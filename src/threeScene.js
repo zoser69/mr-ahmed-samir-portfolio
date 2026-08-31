@@ -275,6 +275,20 @@ export function disposeThreeScene() {
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
   }
+  if (scene) {
+    scene.traverse((object) => {
+      if (object.geometry) {
+        object.geometry.dispose();
+      }
+      if (object.material) {
+        if (Array.isArray(object.material)) {
+          object.material.forEach((mat) => mat.dispose());
+        } else {
+          object.material.dispose();
+        }
+      }
+    });
+  }
   if (renderer) {
     renderer.dispose();
   }
