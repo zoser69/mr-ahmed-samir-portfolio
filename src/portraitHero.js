@@ -40,6 +40,7 @@ export function initPortraitHero() {
     x: 0,
     scale: 1,
     duration: 0.9,
+    force3D: true
   })
   .to(
     '.hero-text-item',
@@ -48,6 +49,7 @@ export function initPortraitHero() {
       x: 0,
       duration: 0.55,
       stagger: 0.05,
+      force3D: true
     },
     '-=0.7'
   );
@@ -68,12 +70,12 @@ export function initPortraitHero() {
       .fromTo(
         '#about .about-header-item',
         { opacity: 0, y: 16 },
-        { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out' }
+        { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out', force3D: true }
       )
       .fromTo(
         '#about .about-card-item',
         { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.5, stagger: 0.12, ease: 'power2.out' }, // Strict sequential reveal 1 -> 2 -> 3
+        { opacity: 1, y: 0, duration: 0.5, stagger: 0.12, ease: 'power2.out', force3D: true }, // Strict sequential reveal 1 -> 2 -> 3
         '-=0.25'
       );
   }
@@ -94,12 +96,12 @@ export function initPortraitHero() {
       .fromTo(
         '#contact .contact-reveal-box > *',
         { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.5, stagger: 0.15, ease: 'power2.out' }
+        { opacity: 1, y: 0, duration: 0.5, stagger: 0.15, ease: 'power2.out', force3D: true }
       )
       .fromTo(
         '#contact .social-card-item',
         { opacity: 0, y: 12 },
-        { opacity: 1, y: 0, duration: 0.4, stagger: 0.05, ease: 'power2.out' },
+        { opacity: 1, y: 0, duration: 0.4, stagger: 0.05, ease: 'power2.out', force3D: true },
         '-=0.3'
       );
   }
