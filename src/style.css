@@ -3,7 +3,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    font-family: 'IBM Plex Sans Arabic', 'Manrope', system-ui, -apple-system, sans-serif;
+    font-family: 'Tajawal', 'Noto Naskh Arabic', system-ui, -apple-system, sans-serif;
     background-color: #060402;
     color: #FAF6F0;
     margin: 0;
@@ -17,7 +17,7 @@
     background-color: #060402;
     color: #FAF6F0;
     min-height: 100vh;
-    font-family: 'IBM Plex Sans Arabic', 'Manrope', system-ui, -apple-system, sans-serif;
+    font-family: 'Tajawal', 'Noto Naskh Arabic', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
   }
   
@@ -42,7 +42,7 @@
 }
 
 /* Strict Zero-Tracking & High-Legibility OpenType for Arabic Script */
-[dir="rtl"], :lang(ar), .font-ar-display, .font-ar-body, .font-body-manrope {
+[dir="rtl"], :lang(ar), .font-ar-display, .font-ar-body, .font-body-naskh, .font-body-manrope {
   letter-spacing: 0 !important;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   font-synthesis-style: none;
@@ -51,29 +51,24 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Luxury Editorial Typography Hierarchy */
+/* Master Academic & Linguistic Typography Hierarchy */
 .font-en-display {
-  font-family: 'Playfair Display', serif;
-  letter-spacing: -0.02em;
+  font-family: 'Libre Baskerville', Georgia, serif;
+  letter-spacing: -0.01em;
 }
 
 .font-ar-display {
-  font-family: 'El Messiri', serif;
+  font-family: 'Tajawal', system-ui, -apple-system, sans-serif;
   letter-spacing: 0 !important;
 }
 
-.font-ar-body {
-  font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
-  letter-spacing: 0 !important;
-}
-
-.font-body-manrope {
-  font-family: 'IBM Plex Sans Arabic', 'Manrope', sans-serif;
+.font-ar-body, .font-body-naskh, .font-body-manrope {
+  font-family: 'Noto Naskh Arabic', Georgia, serif;
   letter-spacing: 0 !important;
 }
 
 .tabular-numbers {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Tajawal', sans-serif;
   font-variant-numeric: tabular-nums;
 }
 

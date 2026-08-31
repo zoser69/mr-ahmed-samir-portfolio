@@ -49,3 +49,12 @@
 - **Context**: Scrolling down into `#about` and `#contact` was freezing the 3D background because an `IntersectionObserver` on `#hero` was prematurely halting the render loop.
 - **Decision**: Removed `heroObserver` so the fixed 3D background animates continuously across the entire page while preserving `isTabVisible` (`visibilitychange`) for battery-saving when the browser tab is hidden/minimized.
 - **Consequences**: Silky smooth, continuous 60fps 3D background tumbling across all sections. Audited and passed by independent review.
+
+## ADR-008: Master Educational Typography Architecture (Libre Baskerville + Tajawal + Noto Naskh)
+- **Date**: 2026-08-31
+- **Context**: Resolving visual dissonance between English display, Arabic headings, and body copy.
+- **Decision**: 
+  1. Selected `Libre Baskerville` (weight 700) for the English title & master branding (`.font-en-display`) — establishing classical English literary and academic authority.
+  2. Selected `Tajawal` (weights 700/800) for all Arabic display headings, navigation, stage tags, and CTA buttons (`.font-ar-display`).
+  3. Selected `Noto Naskh Arabic` (weights 400/500) with generous line-height (`1.85`) for all biographical prose, educational timeline descriptions, and body copy (`.font-body-naskh`).
+- **Consequences**: Harmonious fusion of classical British academic pedigree with authentic Arabic calligraphic heritage and razor-sharp modern UI. Audited and approved by fresh-context review (`PASS`).
