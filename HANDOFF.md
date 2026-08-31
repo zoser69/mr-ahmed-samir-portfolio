@@ -1,15 +1,15 @@
-# Mr. Ahmed Samir 3D Portfolio — Session Handoff
+# Mr. Ahmed Samir 3D Portfolio — Session Handoff (Finalized)
 
 ## 1. Project Summary
 - **Live Production URL**: https://zoser69.github.io/mr-ahmed-samir-portfolio/
-- **Tech Stack**: Vanilla JS (ES Modules) + Vite v6 + Three.js + GSAP v3 (ScrollTrigger) + Tailwind CSS v4 + Lucide Icons.
+- **Tech Stack**: Vanilla JS (ES Modules) + Vite v6 + Three.js r128 + GSAP v3 (ScrollTrigger) + Tailwind CSS v4 + Lucide Icons.
 - **Visual Theme**: Luxury Dark Truffle & Burnt Umber (#060402, #4E2E1B, #FAF6F0, #A67C5B, #2E1E15).
 
 ## 2. Key Architecture & Features Completed
 1. **Adaptive 3-Tier WebGL Engine (src/threeScene.js)**:
    - Hardware-aware tier detection (High, Mid, Low) based on CPU cores and RAM.
    - Dynamic real-time FPS watchdog downscales quality on-the-fly if frame rate drops below 40 FPS, preventing any lag or stutter.
-   - Art-directed 16-slot coordinate system (DESKTOP_SLOTS and MOBILE_SLOTS) ensuring zero overlap with the teacher's portrait.
+   - Wide 16:9 4-quadrant slot coordinate system ensuring zero clumping and zero overlap with the teacher's portrait.
    - Time-delta frame-rate independent rotation (t * rotSpeed * 60).
 2. **Deterministic GSAP Scroll Motion (src/portraitHero.js)**:
    - Independent element ScrollTriggers (top 75%) so animations never trigger offscreen or rush past the user.
