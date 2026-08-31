@@ -83,27 +83,45 @@ export function initPortraitHero() {
   // 3. Deterministic Master Timeline for Contact & Social Hub (#contact)
   const contactSection = document.getElementById('contact');
   if (contactSection) {
-    const contactTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: '#contact',
-        start: 'top 60%',
-        once: true,
-        fastScrollEnd: true
-      }
+    // 3. Contact & Social Hub (#contact)
+    gsap.utils.toArray('#contact .contact-reveal-box > *').forEach((item) => {
+      gsap.fromTo(
+        item,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+          force3D: true,
+          scrollTrigger: {
+            trigger: item,
+            start: 'top 85%',
+            once: true,
+            fastScrollEnd: true
+          }
+        }
+      );
     });
 
-    contactTl
-      .fromTo(
-        '#contact .contact-reveal-box > *',
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.5, stagger: 0.15, ease: 'power2.out', force3D: true }
-      )
-      .fromTo(
-        '#contact .social-card-item',
-        { opacity: 0, y: 12 },
-        { opacity: 1, y: 0, duration: 0.4, stagger: 0.05, ease: 'power2.out', force3D: true },
-        '-=0.3'
-      );
+    gsap.fromTo(
+      '#contact .social-card-item',
+      { opacity: 0, y: 12 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.4,
+        stagger: 0.08,
+        ease: 'power2.out',
+        force3D: true,
+        scrollTrigger: {
+          trigger: '#contact .space-y-4', // The social container
+          start: 'top 85%',
+          once: true,
+          fastScrollEnd: true
+        }
+      }
+    );
   }
 
   // Refresh ScrollTrigger calculations
