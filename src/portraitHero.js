@@ -57,27 +57,45 @@ export function initPortraitHero() {
   // 2. Deterministic Master Timeline for Academic Milestones (#about)
   const aboutSection = document.getElementById('about');
   if (aboutSection) {
-    const aboutTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: '#about',
-        start: 'top 60%',
-        once: true,
-        fastScrollEnd: true
-      }
+    // Animate Header Items
+    gsap.utils.toArray('#about .about-header-item').forEach((item) => {
+      gsap.fromTo(
+        item,
+        { opacity: 0, y: 16 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+          force3D: true,
+          scrollTrigger: {
+            trigger: item,
+            start: 'top 85%',
+            once: true
+          }
+        }
+      );
     });
 
-    aboutTl
-      .fromTo(
-        '#about .about-header-item',
-        { opacity: 0, y: 16 },
-        { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out', force3D: true }
-      )
-      .fromTo(
-        '#about .about-card-item',
+    // Animate Cards Independently 
+    gsap.utils.toArray('#about .about-card-item').forEach((card) => {
+      gsap.fromTo(
+        card,
         { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.5, stagger: 0.12, ease: 'power2.out', force3D: true }, // Strict sequential reveal 1 -> 2 -> 3
-        '-=0.25'
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power2.out',
+          force3D: true,
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            once: true
+          }
+        }
       );
+    });
   }
 
   // 3. Deterministic Master Timeline for Contact & Social Hub (#contact)
