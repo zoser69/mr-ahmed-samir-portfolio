@@ -64,3 +64,9 @@
   2. Mapped `.font-ar-display` to `Tajawal` (Bold, 26px/1.35) for crisp, authoritative Arabic headings and stage tags.
   3. Mapped `.font-ar-body` to `IBM Plex Sans Arabic` with calibrated secondary size (`text-sm sm:text-[15px]`, `leading-[1.8]`) for the hero bio and section descriptions.
 - **Consequences**: Flawless optical hierarchy, zero font distortion, razor-sharp modern clarity. Audited and verified by fresh-context review (`PASS`).
+
+## ADR-010: Stepped Academic Journey Progression Component (Shape 4)
+- **Date**: 2026-08-31
+- **Context**: User selected Shape 4 (Stepped Progress Track) to replace the static vertical bullet list and emphasized that the Baccalaureate represents Egypt's new secondary system.
+- **Decision**: Implemented a stepped horizontal progress track (`1: شهادة إعدادية` ➔ `2: شهادة ثانوية` ➔ `3: بكالوريا عامة`) with numbered circular badges, RTL flow arrows (`←`), and subtle bronze interactive hover states.
+- **Consequences**: Modern, clear pedagogical progression, responsive mobile wrapping, zero layout shift. Audited and approved by independent review (`PASS`).
