@@ -43,3 +43,9 @@
   2. Enforced strict Arabic zero letter-spacing (`letter-spacing: 0 !important`), imported `IBM Plex Sans Arabic`, and boosted body line-heights to `1.8`.
   3. Eradicated low-contrast `#8E5A38` text across the DOM, replacing it with `#A67C5B` (5.25:1) and `#CDB19B` (9.72:1) meeting WCAG AAA.
 - **Consequences**: Elevated visual dignity from a generic AI template to a high-end luxury editorial portfolio. Audited and approved by fresh-context independent subagents.
+
+## ADR-007: Continuous Full-Page 3D Background Atmosphere
+- **Date**: 2026-08-31
+- **Context**: Scrolling down into `#about` and `#contact` was freezing the 3D background because an `IntersectionObserver` on `#hero` was prematurely halting the render loop.
+- **Decision**: Removed `heroObserver` so the fixed 3D background animates continuously across the entire page while preserving `isTabVisible` (`visibilitychange`) for battery-saving when the browser tab is hidden/minimized.
+- **Consequences**: Silky smooth, continuous 60fps 3D background tumbling across all sections. Audited and passed by independent review.

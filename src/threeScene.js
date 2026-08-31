@@ -5,7 +5,6 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 let scene, camera, renderer, animationFrameId;
 let lettersGroup, particlesMesh, pointLight;
 let isDisposed = false;
-let isHeroVisible = true;
 let isTabVisible = true;
 let mouseX = 0, mouseY = 0;
 let targetCameraX = 0, targetCameraY = 0;
@@ -323,15 +322,7 @@ export function initThreeScene() {
   };
   window.addEventListener('resize', onResize, { passive: true });
 
-  // 10. Pause GPU Rendering When Hero is Offscreen or Tab is Hidden
-  let heroObserver;
-  if (heroSection && 'IntersectionObserver' in window) {
-    heroObserver = new IntersectionObserver((entries) => {
-      isHeroVisible = entries[0].isIntersecting;
-    }, { threshold: 0.05 });
-    heroObserver.observe(heroSection);
-  }
-
+  // 10. Pause GPU Rendering Only When Browser Tab is Hidden (Save Battery)
   const onVisibilityChange = () => {
     isTabVisible = !document.hidden;
   };
@@ -347,8 +338,8 @@ export function initThreeScene() {
     if (isDisposed) return;
     animationFrameId = requestAnimationFrame(animate);
 
-    // Skip all WebGL draw calls if hero is scrolled out of view or tab is hidden
-    if (!isHeroVisible || !isTabVisible) return;
+    // Skip WebGL draw calls only if browser tab is hidden/minimized
+    if (!isTabVisible) return;
 
     // Dynamic FPS Watchdog (Auto-downscale if frame rate drops under 40 FPS on weak hardware)
     frameCount++;
@@ -358,7 +349,7 @@ export function initThreeScene() {
       frameCount = 0;
       lastFpsCheckTime = now;
 
-      if (currentFps < 40 && isHeroVisible) {
+      if (currentFps < 40 && isTabVisible) {
         lowFpsCount++;
         if (lowFpsCount >= 2) {
           // Downgrade quality tier dynamically to restore smooth 60 FPS
@@ -422,7 +413,6 @@ export function initThreeScene() {
     if (!isMobile) window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('resize', onResize);
     document.removeEventListener('visibilitychange', onVisibilityChange);
-    if (heroObserver) heroObserver.disconnect();
   };
 }
 
