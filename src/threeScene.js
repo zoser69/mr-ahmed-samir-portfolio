@@ -40,7 +40,7 @@ export function initThreeScene() {
     precision: isLowEnd ? 'mediump' : 'highp'
   });
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isLowEnd ? 1.0 : 1.5));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isLowEnd ? 1.0 : 2.0));
 
   // 5. Studio 3-Point Lighting Setup (Optimized for Standard Shaders)
   const ambientLight = new THREE.AmbientLight(0xA67C5B, 0.85);
@@ -121,18 +121,27 @@ export function initThreeScene() {
       // We want them to act as a wide background frame, leaving the center mostly clear for content
       
       // Distribute Z depth heavily for parallax effect
-      const baseZ = -10 - (idx % 5) * 8.0;
+      const baseZ = -12 - (idx % 4) * 8.0;
 
-      // To keep them on the edges despite perspective, scale radius by depth
+      // Scale radius by depth
       const depthFactor = Math.abs(baseZ) / 10; 
-      // Base radius pushed much further out
-      const radius = isMobile ? 14.0 * depthFactor : 26.0 * depthFactor; 
       
-      const angle = (idx / glyphs.length) * Math.PI * 2; 
+      // We want a good distribution throughout the screen, not just edges.
+      // So we randomize the radius instead of pushing everything to the max edge.
+      const radius = (isMobile ? 6.0 : 12.0) * depthFactor + Math.random() * 8.0 * depthFactor; 
       
-      // Push X and Y to the edges, creating a massive frame
-      const baseX = Math.cos(angle) * radius + ((Math.random() - 0.5) * 5 * depthFactor);
-      const baseY = Math.sin(angle) * (radius * 0.6) + ((Math.random() - 0.5) * 8 * depthFactor);
+      let angle = (idx / glyphs.length) * Math.PI * 2; 
+      
+      // EXCLUSION ZONE: Avoid bottom-left quadrant (where portrait sits on desktop)
+      // PI is left (180 deg), 1.5 PI is bottom (270 deg)
+      if (!isMobile && angle > Math.PI * 0.8 && angle < Math.PI * 1.6) {
+        // Shift angle to top-left or bottom-right
+        angle += Math.PI * 0.8;
+      }
+      
+      // Calculate final X and Y
+      const baseX = Math.cos(angle) * radius;
+      const baseY = Math.sin(angle) * (radius * 0.6);
 
       mesh.position.set(baseX, baseY, baseZ);
       const startRotX = Math.random() * Math.PI;
@@ -211,7 +220,7 @@ export function initThreeScene() {
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isLowEnd ? 1.0 : 1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isLowEnd ? 1.0 : 2.0));
   };
   window.addEventListener('resize', onResize, { passive: true });
 
