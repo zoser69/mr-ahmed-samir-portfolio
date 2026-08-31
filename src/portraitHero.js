@@ -21,111 +21,136 @@ export function initPortraitHero() {
     return;
   }
 
-  // 1. Master Page Load Timeline (Hero Section)
+  // 1. Master Hero Entrance (Smooth & Silky)
   const masterTl = gsap.timeline({
-    defaults: { ease: 'expo.out' }
+    defaults: { ease: 'power3.out' }
   });
 
-  // Initial State Setup
   gsap.set(img, {
     opacity: 0,
-    x: -70,
-    scale: 0.96,
-    filter: 'blur(8px)',
+    x: -60,
+    scale: 0.97,
+    filter: 'blur(6px)',
   });
 
   gsap.set('.hero-text-item', {
     opacity: 0,
-    x: 30,
+    x: 25,
   });
 
-  // Hero Portrait Reveal
   masterTl.to(img, {
     opacity: 1,
     x: 0,
     scale: 1,
     filter: 'blur(0px)',
-    duration: 1.3,
+    duration: 1.2,
     clearProps: 'filter',
   })
-  // Overlapping Hero Content Cascade
   .to(
     '.hero-text-item',
     {
       opacity: 1,
       x: 0,
-      duration: 0.8,
-      stagger: 0.08,
+      duration: 0.75,
+      stagger: 0.07,
     },
-    '-=1.0'
+    '-=0.9'
   );
 
-  // 2. Instantaneous Scroll-Triggered Reveal for Academic Credentials (#about)
-  const aboutSection = document.getElementById('about');
-  if (aboutSection) {
-    gsap.set(['#about .about-header-item', '#about .about-card-item'], {
-      opacity: 0,
-      y: 20
-    });
+  // 2. Silky Editorial Header Reveal (#about)
+  const aboutHeader = document.querySelector('#about .about-header-item');
+  if (aboutHeader) {
+    gsap.fromTo(
+      '#about .about-header-item',
+      {
+        opacity: 0,
+        y: 20
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '#about',
+          start: 'top 88%',
+          once: true
+        }
+      }
+    );
+  }
 
-    ScrollTrigger.create({
-      trigger: '#about',
-      start: 'top 95%', // Triggers the instant the top of the section enters the bottom of the viewport
-      once: true,
-      onEnter: () => {
-        gsap.to('#about .about-header-item', {
+  // 3. Individual Silky Row Glide for Academic Milestones
+  const milestoneRows = document.querySelectorAll('#about .about-card-item');
+  milestoneRows.forEach((row, idx) => {
+    gsap.fromTo(
+      row,
+      {
+        opacity: 0,
+        y: 24
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.85,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: row,
+          start: 'top 92%',
+          once: true
+        }
+      }
+    );
+  });
+
+  // 4. Silky Reveal for Contact Box & Social Grid (#contact)
+  const contactBox = document.querySelector('#contact .contact-reveal-box');
+  if (contactBox) {
+    gsap.fromTo(
+      contactBox,
+      {
+        opacity: 0,
+        y: 25
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.85,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '#contact',
+          start: 'top 88%',
+          once: true
+        }
+      }
+    );
+
+    const socialItems = document.querySelectorAll('#contact .social-card-item');
+    if (socialItems.length > 0) {
+      gsap.fromTo(
+        socialItems,
+        {
+          opacity: 0,
+          y: 15
+        },
+        {
           opacity: 1,
           y: 0,
           duration: 0.65,
-          stagger: 0.06,
-          ease: 'expo.out'
-        });
-
-        gsap.to('#about .about-card-item', {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
           stagger: 0.08,
-          ease: 'expo.out',
-          delay: 0.05
-        });
-      }
-    });
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '#contact .social-card-item',
+            start: 'top 94%',
+            once: true
+          }
+        }
+      );
+    }
   }
 
-  // 3. Instantaneous Scroll-Triggered Reveal for Contact & Social Hub (#contact)
-  const contactSection = document.getElementById('contact');
-  if (contactSection) {
-    gsap.set(['#contact .contact-reveal-box', '#contact .social-card-item'], {
-      opacity: 0,
-      y: 25,
-    });
-
-    ScrollTrigger.create({
-      trigger: '#contact',
-      start: 'top 96%', // Fires immediately as soon as contact enters view
-      once: true,
-      onEnter: () => {
-        gsap.to('#contact .contact-reveal-box', {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          ease: 'expo.out'
-        });
-
-        gsap.to('#contact .social-card-item', {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          stagger: 0.05,
-          ease: 'expo.out',
-          delay: 0.1
-        });
-      }
-    });
-  }
-
-  // Ensure ScrollTrigger recalculates all element triggers accurately
+  // Refresh ScrollTrigger calculations
   setTimeout(() => {
     ScrollTrigger.refresh();
   }, 100);
