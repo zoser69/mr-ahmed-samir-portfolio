@@ -6,10 +6,15 @@ import { createIcons, icons } from 'lucide';
 function initApp() {
   console.log('[App] Initializing Mr. Ahmed Samir Portfolio...');
 
-  // 1. Initialize Lucide Icons properly
+  // 1. Initialize Lucide Icons with aria-hidden for accessibility
   try {
-    createIcons({ icons });
-    console.log('[App] Lucide icons initialized successfully');
+    createIcons({ 
+      icons,
+      attrs: {
+        'aria-hidden': 'true'
+      }
+    });
+    console.log('[App] Lucide icons initialized successfully with a11y');
   } catch (err) {
     console.error('[App] Lucide icon error:', err);
   }
@@ -22,7 +27,7 @@ function initApp() {
     console.error('[App] Three.js error:', err);
   }
 
-  // 3. Initialize Portrait Entrance & Tilt
+  // 3. Initialize Portrait Entrance & Motion
   try {
     initPortraitHero();
     console.log('[App] Portrait hero initialized successfully');
