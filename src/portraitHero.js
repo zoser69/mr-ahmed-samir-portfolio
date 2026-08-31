@@ -62,7 +62,7 @@ export function initPortraitHero() {
     const aboutTl = gsap.timeline({
       scrollTrigger: {
         trigger: '#about',
-        start: 'top 92%',
+        start: 'top 60%',
         once: true,
         fastScrollEnd: true
       }
@@ -88,7 +88,7 @@ export function initPortraitHero() {
     const contactTl = gsap.timeline({
       scrollTrigger: {
         trigger: '#contact',
-        start: 'top 92%',
+        start: 'top 60%',
         once: true,
         fastScrollEnd: true
       }
@@ -96,15 +96,15 @@ export function initPortraitHero() {
 
     contactTl
       .fromTo(
-        '#contact .contact-reveal-box',
+        '#contact .contact-reveal-box > *',
         { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' }
+        { opacity: 1, y: 0, duration: 0.5, stagger: 0.15, ease: 'power2.out' }
       )
       .fromTo(
         '#contact .social-card-item',
         { opacity: 0, y: 12 },
-        { opacity: 1, y: 0, duration: 0.45, stagger: 0.06, ease: 'power2.out' },
-        '-=0.2'
+        { opacity: 1, y: 0, duration: 0.4, stagger: 0.05, ease: 'power2.out' },
+        '-=0.3'
       );
   }
 
