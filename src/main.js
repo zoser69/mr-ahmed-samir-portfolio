@@ -1,7 +1,7 @@
-﻿import './style.css';
+import './style.css';
 import { initThreeScene } from './threeScene.js';
 import { initPortraitHero } from './portraitHero.js';
-import { createIcons, icons } from 'lucide';
+import { createIcons, PhoneCall, MessageCircle, Phone, Facebook, Youtube, Video, Instagram } from 'lucide';
 
 function initApp() {
   console.log('[App] Initializing Mr. Ahmed Samir Portfolio...');
@@ -9,7 +9,7 @@ function initApp() {
   // 1. Initialize Lucide Icons with aria-hidden for accessibility
   try {
     createIcons({ 
-      icons,
+      icons: { PhoneCall, MessageCircle, Phone, Facebook, Youtube, Video, Instagram },
       attrs: {
         'aria-hidden': 'true'
       }

@@ -132,16 +132,19 @@ export function initThreeScene() {
       const baseZ = -8 - (idx % 5) * 6.0;
 
       mesh.position.set(baseX, baseY, baseZ);
-      mesh.rotation.set(
-        Math.random() * Math.PI,
-        Math.random() * Math.PI,
-        Math.random() * Math.PI
-      );
+      const startRotX = Math.random() * Math.PI;
+      const startRotY = Math.random() * Math.PI;
+      const startRotZ = Math.random() * Math.PI;
+      
+      mesh.rotation.set(startRotX, startRotY, startRotZ);
 
       mesh.userData = {
         baseX: baseX,
         baseY: baseY,
         baseZ: baseZ,
+        baseRotX: startRotX,
+        baseRotY: startRotY,
+        baseRotZ: startRotZ,
         rotSpeedX: (Math.random() - 0.5) * 0.008 + 0.003,
         rotSpeedY: (Math.random() - 0.5) * 0.01 + 0.004,
         rotSpeedZ: (Math.random() - 0.5) * 0.005,
@@ -250,9 +253,9 @@ export function initThreeScene() {
     if (lettersGroup && lettersGroup.children.length > 0) {
       lettersGroup.children.forEach((mesh) => {
         const u = mesh.userData;
-        mesh.rotation.x += u.rotSpeedX;
-        mesh.rotation.y += u.rotSpeedY;
-        mesh.rotation.z += u.rotSpeedZ;
+        mesh.rotation.x = u.baseRotX + t * (u.rotSpeedX * 60);
+        mesh.rotation.y = u.baseRotY + t * (u.rotSpeedY * 60);
+        mesh.rotation.z = u.baseRotZ + t * (u.rotSpeedZ * 60);
 
         mesh.position.x = u.baseX + Math.sin(t * u.floatFreqX + u.phase) * u.ampX;
         mesh.position.y = u.baseY + Math.cos(t * u.floatFreqY + u.phase) * u.ampY;
