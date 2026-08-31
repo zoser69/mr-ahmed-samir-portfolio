@@ -12,7 +12,7 @@ export function initPortraitHero() {
 
   if (prefersReducedMotion) {
     // Graceful immediate visibility for reduced-motion users
-    gsap.set(['#hero-portrait-img', '.hero-text-item', '.scroll-reveal-item'], {
+    gsap.set(['#hero-portrait-img', '.hero-text-item', '.about-header-item', '.about-card-item', '.contact-reveal-box', '.social-card-item'], {
       opacity: 1,
       x: 0,
       y: 0,
@@ -29,14 +29,14 @@ export function initPortraitHero() {
   // Initial State Setup
   gsap.set(img, {
     opacity: 0,
-    x: -80,
+    x: -70,
     scale: 0.96,
-    filter: 'blur(10px)',
+    filter: 'blur(8px)',
   });
 
   gsap.set('.hero-text-item', {
     opacity: 0,
-    x: 35,
+    x: 30,
   });
 
   // Hero Portrait Reveal
@@ -45,7 +45,7 @@ export function initPortraitHero() {
     x: 0,
     scale: 1,
     filter: 'blur(0px)',
-    duration: 1.5,
+    duration: 1.3,
     clearProps: 'filter',
   })
   // Overlapping Hero Content Cascade
@@ -54,84 +54,79 @@ export function initPortraitHero() {
     {
       opacity: 1,
       x: 0,
-      duration: 1.0,
-      stagger: 0.1,
+      duration: 0.8,
+      stagger: 0.08,
     },
-    '-=1.1'
+    '-=1.0'
   );
 
-  // 2. Scroll-Triggered Reveal for Academic Credentials (#about)
+  // 2. Instantaneous Scroll-Triggered Reveal for Academic Credentials (#about)
   const aboutSection = document.getElementById('about');
   if (aboutSection) {
-    gsap.set('#about .about-header-item', {
+    gsap.set(['#about .about-header-item', '#about .about-card-item'], {
       opacity: 0,
-      y: 25
-    });
-    gsap.set('#about .about-card-item', {
-      opacity: 0,
-      y: 35
+      y: 20
     });
 
     ScrollTrigger.create({
       trigger: '#about',
-      start: 'top 82%',
+      start: 'top 95%', // Triggers the instant the top of the section enters the bottom of the viewport
       once: true,
       onEnter: () => {
         gsap.to('#about .about-header-item', {
           opacity: 1,
           y: 0,
-          duration: 0.9,
-          stagger: 0.12,
+          duration: 0.65,
+          stagger: 0.06,
           ease: 'expo.out'
         });
 
         gsap.to('#about .about-card-item', {
           opacity: 1,
           y: 0,
-          duration: 1.1,
-          stagger: 0.15,
+          duration: 0.7,
+          stagger: 0.08,
           ease: 'expo.out',
-          delay: 0.15
+          delay: 0.05
         });
       }
     });
   }
 
-  // 3. Scroll-Triggered Reveal for Contact & Social Hub (#contact)
+  // 3. Instantaneous Scroll-Triggered Reveal for Contact & Social Hub (#contact)
   const contactSection = document.getElementById('contact');
   if (contactSection) {
-    gsap.set('#contact .contact-reveal-box', {
+    gsap.set(['#contact .contact-reveal-box', '#contact .social-card-item'], {
       opacity: 0,
-      y: 40,
-      scale: 0.98
-    });
-    gsap.set('#contact .social-card-item', {
-      opacity: 0,
-      y: 20
+      y: 25,
     });
 
     ScrollTrigger.create({
       trigger: '#contact',
-      start: 'top 85%',
+      start: 'top 96%', // Fires immediately as soon as contact enters view
       once: true,
       onEnter: () => {
         gsap.to('#contact .contact-reveal-box', {
           opacity: 1,
           y: 0,
-          scale: 1,
-          duration: 1.1,
+          duration: 0.7,
           ease: 'expo.out'
         });
 
         gsap.to('#contact .social-card-item', {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          stagger: 0.08,
+          duration: 0.6,
+          stagger: 0.05,
           ease: 'expo.out',
-          delay: 0.3
+          delay: 0.1
         });
       }
     });
   }
+
+  // Ensure ScrollTrigger recalculates all element triggers accurately
+  setTimeout(() => {
+    ScrollTrigger.refresh();
+  }, 100);
 }
