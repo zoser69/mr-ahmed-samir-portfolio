@@ -14,8 +14,7 @@ export function initPortraitHero() {
     gsap.set(['#hero-portrait-img', '.hero-text-item', '#about .about-header-item', '#about .about-card-item', '#contact .contact-reveal-box', '#contact .social-card-item'], {
       opacity: 1,
       x: 0,
-      y: 0,
-      filter: 'none'
+      y: 0
     });
     return;
   }
@@ -29,7 +28,6 @@ export function initPortraitHero() {
     opacity: 0,
     x: -40,
     scale: 0.98,
-    filter: 'blur(5px)',
   });
 
   gsap.set('.hero-text-item', {
@@ -41,9 +39,7 @@ export function initPortraitHero() {
     opacity: 1,
     x: 0,
     scale: 1,
-    filter: 'blur(0px)',
     duration: 0.9,
-    clearProps: 'filter',
   })
   .to(
     '.hero-text-item',
