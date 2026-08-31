@@ -6,13 +6,12 @@ gsap.registerPlugin(ScrollTrigger);
 export function initPortraitHero() {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const container = document.getElementById('hero-portrait-container');
   const img = document.getElementById('hero-portrait-img');
   if (!img) return;
 
   if (prefersReducedMotion) {
     // Graceful immediate visibility for reduced-motion users
-    gsap.set(['#hero-portrait-img', '.hero-text-item', '.about-header-item', '.about-card-item', '.contact-reveal-box', '.social-card-item'], {
+    gsap.set(['#hero-portrait-img', '.hero-text-item', '#about .about-header-item', '#about .about-card-item', '#contact .contact-reveal-box', '#contact .social-card-item'], {
       opacity: 1,
       x: 0,
       y: 0,
@@ -28,7 +27,7 @@ export function initPortraitHero() {
 
   gsap.set(img, {
     opacity: 0,
-    x: -50,
+    x: -40,
     scale: 0.98,
     filter: 'blur(5px)',
   });
@@ -43,7 +42,7 @@ export function initPortraitHero() {
     x: 0,
     scale: 1,
     filter: 'blur(0px)',
-    duration: 1.0,
+    duration: 0.9,
     clearProps: 'filter',
   })
   .to(
@@ -51,104 +50,75 @@ export function initPortraitHero() {
     {
       opacity: 1,
       x: 0,
-      duration: 0.6,
+      duration: 0.55,
       stagger: 0.05,
     },
-    '-=0.8'
+    '-=0.7'
   );
 
-  // Helper for Zero-Lag ScrollTrigger configuration
-  const makeZeroLagTrigger = (triggerEl, startPos = 'top 92%') => ({
-    trigger: triggerEl,
-    start: startPos,
-    once: true,
-    fastScrollEnd: 1000,
-    onEnter: (self) => {
-      // If user scrolls quickly (> 1000px/s), snap to completed state immediately with 0ms lag
-      if (Math.abs(self.getVelocity()) > 1000 && self.animation) {
-        self.animation.progress(1);
-      }
-    }
-  });
-
-  // 2. Silky Editorial Header Reveal (#about)
-  const aboutHeader = document.querySelector('#about .about-header-item');
-  if (aboutHeader) {
-    gsap.fromTo(
-      '#about .about-header-item',
-      {
-        opacity: 0,
-        y: 16
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.55,
-        stagger: 0.06,
-        ease: 'power2.out',
-        scrollTrigger: makeZeroLagTrigger('#about', 'top 92%')
-      }
-    );
-  }
-
-  // 3. Individual Milestone Rows (Zero-Lag Silk Glide)
-  const milestoneRows = document.querySelectorAll('#about .about-card-item');
-  milestoneRows.forEach((row) => {
-    gsap.fromTo(
-      row,
-      {
-        opacity: 0,
-        y: 18
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.55,
-        ease: 'power2.out',
-        scrollTrigger: makeZeroLagTrigger(row, 'top 94%')
-      }
-    );
-  });
-
-  // 4. Contact Box & Social Grid (Zero-Lag Silk Glide)
-  const contactBox = document.querySelector('#contact .contact-reveal-box');
-  if (contactBox) {
-    gsap.fromTo(
-      contactBox,
-      {
-        opacity: 0,
-        y: 20
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.55,
-        ease: 'power2.out',
-        scrollTrigger: makeZeroLagTrigger('#contact', 'top 94%')
-      }
-    );
-
-    const socialItems = document.querySelectorAll('#contact .social-card-item');
-    if (socialItems.length > 0) {
-      gsap.fromTo(
-        socialItems,
-        {
-          opacity: 0,
-          y: 12
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.45,
-          stagger: 0.05,
-          ease: 'power2.out',
-          scrollTrigger: makeZeroLagTrigger('#contact .social-card-item', 'top 96%')
+  // 2. Deterministic Master Timeline for Academic Milestones (#about)
+  const aboutSection = document.getElementById('about');
+  if (aboutSection) {
+    const aboutTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#about',
+        start: 'top 92%',
+        once: true,
+        fastScrollEnd: 1000,
+        onEnter: (self) => {
+          if (Math.abs(self.getVelocity()) > 800 && self.animation) {
+            self.animation.progress(1);
+          }
         }
+      }
+    });
+
+    aboutTl
+      .fromTo(
+        '#about .about-header-item',
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out' }
+      )
+      .fromTo(
+        '#about .about-card-item',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.5, stagger: 0.12, ease: 'power2.out' }, // Strict sequential reveal 1 -> 2 -> 3
+        '-=0.25'
       );
-    }
   }
 
-  // Refresh ScrollTrigger coordinates
+  // 3. Deterministic Master Timeline for Contact & Social Hub (#contact)
+  const contactSection = document.getElementById('contact');
+  if (contactSection) {
+    const contactTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#contact',
+        start: 'top 92%',
+        once: true,
+        fastScrollEnd: 1000,
+        onEnter: (self) => {
+          if (Math.abs(self.getVelocity()) > 800 && self.animation) {
+            self.animation.progress(1);
+          }
+        }
+      }
+    });
+
+    contactTl
+      .fromTo(
+        '#contact .contact-reveal-box',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' }
+      )
+      .fromTo(
+        '#contact .social-card-item',
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.45, stagger: 0.06, ease: 'power2.out' },
+        '-=0.2'
+      );
+  }
+
+  // Refresh ScrollTrigger calculations
   setTimeout(() => {
     ScrollTrigger.refresh();
   }, 100);
