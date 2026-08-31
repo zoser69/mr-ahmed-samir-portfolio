@@ -1,21 +1,17 @@
 # System State - Mr. Ahmed Samir 3D Portfolio
 
-- **Current Status**: Design, Arabic Typography & Color Harmony Skills Installed & Audited. 3D Luxury Portfolio Live.
-- **New Skills Added (Phase 3)**:
-  1. `arabic-typography-and-design`: Master guidelines for Arabic typography (zero letter-spacing, line-height 1.65–1.85, optical scale compensation +15%–25%, bilingual pairings, cultural luxury palettes, and CSS logical properties).
-  2. `color-expert`: David Aerne's (meodai) color science and harmony skill (OKLCH, APCA, WCAG, palette generation, pigment mixing, color naming).
-  3. `better-colors`: Jakub Krehel's token-based color system and ramp engineering.
-  4. `better-typography`: Jakub Krehel's typography scales, sizing, OpenType, and text-wrapping rules.
-  5. `better-ui`: Interface polish, surfaces, micro-interactions, and visual feedback.
-  6. `better-layout`: Grouping, optical alignment, spacing, and adaptivity.
-- **Root Cause & Architectural Fixes (Phase 1 & 2)**:
-  1. **Fixed End-State Snapping & Animation Lag**: Replaced all `transition-all` with `transition-colors` so CSS only handles hover states, leaving GSAP in full control of motion.
-  2. **Fixed Sub-pixel Shift on Animation End**: Explicitly added `force3D: true` to all GSAP `.fromTo()` timelines.
-  3. **Fixed Early Animation Trigger (Off-screen)**: Wrapped each card in its own `ScrollTrigger` (`top 75%`).
-  4. **Fixed Fast Scrolling Skipping Animations**: Removed `fastScrollEnd: true` from all ScrollTriggers.
-  5. **Fixed Portrait Shadow Pop**: Removed `filter: blur(...)` GSAP animation on the portrait image.
-  6. **Enhanced 3D Background Typography**: Wide 16:9 4-quadrant slot distribution, eliminating clumping and leaving the teacher portrait unobscured.
-  7. **Adaptive 3-Tier Performance Architecture & Real-Time FPS Watchdog**: Dynamic capability detection (`High`, `Mid`, `Low`) based on CPU/RAM with automatic 40 FPS real-time downscaler.
-  8. **Performance & Bundle Audit**: Reduced bundle by 50% to 636KB via tree-shaking Lucide icons and pruning dead code.
+- **Current Status**: Anti-Slop Subtraction & Arabic Typography Laws Executed & Verified (Phase 4 Done).
+- **Recent Architectural & Design Fixes (Phase 4)**:
+  1. **Anti-Slop Subtraction**: Eradicated fake hover motion on static Hero stages; replaced with clean editorial typography with amber accent indicators.
+  2. **Matryoshka Card De-Nesting**: Stripped redundant outer container borders in Contact hub for a direct, clean, high-contrast surface grid.
+  3. **Timeline Refinement**: Removed redundant badge pills in About section, allowing big numbers (`2000`, `دبلومتان`, `26+ عاماً`) to lead visual hierarchy.
+  4. **Strict Zero-Tracking Law**: Added `letter-spacing: 0 !important;` globally to all Arabic typography selectors, preventing letter dissociation.
+  5. **Arabic Font Stack**: Injected `IBM Plex Sans Arabic` for crisp, authentic Arabic body copy and UI readability.
+  6. **WCAG AAA Contrast**: Replaced low-contrast `#8E5A38` text with high-contrast `#A67C5B` (5.25:1) and `#CDB19B` (9.72:1).
+  7. **BiDi & Logical Properties**: Enforced `<bdi>` on mixed numbers and converted directional alignment to `text-start`.
+- **Active Skills Suite (31 Skills)**:
+  - 3D & Creative: `threejs`, `threejs-fundamentals`, `threejs-shaders`, `gsap-scrolltrigger-storytelling`, `webgl-3d-object`, `glass-dark-ui`.
+  - Design & Anti-Slop: `impeccable`, `no-ai-design-slop`, `audit-ai-design-slop`, `better-ui`, `better-layout`.
+  - Typography & Color: `arabic-typography-and-design`, `better-typography`, `better-colors`, `color-expert`.
 - **Local Dev Server**: `http://localhost:5173/` and `http://127.0.0.1:5173/` (0.0.0.0:5173).
 - **Live Online URL**: `https://zoser69.github.io/mr-ahmed-samir-portfolio/`

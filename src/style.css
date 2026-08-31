@@ -3,7 +3,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    font-family: 'Manrope', 'Alexandria', sans-serif;
+    font-family: 'IBM Plex Sans Arabic', 'Manrope', system-ui, -apple-system, sans-serif;
     background-color: #060402;
     color: #FAF6F0;
     margin: 0;
@@ -17,7 +17,7 @@
     background-color: #060402;
     color: #FAF6F0;
     min-height: 100vh;
-    font-family: 'Manrope', 'Alexandria', sans-serif;
+    font-family: 'IBM Plex Sans Arabic', 'Manrope', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
   }
   
@@ -41,6 +41,16 @@
   }
 }
 
+/* Strict Zero-Tracking & High-Legibility OpenType for Arabic Script */
+[dir="rtl"], :lang(ar), .font-ar-display, .font-ar-body, .font-body-manrope {
+  letter-spacing: 0 !important;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  font-synthesis-style: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 /* Luxury Editorial Typography Hierarchy */
 .font-en-display {
   font-family: 'Playfair Display', serif;
@@ -48,11 +58,18 @@
 }
 
 .font-ar-display {
-  font-family: 'El Messiri', sans-serif;
+  font-family: 'El Messiri', serif;
+  letter-spacing: 0 !important;
+}
+
+.font-ar-body {
+  font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  letter-spacing: 0 !important;
 }
 
 .font-body-manrope {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'IBM Plex Sans Arabic', 'Manrope', sans-serif;
+  letter-spacing: 0 !important;
 }
 
 .tabular-numbers {
@@ -97,27 +114,9 @@
   box-shadow: 0 10px 30px -10px rgba(78, 46, 27, 0.25);
 }
 
-/* 3 Hero Stage Rectangles Micro-Interaction */
-.stage-rectangle {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.stage-rectangle:hover {
-  transform: translateX(-4px);
-  border-color: #A67C5B;
-  background-color: #140E0A;
-}
-.stage-rectangle .indicator-dot {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.stage-rectangle:hover .indicator-dot {
-  background-color: #A67C5B;
-  width: 14px;
-  border-radius: 9999px;
-}
-
 /* Contact Icon Button */
 .contact-icon-btn {
-  background-color: #140E0A;
+  background-color: #0D0906;
   border: 1px solid #2E1E15;
   color: #CDB19B;
   transition: background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
@@ -136,8 +135,5 @@
 @media (prefers-reduced-motion: reduce) {
   .ambient-backlight {
     animation: none;
-  }
-  .stage-rectangle:hover {
-    transform: none;
   }
 }
