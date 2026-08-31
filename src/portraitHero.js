@@ -3,6 +3,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Prevent mobile address bar show/hide from jittering ScrollTrigger calculations
+ScrollTrigger.config({
+  ignoreMobileResize: true
+});
+
 export function initPortraitHero() {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -54,6 +59,10 @@ export function initPortraitHero() {
     '-=0.7'
   );
 
+  // Trigger position tuned for mobile & desktop visibility:
+  // Starts when element reaches 75% of viewport (25% up from bottom)
+  const triggerStart = 'top 75%';
+
   // 2. Deterministic Master Timeline for Academic Milestones (#about)
   const aboutSection = document.getElementById('about');
   if (aboutSection) {
@@ -61,16 +70,16 @@ export function initPortraitHero() {
     gsap.utils.toArray('#about .about-header-item').forEach((item) => {
       gsap.fromTo(
         item,
-        { opacity: 0, y: 16 },
+        { opacity: 0, y: 18 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.5,
+          duration: 0.6,
           ease: 'power2.out',
           force3D: true,
           scrollTrigger: {
             trigger: item,
-            start: 'top 85%',
+            start: triggerStart,
             once: true
           }
         }
@@ -81,16 +90,16 @@ export function initPortraitHero() {
     gsap.utils.toArray('#about .about-card-item').forEach((card) => {
       gsap.fromTo(
         card,
-        { opacity: 0, y: 20 },
+        { opacity: 0, y: 24 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.5,
+          duration: 0.65,
           ease: 'power2.out',
           force3D: true,
           scrollTrigger: {
             trigger: card,
-            start: 'top 85%',
+            start: triggerStart,
             once: true
           }
         }
@@ -101,20 +110,20 @@ export function initPortraitHero() {
   // 3. Deterministic Master Timeline for Contact & Social Hub (#contact)
   const contactSection = document.getElementById('contact');
   if (contactSection) {
-    // 3. Contact & Social Hub (#contact)
+    // Contact Reveal Items
     gsap.utils.toArray('#contact .contact-reveal-box > *').forEach((item) => {
       gsap.fromTo(
         item,
-        { opacity: 0, y: 20 },
+        { opacity: 0, y: 22 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.5,
+          duration: 0.6,
           ease: 'power2.out',
           force3D: true,
           scrollTrigger: {
             trigger: item,
-            start: 'top 85%',
+            start: triggerStart,
             once: true
           }
         }
@@ -123,17 +132,17 @@ export function initPortraitHero() {
 
     gsap.fromTo(
       '#contact .social-card-item',
-      { opacity: 0, y: 12 },
+      { opacity: 0, y: 16 },
       {
         opacity: 1,
         y: 0,
-        duration: 0.4,
+        duration: 0.5,
         stagger: 0.08,
         ease: 'power2.out',
         force3D: true,
         scrollTrigger: {
-          trigger: '#contact .space-y-4', // The social container
-          start: 'top 85%',
+          trigger: '#contact .space-y-4',
+          start: triggerStart,
           once: true
         }
       }

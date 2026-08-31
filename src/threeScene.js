@@ -18,9 +18,9 @@ export function initThreeScene() {
 
   isDisposed = false;
 
-  // 1. Device Capability & Mobile Tier Detection
+  // 1. Device Capability & Mobile Detection
   const isMobile = window.innerWidth < 768 || (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 1);
-  const isLowEnd = isMobile || (typeof navigator !== 'undefined' && navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+  const isLowEnd = typeof navigator !== 'undefined' && navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2;
 
   // 2. Scene Setup
   scene = new THREE.Scene();
@@ -28,39 +28,38 @@ export function initThreeScene() {
 
   // 3. Camera Setup
   const aspect = window.innerWidth / window.innerHeight;
-  camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 80);
+  camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 90);
   camera.position.set(0, 0, 32);
 
-  // 4. Lightweight WebGL Renderer (Capped for Mobile Performance)
+  // 4. Studio WebGL Renderer (Crisp 4K Vector Geometry & High-DPI Enabled)
   renderer = new THREE.WebGLRenderer({
     canvas,
-    antialias: !isLowEnd, // Disable MSAA on budget phones for max FPS
+    antialias: true, // Always enable MSAA for smooth crisp edges
     alpha: true,
     powerPreference: 'high-performance',
-    precision: isLowEnd ? 'mediump' : 'highp'
+    precision: 'highp'
   });
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isLowEnd ? 1.0 : 2.0));
+  // Cap at 2.0x device pixel ratio for crystal clear rendering on OLED / Retina screens
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.0));
 
-  // 5. Studio 3-Point Lighting Setup (Optimized for Standard Shaders)
-  const ambientLight = new THREE.AmbientLight(0xA67C5B, 0.85);
+  // 5. Studio 3-Point Lighting Setup (Warm Truffle & Ambient Gold)
+  const ambientLight = new THREE.AmbientLight(0xA67C5B, 0.95);
   scene.add(ambientLight);
 
-  const keyLight = new THREE.DirectionalLight(0xFAF6F0, 1.8);
+  const keyLight = new THREE.DirectionalLight(0xFAF6F0, 2.0);
   keyLight.position.set(15, 20, 20);
   scene.add(keyLight);
 
-  const rimLight = new THREE.DirectionalLight(0x4E2E1B, 2.5);
+  const rimLight = new THREE.DirectionalLight(0x4E2E1B, 3.0);
   rimLight.position.set(-18, -12, -10);
   scene.add(rimLight);
 
-  if (!isLowEnd) {
-    pointLight = new THREE.PointLight(0xCDB19B, 2.0, 40);
-    pointLight.position.set(0, 0, 15);
-    scene.add(pointLight);
-  }
+  pointLight = new THREE.PointLight(0xCDB19B, 2.2, 45);
+  pointLight.position.set(0, 0, 15);
+  scene.add(pointLight);
 
-  // 6. Extruded 3D Kinetic Typography (Adaptive Geometry)
+  // 6. Extruded 3D Kinetic Typography (Art-Directed Balanced Constellation)
   lettersGroup = new THREE.Group();
   scene.add(lettersGroup);
 
@@ -70,12 +69,12 @@ export function initThreeScene() {
   fontLoader.load(fontPath, (font) => {
     if (isDisposed) return;
 
-    // Adaptive glyph count (8 for mobile, 16 for desktop)
+    // Adaptive glyph list
     const glyphs = isMobile 
       ? ['E', 'N', 'G', 'L', 'S', 'H', 'A', 'M'] 
       : ['E', 'N', 'G', 'L', 'I', 'S', 'H', 'A', 'M', 'S', 'R', 'X', 'V', 'K', 'Q', 'Z'];
 
-    // High-efficiency Standard Materials
+    // Luxury Dark Truffle & Warm Umber Materials
     const materials = [
       new THREE.MeshStandardMaterial({
         color: 0x4E2E1B,
@@ -97,19 +96,61 @@ export function initThreeScene() {
       })
     ];
 
+    // Balanced, art-directed 3D constellation slots (Zero overlap with teacher portrait)
+    const DESKTOP_SLOTS = [
+      // Top row (Left to Right)
+      { x: -14, y: 9.5,  z: -14, size: 1.8 },
+      { x: -7,  y: 10.5, z: -18, size: 2.1 },
+      { x: 0,   y: 9.0,  z: -15, size: 1.7 },
+      { x: 7,   y: 10.0, z: -20, size: 2.2 },
+      { x: 14,  y: 8.5,  z: -16, size: 1.9 },
+      // Upper Left (Above/Behind Teacher shoulder)
+      { x: -17, y: 4.0,  z: -17, size: 2.0 },
+      { x: -19, y: -2.0, z: -22, size: 2.3 },
+      // Right flank (Next to English Master title & text)
+      { x: 17,  y: 3.5,  z: -18, size: 2.0 },
+      { x: 20,  y: -2.5, z: -21, size: 2.2 },
+      { x: 16,  y: -7.0, z: -16, size: 1.8 },
+      // Bottom Right (Under Stage Badges & CTA)
+      { x: 11,  y: -10.5, z: -15, size: 1.9 },
+      { x: 5,   y: -11.0, z: -22, size: 2.2 },
+      // Ambient Deep Layer (Far background depth)
+      { x: -10, y: 5.5,   z: -26, size: 2.4 },
+      { x: 10,  y: 0.0,   z: -28, size: 2.6 },
+      { x: -15, y: 11.0,  z: -24, size: 2.2 },
+      { x: 18,  y: 10.0,  z: -25, size: 2.3 }
+    ];
+
+    const MOBILE_SLOTS = [
+      // Top header region
+      { x: -4.5, y: 10.0, z: -13, size: 1.5 },
+      { x: 4.5,  y: 9.0,  z: -15, size: 1.6 },
+      // Flanking sides (outside central text)
+      { x: -5.5, y: 4.0,  z: -14, size: 1.5 },
+      { x: 5.5,  y: 2.5,  z: -16, size: 1.7 },
+      { x: -5.2, y: -4.0, z: -13, size: 1.4 },
+      { x: 5.2,  y: -5.5, z: -15, size: 1.6 },
+      // Bottom region
+      { x: -4.0, y: -11.0, z: -14, size: 1.5 },
+      { x: 4.0,  y: -12.5, z: -17, size: 1.8 }
+    ];
+
+    const slots = isMobile ? MOBILE_SLOTS : DESKTOP_SLOTS;
+
     glyphs.forEach((char, idx) => {
-      const size = isMobile ? 1.4 + (idx % 2) * 0.5 : 1.8 + (idx % 3) * 0.6;
+      const slot = slots[idx % slots.length];
+      const size = slot.size || 1.8;
       
       const textGeo = new TextGeometry(char, {
         font: font,
         size: size,
         depth: 0.28,
-        curveSegments: isLowEnd ? 4 : 8, // Low triangle count on budget phones
+        curveSegments: 8, // High-fidelity curves on all devices
         bevelEnabled: true,
         bevelThickness: 0.05,
         bevelSize: 0.03,
         bevelOffset: 0,
-        bevelSegments: isLowEnd ? 2 : 3,
+        bevelSegments: 3,
       });
 
       textGeo.center();
@@ -117,31 +158,9 @@ export function initThreeScene() {
       const mat = materials[idx % materials.length];
       const mesh = new THREE.Mesh(textGeo, mat);
 
-      // Better cinematic distribution (Constellation layout)
-      // We want them to act as a wide background frame, leaving the center mostly clear for content
-      
-      // Distribute Z depth heavily for parallax effect
-      const baseZ = -12 - (idx % 4) * 8.0;
-
-      // Scale radius by depth
-      const depthFactor = Math.abs(baseZ) / 10; 
-      
-      // We want a good distribution throughout the screen, not just edges.
-      // So we randomize the radius instead of pushing everything to the max edge.
-      const radius = (isMobile ? 6.0 : 12.0) * depthFactor + Math.random() * 8.0 * depthFactor; 
-      
-      let angle = (idx / glyphs.length) * Math.PI * 2; 
-      
-      // EXCLUSION ZONE: Avoid bottom-left quadrant (where portrait sits on desktop)
-      // PI is left (180 deg), 1.5 PI is bottom (270 deg)
-      if (!isMobile && angle > Math.PI * 0.8 && angle < Math.PI * 1.6) {
-        // Shift angle to top-left or bottom-right
-        angle += Math.PI * 0.8;
-      }
-      
-      // Calculate final X and Y
-      const baseX = Math.cos(angle) * radius;
-      const baseY = Math.sin(angle) * (radius * 0.6);
+      const baseX = slot.x;
+      const baseY = slot.y;
+      const baseZ = slot.z;
 
       mesh.position.set(baseX, baseY, baseZ);
       const startRotX = Math.random() * Math.PI;
@@ -160,13 +179,13 @@ export function initThreeScene() {
         rotSpeedX: (Math.random() - 0.5) * 0.008 + 0.003,
         rotSpeedY: (Math.random() - 0.5) * 0.01 + 0.004,
         rotSpeedZ: (Math.random() - 0.5) * 0.005,
-        floatFreqX: 0.4 + Math.random() * 0.3,
-        floatFreqY: 0.5 + Math.random() * 0.4,
-        floatFreqZ: 0.3 + Math.random() * 0.3,
-        ampX: 0.5 + Math.random() * 0.4,
-        ampY: 0.7 + Math.random() * 0.5,
-        ampZ: 1.0 + Math.random() * 0.6,
-        phase: Math.random() * Math.PI * 2
+        floatFreqX: 0.35 + Math.random() * 0.25,
+        floatFreqY: 0.45 + Math.random() * 0.3,
+        floatFreqZ: 0.3 + Math.random() * 0.25,
+        ampX: 0.4 + Math.random() * 0.3,
+        ampY: 0.5 + Math.random() * 0.4,
+        ampZ: 0.8 + Math.random() * 0.5,
+        phase: (idx / glyphs.length) * Math.PI * 2
       };
 
       lettersGroup.add(mesh);
@@ -212,15 +231,27 @@ export function initThreeScene() {
     window.addEventListener('mousemove', onMouseMove, { passive: true });
   }
 
-  // 9. Resize Listener
+  // 9. Resize Listener (Stabilized for mobile URL bar collapses)
+  let lastWidth = window.innerWidth;
+  let lastHeight = window.innerHeight;
+
   const onResize = () => {
     if (isDisposed || !renderer || !camera) return;
     const w = window.innerWidth;
     const h = window.innerHeight;
+
+    // On mobile, ignore vertical-only resize jumps caused by address bar toggling on scroll
+    if (isMobile && Math.abs(w - lastWidth) < 2 && Math.abs(h - lastHeight) < 140) {
+      return;
+    }
+
+    lastWidth = w;
+    lastHeight = h;
+
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isLowEnd ? 1.0 : 2.0));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.0));
   };
   window.addEventListener('resize', onResize, { passive: true });
 
