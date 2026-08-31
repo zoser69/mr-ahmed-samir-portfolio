@@ -97,8 +97,7 @@ export function initPortraitHero() {
           scrollTrigger: {
             trigger: item,
             start: 'top 85%',
-            once: true,
-            fastScrollEnd: true
+            once: true
           }
         }
       );
@@ -117,8 +116,7 @@ export function initPortraitHero() {
         scrollTrigger: {
           trigger: '#contact .space-y-4', // The social container
           start: 'top 85%',
-          once: true,
-          fastScrollEnd: true
+          once: true
         }
       }
     );
