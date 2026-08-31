@@ -80,8 +80,8 @@
 
 /* Cinematic Depth of Field (Soft Ambient Background Bokeh) */
 .canvas-ambient-blur {
-  filter: blur(1.2px);
-  transform: scale(1.01) translateZ(0);
+  filter: blur(1.8px);
+  transform: scale(1.015) translateZ(0);
   will-change: transform, filter;
 }
 
