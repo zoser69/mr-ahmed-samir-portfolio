@@ -3,7 +3,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    font-family: 'Tajawal', 'Noto Naskh Arabic', system-ui, -apple-system, sans-serif;
+    font-family: 'Tajawal', 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
     background-color: #060402;
     color: #FAF6F0;
     margin: 0;
@@ -17,7 +17,7 @@
     background-color: #060402;
     color: #FAF6F0;
     min-height: 100vh;
-    font-family: 'Tajawal', 'Noto Naskh Arabic', system-ui, -apple-system, sans-serif;
+    font-family: 'Tajawal', 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
   }
   
@@ -42,7 +42,7 @@
 }
 
 /* Strict Zero-Tracking & High-Legibility OpenType for Arabic Script */
-[dir="rtl"], :lang(ar), .font-ar-display, .font-ar-body, .font-body-naskh, .font-body-manrope {
+[dir="rtl"], :lang(ar), .font-ar-display, .font-ar-body, .font-body-sans, .font-body-naskh, .font-body-manrope {
   letter-spacing: 0 !important;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   font-synthesis-style: none;
@@ -51,10 +51,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Master Academic & Linguistic Typography Hierarchy */
+/* Master Tech-Minimalist Typography Hierarchy (System 3: Outfit + Tajawal + IBM Plex) */
 .font-en-display {
-  font-family: 'Libre Baskerville', Georgia, serif;
-  letter-spacing: -0.01em;
+  font-family: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: -0.02em;
 }
 
 .font-ar-display {
@@ -62,13 +62,13 @@
   letter-spacing: 0 !important;
 }
 
-.font-ar-body, .font-body-naskh, .font-body-manrope {
-  font-family: 'Noto Naskh Arabic', Georgia, serif;
+.font-ar-body, .font-body-sans, .font-body-naskh, .font-body-manrope {
+  font-family: 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
   letter-spacing: 0 !important;
 }
 
 .tabular-numbers {
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Outfit', 'Tajawal', sans-serif;
   font-variant-numeric: tabular-nums;
 }
 

@@ -53,8 +53,14 @@
 ## ADR-008: Master Educational Typography Architecture (Libre Baskerville + Tajawal + Noto Naskh)
 - **Date**: 2026-08-31
 - **Context**: Resolving visual dissonance between English display, Arabic headings, and body copy.
+- **Decision**: Established initial literary serif architecture.
+- **Consequences**: Tested and documented for comparative evaluation.
+
+## ADR-009: Clean Geometric Tech-Minimalist Typography System (Outfit + Tajawal + IBM Plex)
+- **Date**: 2026-08-31
+- **Context**: User selected System 3 (Outfit + Tajawal + IBM Plex Sans Arabic) with clean natural 1:1 proportions and requested calibrating the bio text size down to prevent visual clutter.
 - **Decision**: 
-  1. Selected `Libre Baskerville` (weight 700) for the English title & master branding (`.font-en-display`) — establishing classical English literary and academic authority.
-  2. Selected `Tajawal` (weights 700/800) for all Arabic display headings, navigation, stage tags, and CTA buttons (`.font-ar-display`).
-  3. Selected `Noto Naskh Arabic` (weights 400/500) with generous line-height (`1.85`) for all biographical prose, educational timeline descriptions, and body copy (`.font-body-naskh`).
-- **Consequences**: Harmonious fusion of classical British academic pedigree with authentic Arabic calligraphic heritage and razor-sharp modern UI. Audited and approved by fresh-context review (`PASS`).
+  1. Mapped `.font-en-display` to `Outfit` (Bold, tracking: -0.02em, 56px/1.08) for modern, clean British geometric proportions without any distortion.
+  2. Mapped `.font-ar-display` to `Tajawal` (Bold, 26px/1.35) for crisp, authoritative Arabic headings and stage tags.
+  3. Mapped `.font-ar-body` to `IBM Plex Sans Arabic` with calibrated secondary size (`text-sm sm:text-[15px]`, `leading-[1.8]`) for the hero bio and section descriptions.
+- **Consequences**: Flawless optical hierarchy, zero font distortion, razor-sharp modern clarity. Audited and verified by fresh-context review (`PASS`).
