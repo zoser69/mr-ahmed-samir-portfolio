@@ -7,6 +7,7 @@
   1. Creative WebGL, kinetic typography, and scrollytelling from `MengTo/skills`.
   2. Core 3D engine mechanics (Three.js fundamentals, loaders, lighting, shaders, interaction) from `CloudAI-X/threejs-skills`.
 - **Consequences**: Skills are scoped locally to `d:/Anti Projects/MR Ahmed Samir` without cluttering global configs, ready for progressive disclosure.
+
 ## ADR-002: Adaptive 3-Tier Performance Engine & Self-Healing Watchdog
 - **Date**: 2026-08-31
 - **Context**: Need high-fidelity 4K 3D graphics on flagships and desktops without lagging or overheating budget mobile devices.
@@ -24,3 +25,12 @@
 - **Context**: Production bundle was 1.2MB due to importing full `lucide` icon set and unused assets.
 - **Decision**: Tree-shook Lucide icons to 7 named imports and removed 38MB of unreferenced raw images from `public/`.
 - **Consequences**: JS bundle reduced by ~50% to 636KB, build size reduced by >90%.
+
+## ADR-005: Addition of Design, Arabic Typography & Color Harmony Skills
+- **Date**: 2026-08-31
+- **Context**: User requested adding high-rated design skills from GitHub supporting Arabic typography, Arabic fonts, and color harmony.
+- **Decision**: 
+  1. Ingested `jakubkrehel/skills` (`better-colors`, `better-typography`, `better-ui`, `better-layout`) for interface polish and design token engineering.
+  2. Ingested `meodai/skill.color-expert` for color science, OKLCH, APCA, WCAG, and perceptual color harmony.
+  3. Engineered custom, world-class `arabic-typography-and-design` skill encoding the zero letter-spacing law, optical size compensation (+15%–25%), line-height rules (1.65–1.85), bilingual pairing matrix, and culturally resonant color palettes.
+- **Consequences**: Provides deterministic, expert guidance for Arabic and bilingual luxury design without generic AI design defaults. Audited and passed by independent review.

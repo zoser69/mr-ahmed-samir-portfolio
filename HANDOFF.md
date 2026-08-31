@@ -1,26 +1,35 @@
-# Mr. Ahmed Samir 3D Portfolio � Session Handoff (Finalized)
+﻿# Mr. Ahmed Samir 3D Portfolio — Session Handoff (Finalized)
 
 ## 1. Project Summary
 - **Live Production URL**: https://zoser69.github.io/mr-ahmed-samir-portfolio/
 - **Tech Stack**: Vanilla JS (ES Modules) + Vite v6 + Three.js r128 + GSAP v3 (ScrollTrigger) + Tailwind CSS v4 + Lucide Icons.
-- **Visual Theme**: Luxury Dark Truffle & Burnt Umber (#060402, #4E2E1B, #FAF6F0, #A67C5B, #2E1E15).
+- **Visual Theme**: Luxury Dark Truffle & Burnt Umber (`#060402`, `#4E2E1B`, `#FAF6F0`, `#A67C5B`, `#2E1E15`).
 
 ## 2. Key Architecture & Features Completed
 1. **Adaptive 3-Tier WebGL Engine (src/threeScene.js)**:
    - Hardware-aware tier detection (High, Mid, Low) based on CPU cores and RAM.
    - Dynamic real-time FPS watchdog downscales quality on-the-fly if frame rate drops below 40 FPS, preventing any lag or stutter.
    - Wide 16:9 4-quadrant slot coordinate system ensuring zero clumping and zero overlap with the teacher's portrait.
-   - Time-delta frame-rate independent rotation (t * rotSpeed * 60).
+   - Time-delta frame-rate independent rotation (`t * rotSpeed * 60`).
 2. **Deterministic GSAP Scroll Motion (src/portraitHero.js)**:
-   - Independent element ScrollTriggers (top 75%) so animations never trigger offscreen or rush past the user.
-   - Complete removal of fastScrollEnd and addition of force3D: true for buttery 60fps motion without subpixel shifts.
-   - Mobile URL bar resize stabilization (ScrollTrigger.config({ ignoreMobileResize: true }) and width-only listener).
+   - Independent element ScrollTriggers (`top 75%`) so animations never trigger offscreen or rush past the user.
+   - Complete removal of `fastScrollEnd` and addition of `force3D: true` for buttery 60fps motion without subpixel shifts.
+   - Mobile URL bar resize stabilization (`ScrollTrigger.config({ ignoreMobileResize: true })` and width-only listener).
 3. **High-End UI & Frosted Glass Header (index.html, src/style.css)**:
-   - Frosted Glassmorphism header (backdrop-blur-2xl bg-[#060402]/50).
+   - Frosted Glassmorphism header (`backdrop-blur-2xl bg-[#060402]/50`).
    - Pure typography pairing: Playfair Display / Cinzel + El Messiri + Manrope.
    - Tree-shaken Lucide icons (bundle reduced by 50% to 636KB).
 
-## 3. Production Build & Deployment Pipeline
-- Build: npm run build
-- Deploy: npx --yes gh-pages -d dist
-- Repository: https://github.com/zoser69/mr-ahmed-samir-portfolio.git (branch main).
+## 3. High-Rated Design, Arabic Typography & Color Skills (Added in Phase 3)
+- `arabic-typography-and-design`: Master rules for Arabic typography, Arabic font pairing, zero-tracking rule, optical scale compensation (+15%–25%), line-height rules (1.65–1.85), culturally resonant luxury palettes, and CSS logical properties.
+- `color-expert`: David Aerne's (meodai) color science and harmony skill (OKLCH, APCA, WCAG, palette generation, pigment mixing, color naming).
+- `better-colors`: Jakub Krehel's token-based color system and ramp engineering.
+- `better-typography`: Jakub Krehel's typography scales, sizing, OpenType, and text-wrapping rules.
+- `better-ui`: Interface polish, surfaces, micro-interactions, and visual feedback.
+- `better-layout`: Grouping, optical alignment, spacing, and adaptivity.
+- **Independent Security & Quality Audit**: Passed (`🟢 PASS`).
+
+## 4. Production Build & Deployment Pipeline
+- Build: `npm run build`
+- Deploy: `npx --yes gh-pages -d dist`
+- Repository: `https://github.com/zoser69/mr-ahmed-samir-portfolio.git` (branch `main`).

@@ -1,24 +1,21 @@
 # System State - Mr. Ahmed Samir 3D Portfolio
 
-- **Current Status**: 3D Background Improved, Subagents Auditing, Animations Polished.
-- **Root Cause & Fixes**:
+- **Current Status**: Design, Arabic Typography & Color Harmony Skills Installed & Audited. 3D Luxury Portfolio Live.
+- **New Skills Added (Phase 3)**:
+  1. `arabic-typography-and-design`: Master guidelines for Arabic typography (zero letter-spacing, line-height 1.65–1.85, optical scale compensation +15%–25%, bilingual pairings, cultural luxury palettes, and CSS logical properties).
+  2. `color-expert`: David Aerne's (meodai) color science and harmony skill (OKLCH, APCA, WCAG, palette generation, pigment mixing, color naming).
+  3. `better-colors`: Jakub Krehel's token-based color system and ramp engineering.
+  4. `better-typography`: Jakub Krehel's typography scales, sizing, OpenType, and text-wrapping rules.
+  5. `better-ui`: Interface polish, surfaces, micro-interactions, and visual feedback.
+  6. `better-layout`: Grouping, optical alignment, spacing, and adaptivity.
+- **Root Cause & Architectural Fixes (Phase 1 & 2)**:
   1. **Fixed End-State Snapping & Animation Lag**: Replaced all `transition-all` with `transition-colors` so CSS only handles hover states, leaving GSAP in full control of motion.
-  2. **Fixed Sub-pixel Shift on Animation End**: Explicitly added `force3D: true` to all GSAP `.fromTo()` timelines to prevent snapping when GSAP drops hardware acceleration at the end of a tween.
-  3. **Fixed Early Animation Trigger (Off-screen)**: Both `#contact` and `#about` were using a single `gsap.timeline` triggered by the top of their massive sections. Elements at the bottom were animating while still physically off-screen. Removed the single timeline and wrapped each individual card/block in its own `ScrollTrigger` (`top 85%`), ensuring they wait until they actually enter the viewport.
-  4. **Fixed Early Animation Trigger (Global)**: Changed `start` to `top 60%`.
-  5. **Fixed Fast Scrolling Skipping Animations**: Completely eradicated `fastScrollEnd: true` from all ScrollTriggers (including `#about` and `#contact`). This feature was forcing animations to instantly snap to 100% completion if the user scrolled down quickly, causing the "it finishes before I reach it" complaints.
-  6. **Fixed Portrait Shadow Pop**: Removed the `filter: blur(...)` GSAP animation on the portrait image entirely to prevent the drop-shadow from popping at the end and to reduce heavy GPU load.
-  7. **Enhanced 3D Background Typography**: Rewrote the mathematical distribution of the floating 3D English letters in `threeScene.js` to use polar coordinates (`Math.cos`, `Math.sin`). This scatters them beautifully in a wide "constellation" frame around the edges (with heavy Z-depth parallax), rather than bunching them linearly, leaving the center readable for the hero text.
-  8. **Performance Audit (Flash Subagent)**: Reduced production JS bundle size by **~50%** (1.2MB to 634KB) by tree-shaking `lucide` icons. Removed 38MB of unused raw images from the build folder. Fixed a 404 redundant CSS link in `index.html`. Deleted 649 lines of dead code (`phoneticsLab.js`).
-  9. **WebGL Frame-Rate Independence**: Fixed an issue where the 3D letters would rotate 2x faster on 120Hz/144Hz monitors than on 60Hz monitors. The rotation logic `mesh.rotation.x += u.rotSpeedX` was replaced with a time-based delta multiplier `mesh.rotation.x = u.baseRotX + t * (u.rotSpeedX * 60)`.
-  11. **Fixed Mobile URL Bar Resize Jitter**: When scrolling on mobile Chrome/Safari/Edge, the URL bar / bottom bar expands/collapses, which triggers a `window.resize` event and changes `window.innerHeight`. This was causing the Three.js camera projection matrix to recalculate every scroll, resulting in the 3D scene jumping/jittering (felt like a repeating video). Fixed by tracking `lastWidth` and ignoring height-only resizes under 140px on mobile. Also added `ScrollTrigger.config({ ignoreMobileResize: true })`.
-  12. **Fixed Mobile 3D Pixelation**: Found that `isLowEnd` was defined as `isMobile || ...`, which mistakenly forced all mobile devices (including modern OLED phones) into 1.0x pixel ratio, mediump shader precision, 4 curve segments (rough polygons), and disabled antialiasing. Fixed by setting `antialias: true`, `precision: 'highp'`, `curveSegments: 8`, `bevelSegments: 3`, and `pixelRatio: Math.min(window.devicePixelRatio, 2.0)` across all devices.
-  13. **Fixed Letter Clumping in Center (Wide 16:9 Canvas Math)**: Discovered that on 16:9 screens with camera FOV 45 at Z=32, the visible width at Z=-18 is X: -38 to +38. The previous coordinates (X: -14 to +14) were occupying only the central 35% of the screen, creating a dense vertical clump between the teacher and the title. Recalculated coordinates across the full X: -30 to +30 range into 4 distinct quadrants (Far Left Margin, Top Span, Far Right Margin, and Ambient Deep Layer), eliminating any clumping and giving a balanced, luxurious breathing space across the entire background.
-  14. **Fixed Mobile Scroll Animations Racing Ahead**: On mobile, rapid finger swipes scroll 300-500px quickly. With `start: 'top 85%'`, animations were starting when cards were near the bottom edge and finishing before the card reached the user's focus. Tuned `start` to `'top 75%'` and increased duration slightly to 0.6-0.65s so animations trigger right in front of the user's eyes.
-  15. **Adaptive 3-Tier Performance Architecture & Real-Time FPS Watchdog**: Implemented a dynamic capability detection engine in `threeScene.js` based on CPU cores (`navigator.hardwareConcurrency`) and RAM (`navigator.deviceMemory`).
-      - **High Tier (Flagships / Modern Desktops):** 2.0x Retina PixelRatio, MSAA Antialiasing on, 8 curve segments, 3 bevel segments, 90 particles, studio point light enabled.
-      - **Mid Tier (Standard Phones & Laptops):** 1.75x PixelRatio, MSAA on, 6 curve segments, 2 bevel segments, 50 particles.
-      - **Low Tier (Budget Devices / Low Battery):** 1.25x PixelRatio, MSAA off, 4 curve segments, 25 particles, mediump shader precision to prevent any lag or overheating.
-      - **Self-Healing Real-Time FPS Watchdog:** Built a dynamic frame-time monitor. If FPS drops below 40 FPS for 2 seconds on any hardware, it automatically downscales the rendering tier in real-time without reloading, guaranteeing silky 60 FPS across all devices.
+  2. **Fixed Sub-pixel Shift on Animation End**: Explicitly added `force3D: true` to all GSAP `.fromTo()` timelines.
+  3. **Fixed Early Animation Trigger (Off-screen)**: Wrapped each card in its own `ScrollTrigger` (`top 75%`).
+  4. **Fixed Fast Scrolling Skipping Animations**: Removed `fastScrollEnd: true` from all ScrollTriggers.
+  5. **Fixed Portrait Shadow Pop**: Removed `filter: blur(...)` GSAP animation on the portrait image.
+  6. **Enhanced 3D Background Typography**: Wide 16:9 4-quadrant slot distribution, eliminating clumping and leaving the teacher portrait unobscured.
+  7. **Adaptive 3-Tier Performance Architecture & Real-Time FPS Watchdog**: Dynamic capability detection (`High`, `Mid`, `Low`) based on CPU/RAM with automatic 40 FPS real-time downscaler.
+  8. **Performance & Bundle Audit**: Reduced bundle by 50% to 636KB via tree-shaking Lucide icons and pruning dead code.
 - **Local Dev Server**: `http://localhost:5173/` and `http://127.0.0.1:5173/` (0.0.0.0:5173).
 - **Live Online URL**: `https://zoser69.github.io/mr-ahmed-samir-portfolio/`
