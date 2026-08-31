@@ -1,4 +1,4 @@
-﻿import gsap from 'gsap';
+import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -64,12 +64,7 @@ export function initPortraitHero() {
         trigger: '#about',
         start: 'top 92%',
         once: true,
-        fastScrollEnd: 1000,
-        onEnter: (self) => {
-          if (Math.abs(self.getVelocity()) > 800 && self.animation) {
-            self.animation.progress(1);
-          }
-        }
+        fastScrollEnd: true
       }
     });
 
@@ -95,12 +90,7 @@ export function initPortraitHero() {
         trigger: '#contact',
         start: 'top 92%',
         once: true,
-        fastScrollEnd: 1000,
-        onEnter: (self) => {
-          if (Math.abs(self.getVelocity()) > 800 && self.animation) {
-            self.animation.progress(1);
-          }
-        }
+        fastScrollEnd: true
       }
     });
 
