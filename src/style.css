@@ -51,15 +51,53 @@
   mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 82%, rgba(0,0,0,0) 100%);
 }
 
-/* Pure Solid Luxury Card */
+/* Ambient Breathing Backlight */
+@keyframes ambientPulse {
+  0%, 100% {
+    opacity: 0.22;
+    transform: scale(1.05);
+  }
+  50% {
+    opacity: 0.38;
+    transform: scale(1.15);
+  }
+}
+
+.ambient-backlight {
+  animation: ambientPulse 7s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  will-change: opacity, transform;
+}
+
+/* High-End Solid Luxury Cards */
 .solid-card {
   background-color: #0D0906;
   border: 1px solid #2E1E15;
-  transition: all 0.3s ease;
+  transition: border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+              background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .solid-card:hover {
-  border-color: #4E2E1B;
+  border-color: #A67C5B;
   background-color: #140E0A;
+  box-shadow: 0 10px 30px -10px rgba(78, 46, 27, 0.25);
+}
+
+/* 3 Hero Stage Rectangles Micro-Interaction */
+.stage-rectangle {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stage-rectangle:hover {
+  transform: translateX(-4px);
+  border-color: #A67C5B;
+  background-color: #140E0A;
+}
+.stage-rectangle .indicator-dot {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stage-rectangle:hover .indicator-dot {
+  background-color: #A67C5B;
+  width: 14px;
+  border-radius: 9999px;
 }
 
 /* Contact Icon Button */
@@ -67,11 +105,21 @@
   background-color: #140E0A;
   border: 1px solid #2E1E15;
   color: #CDB19B;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .contact-icon-btn:hover {
   background-color: #4E2E1B;
   border-color: #A67C5B;
   color: #FAF6F0;
-  transform: translateY(-3px);
+  box-shadow: 0 8px 24px -6px rgba(78, 46, 27, 0.4);
+}
+
+/* Reduced Motion Fallback */
+@media (prefers-reduced-motion: reduce) {
+  .ambient-backlight {
+    animation: none;
+  }
+  .stage-rectangle:hover {
+    transform: none;
+  }
 }
