@@ -5,142 +5,143 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 let scene, camera, renderer, animationFrameId;
 let lettersGroup, particlesMesh, pointLight;
 let isDisposed = false;
+let isHeroVisible = true;
+let isTabVisible = true;
 let mouseX = 0, mouseY = 0;
 let targetCameraX = 0, targetCameraY = 0;
 let targetLightX = 0, targetLightY = 0;
 
 export function initThreeScene() {
   const canvas = document.getElementById('three-canvas');
+  const heroSection = document.getElementById('hero');
   if (!canvas) return;
 
   isDisposed = false;
 
-  // 1. Scene
+  // 1. Device Capability & Mobile Tier Detection
+  const isMobile = window.innerWidth < 768 || (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 1);
+  const isLowEnd = isMobile || (typeof navigator !== 'undefined' && navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+
+  // 2. Scene Setup
   scene = new THREE.Scene();
   scene.background = null;
 
-  // 2. Camera
+  // 3. Camera Setup
   const aspect = window.innerWidth / window.innerHeight;
-  camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
+  camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 80);
   camera.position.set(0, 0, 32);
 
-  // 3. WebGL Renderer with High Performance
+  // 4. Lightweight WebGL Renderer (Capped for Mobile Performance)
   renderer = new THREE.WebGLRenderer({
     canvas,
-    antialias: true,
+    antialias: !isLowEnd, // Disable MSAA on budget phones for max FPS
     alpha: true,
-    powerPreference: 'high-performance'
+    powerPreference: 'high-performance',
+    precision: isLowEnd ? 'mediump' : 'highp'
   });
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isLowEnd ? 1.0 : 1.5));
 
-  // 4. Studio 3-Point Lighting Setup for 3D Reflections
-  const ambientLight = new THREE.AmbientLight(0xA67C5B, 0.9);
+  // 5. Studio 3-Point Lighting Setup (Optimized for Standard Shaders)
+  const ambientLight = new THREE.AmbientLight(0xA67C5B, 0.85);
   scene.add(ambientLight);
 
-  const keyLight = new THREE.DirectionalLight(0xFAF6F0, 2.2);
-  keyLight.position.set(15, 25, 20);
+  const keyLight = new THREE.DirectionalLight(0xFAF6F0, 1.8);
+  keyLight.position.set(15, 20, 20);
   scene.add(keyLight);
 
-  const rimLight = new THREE.DirectionalLight(0x4E2E1B, 3.5);
-  rimLight.position.set(-20, -15, -10);
+  const rimLight = new THREE.DirectionalLight(0x4E2E1B, 2.5);
+  rimLight.position.set(-18, -12, -10);
   scene.add(rimLight);
 
-  // Interactive Cursor Glint Light
-  pointLight = new THREE.PointLight(0xCDB19B, 2.5, 45);
-  pointLight.position.set(0, 0, 15);
-  scene.add(pointLight);
+  if (!isLowEnd) {
+    pointLight = new THREE.PointLight(0xCDB19B, 2.0, 40);
+    pointLight.position.set(0, 0, 15);
+    scene.add(pointLight);
+  }
 
-  // 5. Load Real 3D Serif Typeface and Build Extruded 3D Kinetic Letters
+  // 6. Extruded 3D Kinetic Typography (Adaptive Geometry)
   lettersGroup = new THREE.Group();
   scene.add(lettersGroup);
 
   const fontLoader = new FontLoader();
-  fontLoader.load('./fonts/serif_bold.json', (font) => {
+  const fontPath = `${import.meta.env.BASE_URL}fonts/serif_bold.json`;
+
+  fontLoader.load(fontPath, (font) => {
     if (isDisposed) return;
 
-    // Curated high-prestige English glyphs
-    const glyphs = ['E', 'N', 'G', 'L', 'I', 'S', 'H', 'A', 'M', 'S', 'R', 'X', 'V', 'K', 'Q', 'Z'];
+    // Adaptive glyph count (8 for mobile, 16 for desktop)
+    const glyphs = isMobile 
+      ? ['E', 'N', 'G', 'L', 'S', 'H', 'A', 'M'] 
+      : ['E', 'N', 'G', 'L', 'I', 'S', 'H', 'A', 'M', 'S', 'R', 'X', 'V', 'K', 'Q', 'Z'];
 
-    // Luxury Material Variants (Palette D with Polished Clearcoat Depth)
+    // High-efficiency Standard Materials
     const materials = [
-      new THREE.MeshPhysicalMaterial({
+      new THREE.MeshStandardMaterial({
         color: 0x4E2E1B,
-        emissive: 0x1A0D06,
-        metalness: 0.45,
-        roughness: 0.18,
-        clearcoat: 1.0,
-        clearcoatRoughness: 0.08,
-        reflectivity: 0.9,
-      }),
-      new THREE.MeshPhysicalMaterial({
-        color: 0x6E4227,
-        emissive: 0x241208,
-        metalness: 0.55,
-        roughness: 0.22,
-        clearcoat: 0.9,
-        clearcoatRoughness: 0.1,
-      }),
-      new THREE.MeshPhysicalMaterial({
-        color: 0x8E5A38,
-        emissive: 0x2E180B,
-        metalness: 0.35,
+        emissive: 0x140A04,
+        metalness: 0.4,
         roughness: 0.25,
-        clearcoat: 0.8,
-        clearcoatRoughness: 0.12,
+      }),
+      new THREE.MeshStandardMaterial({
+        color: 0x6E4227,
+        emissive: 0x1E0E06,
+        metalness: 0.5,
+        roughness: 0.3,
+      }),
+      new THREE.MeshStandardMaterial({
+        color: 0x8E5A38,
+        emissive: 0x241208,
+        metalness: 0.35,
+        roughness: 0.35,
       })
     ];
 
     glyphs.forEach((char, idx) => {
-      const size = 1.4 + (idx % 3) * 0.5; // Varied scale
+      const size = isMobile ? 1.2 + (idx % 2) * 0.4 : 1.4 + (idx % 3) * 0.5;
+      
       const textGeo = new TextGeometry(char, {
         font: font,
         size: size,
-        depth: 0.35, // True 3D Depth
-        curveSegments: 10,
+        depth: 0.28,
+        curveSegments: isLowEnd ? 4 : 8, // Low triangle count on budget phones
         bevelEnabled: true,
-        bevelThickness: 0.06,
-        bevelSize: 0.04,
+        bevelThickness: 0.05,
+        bevelSize: 0.03,
         bevelOffset: 0,
-        bevelSegments: 4,
+        bevelSegments: isLowEnd ? 2 : 3,
       });
 
-      textGeo.center(); // Center rotation pivot
+      textGeo.center();
 
       const mat = materials[idx % materials.length];
       const mesh = new THREE.Mesh(textGeo, mat);
 
-      // Distribute across full 3D space (leaving central column clear for portrait)
       const side = idx % 2 === 0 ? 1 : -1;
-      const posX = side * (8.5 + (idx % 5) * 3.2);
-      const posY = ((idx % 7) - 3) * 3.8 + (Math.random() - 0.5) * 2;
-      const posZ = -4 - (idx % 4) * 5.5;
+      const posX = side * (isMobile ? (7.0 + (idx % 4) * 2.2) : (8.5 + (idx % 5) * 3.2));
+      const posY = ((idx % 6) - 2.5) * 3.6 + (Math.random() - 0.5) * 2;
+      const posZ = -4 - (idx % 4) * 5.0;
 
       mesh.position.set(posX, posY, posZ);
-
-      // Initial random 3D angles
       mesh.rotation.set(
         Math.random() * Math.PI,
         Math.random() * Math.PI,
         Math.random() * Math.PI
       );
 
-      // Dynamic kinetic properties
       mesh.userData = {
         baseX: posX,
         baseY: posY,
         baseZ: posZ,
-        rotSpeedX: (Math.random() - 0.5) * 0.008 + 0.004,
-        rotSpeedY: (Math.random() - 0.5) * 0.01 + 0.005,
-        rotSpeedZ: (Math.random() - 0.5) * 0.006,
-        floatFreqX: 0.4 + Math.random() * 0.4,
-        floatFreqY: 0.5 + Math.random() * 0.5,
+        rotSpeedX: (Math.random() - 0.5) * 0.008 + 0.003,
+        rotSpeedY: (Math.random() - 0.5) * 0.01 + 0.004,
+        rotSpeedZ: (Math.random() - 0.5) * 0.005,
+        floatFreqX: 0.4 + Math.random() * 0.3,
+        floatFreqY: 0.5 + Math.random() * 0.4,
         floatFreqZ: 0.3 + Math.random() * 0.3,
-        ampX: 0.6 + Math.random() * 0.5,
-        ampY: 0.8 + Math.random() * 0.7,
-        ampZ: 1.2 + Math.random() * 0.8,
+        ampX: 0.5 + Math.random() * 0.4,
+        ampY: 0.7 + Math.random() * 0.5,
+        ampZ: 1.0 + Math.random() * 0.6,
         phase: Math.random() * Math.PI * 2
       };
 
@@ -148,42 +149,46 @@ export function initThreeScene() {
     });
   });
 
-  // 6. Glowing Ambient Floating Dust
-  const particleCount = 140;
+  // 7. Ambient Floating Dust Particles (Reduced count on mobile)
+  const particleCount = isMobile ? 35 : 90;
   const particleGeo = new THREE.BufferGeometry();
   const positions = new Float32Array(particleCount * 3);
 
   for (let i = 0; i < particleCount * 3; i += 3) {
-    positions[i] = (Math.random() - 0.5) * 65;
-    positions[i + 1] = (Math.random() - 0.5) * 55;
-    positions[i + 2] = -8 - Math.random() * 30;
+    positions[i] = (Math.random() - 0.5) * 55;
+    positions[i + 1] = (Math.random() - 0.5) * 45;
+    positions[i + 2] = -8 - Math.random() * 25;
   }
 
   particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
   const particleMat = new THREE.PointsMaterial({
     color: 0xA67C5B,
-    size: 0.22,
+    size: isMobile ? 0.18 : 0.22,
     transparent: true,
-    opacity: 0.5,
+    opacity: 0.4,
     blending: THREE.AdditiveBlending
   });
 
   particlesMesh = new THREE.Points(particleGeo, particleMat);
   scene.add(particlesMesh);
 
-  // 7. Mouse Parallax & Dynamic Lighting Interaction
+  // 8. Mouse / Touch Parallax (Only on desktop to save mobile battery)
   const onMouseMove = (e) => {
     mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
     mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-    targetCameraX = mouseX * 2.8;
-    targetCameraY = -mouseY * 2.0;
-    targetLightX = mouseX * 18;
-    targetLightY = -mouseY * 12;
+    targetCameraX = mouseX * 2.2;
+    targetCameraY = -mouseY * 1.6;
+    if (pointLight) {
+      targetLightX = mouseX * 16;
+      targetLightY = -mouseY * 10;
+    }
   };
-  window.addEventListener('mousemove', onMouseMove);
+  if (!isMobile) {
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+  }
 
-  // 8. Responsive Resize
+  // 9. Resize Listener
   const onResize = () => {
     if (isDisposed || !renderer || !camera) return;
     const w = window.innerWidth;
@@ -191,50 +196,64 @@ export function initThreeScene() {
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isLowEnd ? 1.0 : 1.5));
   };
-  window.addEventListener('resize', onResize);
+  window.addEventListener('resize', onResize, { passive: true });
 
-  // 9. Kinetic 3D Animation Loop
+  // 10. Pause GPU Rendering When Hero is Offscreen or Tab is Hidden
+  let heroObserver;
+  if (heroSection && 'IntersectionObserver' in window) {
+    heroObserver = new IntersectionObserver((entries) => {
+      isHeroVisible = entries[0].isIntersecting;
+    }, { threshold: 0.05 });
+    heroObserver.observe(heroSection);
+  }
+
+  const onVisibilityChange = () => {
+    isTabVisible = !document.hidden;
+  };
+  document.addEventListener('visibilitychange', onVisibilityChange);
+
+  // 11. Optimized Kinetic Animation Loop
   const clock = new THREE.Clock();
 
   function animate() {
     if (isDisposed) return;
     animationFrameId = requestAnimationFrame(animate);
 
+    // Skip all WebGL draw calls if hero is scrolled out of view or tab is hidden
+    if (!isHeroVisible || !isTabVisible) return;
+
     const t = clock.getElapsedTime();
 
-    // Smooth Camera & Interactive Light Lerping
-    camera.position.x += (targetCameraX - camera.position.x) * 0.05;
-    camera.position.y += (targetCameraY - camera.position.y) * 0.05;
-    camera.lookAt(0, 0, 0);
+    if (!isMobile) {
+      camera.position.x += (targetCameraX - camera.position.x) * 0.05;
+      camera.position.y += (targetCameraY - camera.position.y) * 0.05;
+      camera.lookAt(0, 0, 0);
 
-    if (pointLight) {
-      pointLight.position.x += (targetLightX - pointLight.position.x) * 0.08;
-      pointLight.position.y += (targetLightY - pointLight.position.y) * 0.08;
+      if (pointLight) {
+        pointLight.position.x += (targetLightX - pointLight.position.x) * 0.08;
+        pointLight.position.y += (targetLightY - pointLight.position.y) * 0.08;
+      }
     }
 
-    // Dynamic 3-Axis Kinetic Letter Rotation & 3D Wave Motion
+    // Dynamic Letter Kinetic Tumbling & Spatial Waves
     if (lettersGroup && lettersGroup.children.length > 0) {
       lettersGroup.children.forEach((mesh) => {
         const u = mesh.userData;
-
-        // Continuous 3D tumbling rotation
         mesh.rotation.x += u.rotSpeedX;
         mesh.rotation.y += u.rotSpeedY;
         mesh.rotation.z += u.rotSpeedZ;
 
-        // Harmonic 3D spatial undulating motion
         mesh.position.x = u.baseX + Math.sin(t * u.floatFreqX + u.phase) * u.ampX;
         mesh.position.y = u.baseY + Math.cos(t * u.floatFreqY + u.phase) * u.ampY;
         mesh.position.z = u.baseZ + Math.sin(t * u.floatFreqZ + u.phase) * u.ampZ;
       });
     }
 
-    // Swirling Particle Dust
+    // Swirling Particles
     if (particlesMesh) {
-      particlesMesh.rotation.y = t * 0.02;
-      particlesMesh.rotation.x = Math.sin(t * 0.015) * 0.08;
+      particlesMesh.rotation.y = t * 0.015;
     }
 
     renderer.render(scene, camera);
@@ -244,8 +263,10 @@ export function initThreeScene() {
 
   return () => {
     disposeThreeScene();
-    window.removeEventListener('mousemove', onMouseMove);
+    if (!isMobile) window.removeEventListener('mousemove', onMouseMove);
     window.removeEventListener('resize', onResize);
+    document.removeEventListener('visibilitychange', onVisibilityChange);
+    if (heroObserver) heroObserver.disconnect();
   };
 }
 
