@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <script type="module" crossorigin src="/mr-ahmed-samir-portfolio/assets/index-y8DXvFsG.js"></script>
-  <link rel="stylesheet" crossorigin href="/mr-ahmed-samir-portfolio/assets/index-CJJo5q6v.css">
+  
+  <script type="module" crossorigin src="/mr-ahmed-samir-portfolio/assets/index-CAFBwA3H.js"></script>
+  <link rel="stylesheet" crossorigin href="/mr-ahmed-samir-portfolio/assets/index-B8lbwn0L.css">
 </head>
 <body class="bg-[#060402] text-[#FAF6F0] antialiased selection:bg-[#4E2E1B] selection:text-[#FAF6F0]">
 
@@ -119,13 +119,20 @@
               <!-- Soft Solid Ambient Backlight -->
               <div class="absolute inset-0 bg-[#4E2E1B]/25 rounded-full blur-3xl pointer-events-none scale-110"></div>
 
-              <!-- Master 4K Image -->
-              <img 
-                id="hero-portrait-img"
-                src="./images/mr_ahmed_hero_cutout_web.webp" 
-                alt="Mr. Ahmed Samir - English Teacher" 
-                class="relative z-10 w-full max-h-[500px] lg:max-h-[560px] object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.9)] portrait-feathered select-none pointer-events-auto transition-transform duration-100 ease-out"
-              >
+              <!-- Responsive WebP Picture Tag (76KB on mobile, high-res on desktop) -->
+              <picture class="relative z-10 w-full flex justify-center">
+                <source media="(max-width: 768px)" srcset="./images/mr_ahmed_hero_cutout_mobile.webp" type="image/webp">
+                <img 
+                  id="hero-portrait-img"
+                  src="./images/mr_ahmed_hero_cutout_web.webp" 
+                  alt="Mr. Ahmed Samir - English Teacher" 
+                  width="1400"
+                  height="2088"
+                  fetchpriority="high"
+                  loading="eager"
+                  class="w-full max-h-[500px] lg:max-h-[560px] object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.9)] portrait-feathered select-none pointer-events-auto transition-transform duration-100 ease-out"
+                >
+              </picture>
 
             </div>
           </div>
@@ -134,7 +141,7 @@
       </section>
 
       <!-- ABOUT & ACADEMIC CREDENTIALS SECTION -->
-      <section id="about" class="max-w-7xl mx-auto px-6 sm:px-10 py-24 border-t border-[#2E1E15]">
+      <section id="about" class="performance-section max-w-7xl mx-auto px-6 sm:px-10 py-24 border-t border-[#2E1E15]">
         <div class="text-right mb-14 space-y-3">
           
           <span class="text-sm sm:text-base md:text-lg font-bold text-[#A67C5B] uppercase tracking-[0.2em] font-sans block">
@@ -191,7 +198,7 @@
       </section>
 
       <!-- CONTACT & SOCIAL MEDIA HUB -->
-      <section id="contact" class="max-w-7xl mx-auto px-6 sm:px-10 py-24 border-t border-[#2E1E15]">
+      <section id="contact" class="performance-section max-w-7xl mx-auto px-6 sm:px-10 py-24 border-t border-[#2E1E15]">
         <div class="solid-card rounded-3xl p-8 sm:p-14 text-center max-w-4xl mx-auto space-y-10 shadow-2xl">
           
           <div class="space-y-3">
@@ -299,6 +306,6 @@
     </footer>
 
   </div>
-
+
 </body>
 </html>
