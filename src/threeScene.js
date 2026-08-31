@@ -11,6 +11,68 @@ let mouseX = 0, mouseY = 0;
 let targetCameraX = 0, targetCameraY = 0;
 let targetLightX = 0, targetLightY = 0;
 
+// Dynamic Adaptive Quality Configuration
+const TIER_CONFIG = {
+  high: {
+    pixelRatioMax: 2.0,
+    antialias: true,
+    curveSegments: 8,
+    bevelSegments: 3,
+    desktopParticles: 90,
+    mobileParticles: 40,
+    precision: 'highp',
+    desktopLetters: 16,
+    mobileLetters: 8,
+    enablePointLight: true
+  },
+  mid: {
+    pixelRatioMax: 1.75,
+    antialias: true,
+    curveSegments: 6,
+    bevelSegments: 2,
+    desktopParticles: 50,
+    mobileParticles: 25,
+    precision: 'highp',
+    desktopLetters: 14,
+    mobileLetters: 8,
+    enablePointLight: true
+  },
+  low: {
+    pixelRatioMax: 1.25,
+    antialias: false,
+    curveSegments: 4,
+    bevelSegments: 2,
+    desktopParticles: 25,
+    mobileParticles: 15,
+    precision: 'mediump',
+    desktopLetters: 10,
+    mobileLetters: 6,
+    enablePointLight: false
+  }
+};
+
+function detectDeviceTier() {
+  const isMobile = window.innerWidth < 768 || (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 1);
+  const cores = (typeof navigator !== 'undefined' && navigator.hardwareConcurrency) || 4;
+  const memory = (typeof navigator !== 'undefined' && navigator.deviceMemory) || 4; // in GB
+
+  // Low Tier: budget devices or heavily constrained hardware
+  if (cores <= 2 || memory <= 2) {
+    return 'low';
+  }
+
+  // High Tier: desktop with >= 6 cores or modern flagship phone with >= 8 cores and >= 6GB RAM
+  if (!isMobile && cores >= 6) {
+    return 'high';
+  }
+  if (isMobile && cores >= 8 && memory >= 6) {
+    return 'high';
+  }
+
+  // Mid Tier: standard phones & laptops
+  return 'mid';
+}
+
 export function initThreeScene() {
   const canvas = document.getElementById('three-canvas');
   const heroSection = document.getElementById('hero');
@@ -18,9 +80,12 @@ export function initThreeScene() {
 
   isDisposed = false;
 
-  // 1. Device Capability & Mobile Detection
+  // 1. Device Capability & Tier Detection
   const isMobile = window.innerWidth < 768 || (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 1);
-  const isLowEnd = typeof navigator !== 'undefined' && navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2;
+  let currentTier = detectDeviceTier();
+  let tierConfig = TIER_CONFIG[currentTier];
+
+  console.log(`[ThreeScene] Device capability tier: "${currentTier}" (Cores: ${navigator.hardwareConcurrency || 'N/A'}, RAM: ${navigator.deviceMemory || 'N/A'}GB)`);
 
   // 2. Scene Setup
   scene = new THREE.Scene();
@@ -31,17 +96,16 @@ export function initThreeScene() {
   camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 90);
   camera.position.set(0, 0, 32);
 
-  // 4. Studio WebGL Renderer (Crisp 4K Vector Geometry & High-DPI Enabled)
+  // 4. Studio WebGL Renderer (Adaptive Quality)
   renderer = new THREE.WebGLRenderer({
     canvas,
-    antialias: true, // Always enable MSAA for smooth crisp edges
+    antialias: tierConfig.antialias,
     alpha: true,
     powerPreference: 'high-performance',
-    precision: 'highp'
+    precision: tierConfig.precision
   });
   renderer.setSize(window.innerWidth, window.innerHeight);
-  // Cap at 2.0x device pixel ratio for crystal clear rendering on OLED / Retina screens
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.0));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tierConfig.pixelRatioMax));
 
   // 5. Studio 3-Point Lighting Setup (Warm Truffle & Ambient Gold)
   const ambientLight = new THREE.AmbientLight(0xA67C5B, 0.95);
@@ -55,9 +119,11 @@ export function initThreeScene() {
   rimLight.position.set(-18, -12, -10);
   scene.add(rimLight);
 
-  pointLight = new THREE.PointLight(0xCDB19B, 2.2, 45);
-  pointLight.position.set(0, 0, 15);
-  scene.add(pointLight);
+  if (tierConfig.enablePointLight) {
+    pointLight = new THREE.PointLight(0xCDB19B, 2.2, 45);
+    pointLight.position.set(0, 0, 15);
+    scene.add(pointLight);
+  }
 
   // 6. Extruded 3D Kinetic Typography (Art-Directed Balanced Constellation)
   lettersGroup = new THREE.Group();
@@ -69,10 +135,10 @@ export function initThreeScene() {
   fontLoader.load(fontPath, (font) => {
     if (isDisposed) return;
 
-    // Adaptive glyph list
-    const glyphs = isMobile 
-      ? ['E', 'N', 'G', 'L', 'S', 'H', 'A', 'M'] 
-      : ['E', 'N', 'G', 'L', 'I', 'S', 'H', 'A', 'M', 'S', 'R', 'X', 'V', 'K', 'Q', 'Z'];
+    // Adaptive glyph count by tier
+    const allGlyphs = ['E', 'N', 'G', 'L', 'I', 'S', 'H', 'A', 'M', 'S', 'R', 'X', 'V', 'K', 'Q', 'Z'];
+    const maxLetters = isMobile ? tierConfig.mobileLetters : tierConfig.desktopLetters;
+    const glyphs = allGlyphs.slice(0, maxLetters);
 
     // Luxury Dark Truffle & Warm Umber Materials
     const materials = [
@@ -145,12 +211,12 @@ export function initThreeScene() {
         font: font,
         size: size,
         depth: 0.28,
-        curveSegments: 8, // High-fidelity curves on all devices
+        curveSegments: tierConfig.curveSegments,
         bevelEnabled: true,
         bevelThickness: 0.05,
         bevelSize: 0.03,
         bevelOffset: 0,
-        bevelSegments: 3,
+        bevelSegments: tierConfig.bevelSegments,
       });
 
       textGeo.center();
@@ -192,8 +258,8 @@ export function initThreeScene() {
     });
   });
 
-  // 7. Ambient Floating Dust Particles (Reduced count on mobile)
-  const particleCount = isMobile ? 35 : 90;
+  // 7. Ambient Floating Dust Particles (Scaled by Tier)
+  const particleCount = isMobile ? tierConfig.mobileParticles : tierConfig.desktopParticles;
   const particleGeo = new THREE.BufferGeometry();
   const positions = new Float32Array(particleCount * 3);
 
@@ -251,7 +317,7 @@ export function initThreeScene() {
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.0));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tierConfig.pixelRatioMax));
   };
   window.addEventListener('resize', onResize, { passive: true });
 
@@ -269,8 +335,11 @@ export function initThreeScene() {
   };
   document.addEventListener('visibilitychange', onVisibilityChange);
 
-  // 11. Optimized Kinetic Animation Loop
+  // 11. Optimized Kinetic Animation Loop with Self-Healing Dynamic FPS Watchdog
   const clock = new THREE.Clock();
+  let frameCount = 0;
+  let lastFpsCheckTime = performance.now();
+  let lowFpsCount = 0;
 
   function animate() {
     if (isDisposed) return;
@@ -278,6 +347,36 @@ export function initThreeScene() {
 
     // Skip all WebGL draw calls if hero is scrolled out of view or tab is hidden
     if (!isHeroVisible || !isTabVisible) return;
+
+    // Dynamic FPS Watchdog (Auto-downscale if frame rate drops under 40 FPS on weak hardware)
+    frameCount++;
+    const now = performance.now();
+    if (now - lastFpsCheckTime >= 1000) {
+      const currentFps = (frameCount * 1000) / (now - lastFpsCheckTime);
+      frameCount = 0;
+      lastFpsCheckTime = now;
+
+      if (currentFps < 40 && isHeroVisible) {
+        lowFpsCount++;
+        if (lowFpsCount >= 2) {
+          // Downgrade quality tier dynamically to restore smooth 60 FPS
+          if (currentTier === 'high') {
+            currentTier = 'mid';
+            tierConfig = TIER_CONFIG.mid;
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tierConfig.pixelRatioMax));
+            console.warn('[ThreeScene FPS Watchdog] Downscaled quality tier to "mid" for smooth 60 FPS');
+          } else if (currentTier === 'mid') {
+            currentTier = 'low';
+            tierConfig = TIER_CONFIG.low;
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tierConfig.pixelRatioMax));
+            console.warn('[ThreeScene FPS Watchdog] Downscaled quality tier to "low" for smooth 60 FPS');
+          }
+          lowFpsCount = 0;
+        }
+      } else {
+        lowFpsCount = Math.max(0, lowFpsCount - 1);
+      }
+    }
 
     const t = clock.getElapsedTime();
 
