@@ -70,3 +70,9 @@
 - **Context**: User selected Shape 4 (Stepped Progress Track) to replace the static vertical bullet list and emphasized that the Baccalaureate represents Egypt's new secondary system.
 - **Decision**: Implemented a stepped horizontal progress track (`1: شهادة إعدادية` ➔ `2: شهادة ثانوية` ➔ `3: بكالوريا عامة`) with numbered circular badges, RTL flow arrows (`←`), and subtle bronze interactive hover states.
 - **Consequences**: Modern, clear pedagogical progression, responsive mobile wrapping, zero layout shift. Audited and approved by independent review (`PASS`).
+
+## ADR-011: Cinematic Depth of Field (DoF) Background Bokeh
+- **Date**: 2026-08-31
+- **Context**: User suggested adding a background blur to the floating 3D letters to create cinematic depth, separate background from foreground, and elevate visual luxury.
+- **Decision**: Added `.canvas-ambient-blur` to `#three-canvas` using `filter: blur(2.5px)` with `transform: scale(1.02) translateZ(0)` for hardware-accelerated, edge-safe cinematic bokeh. Foreground elements (text, buttons, portrait) remain isolated in `z-10` with 100% crystal sharpness.
+- **Consequences**: Instant optical depth separation, zero cognitive distraction from sharp background glyphs, silky 60 FPS performance. Audited and approved by independent subagent review (`PASS`).

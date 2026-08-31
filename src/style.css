@@ -78,6 +78,13 @@
   mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 82%, rgba(0,0,0,0) 100%);
 }
 
+/* Cinematic Depth of Field (Soft Ambient Background Bokeh) */
+.canvas-ambient-blur {
+  filter: blur(2.5px);
+  transform: scale(1.02) translateZ(0);
+  will-change: transform, filter;
+}
+
 /* Ambient Breathing Backlight */
 @keyframes ambientPulse {
   0%, 100% {
