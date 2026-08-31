@@ -162,43 +162,45 @@ export function initThreeScene() {
       })
     ];
 
-    // Balanced, art-directed 3D constellation slots (Zero overlap with teacher portrait)
+    // Balanced, art-directed 3D constellation slots (Zero overlap, wide screen coverage)
     const DESKTOP_SLOTS = [
-      // Top row (Left to Right)
-      { x: -14, y: 9.5,  z: -14, size: 1.8 },
-      { x: -7,  y: 10.5, z: -18, size: 2.1 },
-      { x: 0,   y: 9.0,  z: -15, size: 1.7 },
-      { x: 7,   y: 10.0, z: -20, size: 2.2 },
-      { x: 14,  y: 8.5,  z: -16, size: 1.9 },
-      // Upper Left (Above/Behind Teacher shoulder)
-      { x: -17, y: 4.0,  z: -17, size: 2.0 },
-      { x: -19, y: -2.0, z: -22, size: 2.3 },
-      // Right flank (Next to English Master title & text)
-      { x: 17,  y: 3.5,  z: -18, size: 2.0 },
-      { x: 20,  y: -2.5, z: -21, size: 2.2 },
-      { x: 16,  y: -7.0, z: -16, size: 1.8 },
-      // Bottom Right (Under Stage Badges & CTA)
-      { x: 11,  y: -10.5, z: -15, size: 1.9 },
-      { x: 5,   y: -11.0, z: -22, size: 2.2 },
-      // Ambient Deep Layer (Far background depth)
-      { x: -10, y: 5.5,   z: -26, size: 2.4 },
-      { x: 10,  y: 0.0,   z: -28, size: 2.6 },
-      { x: -15, y: 11.0,  z: -24, size: 2.2 },
-      { x: 18,  y: 10.0,  z: -25, size: 2.3 }
+      // 1. Far Left Margin (Left of Teacher)
+      { x: -28, y: 11,  z: -14, size: 2.2 },
+      { x: -25, y: 2,   z: -18, size: 2.0 },
+      { x: -29, y: -6,  z: -22, size: 2.3 },
+      { x: -24, y: -13, z: -16, size: 1.9 },
+
+      // 2. Top Banner Row (Above Teacher & Above Title - Wide Spread)
+      { x: -16, y: 13.5, z: -20, size: 2.1 },
+      { x: -5,  y: 14.5, z: -16, size: 1.8 },
+      { x: 9,   y: 14.0, z: -22, size: 2.2 },
+      { x: 23,  y: 13.0, z: -18, size: 2.0 },
+
+      // 3. Far Right Margin (Right of Hero Title & CTAs)
+      { x: 28,  y: 7.5,  z: -16, size: 2.0 },
+      { x: 26,  y: -0.5, z: -20, size: 2.2 },
+      { x: 30,  y: -8.0, z: -18, size: 2.1 },
+      { x: 25,  y: -14.0, z: -22, size: 2.4 },
+
+      // 4. Ambient Deep Background Layer (Deep Z-depth, widely dispersed)
+      { x: -14, y: -3.0, z: -30, size: 2.8 },
+      { x: 14,  y: -6.0, z: -28, size: 2.6 },
+      { x: 2,   y: 8.0,  z: -32, size: 2.9 },
+      { x: 16,  y: 9.5,  z: -26, size: 2.4 }
     ];
 
     const MOBILE_SLOTS = [
-      // Top header region
-      { x: -4.5, y: 10.0, z: -13, size: 1.5 },
-      { x: 4.5,  y: 9.0,  z: -15, size: 1.6 },
-      // Flanking sides (outside central text)
-      { x: -5.5, y: 4.0,  z: -14, size: 1.5 },
-      { x: 5.5,  y: 2.5,  z: -16, size: 1.7 },
-      { x: -5.2, y: -4.0, z: -13, size: 1.4 },
-      { x: 5.2,  y: -5.5, z: -15, size: 1.6 },
-      // Bottom region
-      { x: -4.0, y: -11.0, z: -14, size: 1.5 },
-      { x: 4.0,  y: -12.5, z: -17, size: 1.8 }
+      // Left Column (Wide edges)
+      { x: -8.5, y: 13.5,  z: -14, size: 1.6 },
+      { x: -8.0, y: 4.5,   z: -18, size: 1.8 },
+      { x: -8.5, y: -4.5,  z: -15, size: 1.6 },
+      { x: -7.5, y: -13.5, z: -20, size: 1.9 },
+
+      // Right Column (Wide edges)
+      { x: 8.5,  y: 12.0,  z: -16, size: 1.7 },
+      { x: 8.0,  y: 3.0,   z: -14, size: 1.5 },
+      { x: 8.5,  y: -6.0,  z: -19, size: 1.8 },
+      { x: 7.5,  y: -15.0, z: -15, size: 1.6 }
     ];
 
     const slots = isMobile ? MOBILE_SLOTS : DESKTOP_SLOTS;
