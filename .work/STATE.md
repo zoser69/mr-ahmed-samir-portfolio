@@ -9,6 +9,8 @@
   5. **Fixed Fast Scrolling Skipping Animations**: Removed `fastScrollEnd: true` from all ScrollTriggers. This feature was forcing animations to instantly snap to 100% completion if the user scrolled down quickly, which caused the "it finishes before I reach it" complaint.
   6. **Fixed Portrait Shadow Pop**: Removed the `filter: blur(...)` GSAP animation on the portrait image entirely to prevent the drop-shadow from popping at the end and to reduce heavy GPU load.
   7. **Enhanced 3D Background Typography**: Rewrote the mathematical distribution of the floating 3D English letters in `threeScene.js` to use polar coordinates (`Math.cos`, `Math.sin`). This scatters them beautifully in a wide "constellation" frame around the edges (with heavy Z-depth parallax), rather than bunching them linearly, leaving the center readable for the hero text.
-- **Active Subagents**: 2 Subagents (`3.1 pro`, `3.7 flash`) currently auditing the codebase for cleanliness, security, and performance.
+  8. **Performance Audit (Flash Subagent)**: Reduced production JS bundle size by **~50%** (1.2MB to 634KB) by tree-shaking `lucide` icons. Removed 38MB of unused raw images from the build folder. Fixed a 404 redundant CSS link in `index.html`. Deleted 649 lines of dead code (`phoneticsLab.js`).
+  9. **WebGL Frame-Rate Independence**: Fixed an issue where the 3D letters would rotate 2x faster on 120Hz/144Hz monitors than on 60Hz monitors. The rotation logic `mesh.rotation.x += u.rotSpeedX` was replaced with a time-based delta multiplier `mesh.rotation.x = u.baseRotX + t * (u.rotSpeedX * 60)`.
+  10. **Clean Code Audit (Pro Subagent)**: Refactored a magic `setTimeout` in `portraitHero.js` to instead use a deterministic `window.addEventListener('load')` for `ScrollTrigger.refresh()`.
 - **Local Dev Server**: `http://localhost:5173/` and `http://127.0.0.1:5173/` (0.0.0.0:5173).
 - **Live Online URL**: `https://zoser69.github.io/mr-ahmed-samir-portfolio/`
