@@ -39,6 +39,11 @@
   }
 }
 
+/* Premium Typography Classes */
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
 /* Off-screen Content Visibility Optimization */
 .performance-section {
   content-visibility: auto;
