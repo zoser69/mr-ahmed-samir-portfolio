@@ -122,8 +122,8 @@ export function initPortraitHero() {
     );
   }
 
-  // Refresh ScrollTrigger calculations
-  setTimeout(() => {
+  // Refresh ScrollTrigger calculations after all resources (images/fonts) are fully loaded
+  window.addEventListener('load', () => {
     ScrollTrigger.refresh();
-  }, 100);
+  });
 }
