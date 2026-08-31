@@ -1,4 +1,4 @@
-﻿import * as THREE from 'three';
+import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
@@ -117,12 +117,21 @@ export function initThreeScene() {
       const mat = materials[idx % materials.length];
       const mesh = new THREE.Mesh(textGeo, mat);
 
-      const side = idx % 2 === 0 ? 1 : -1;
-      const posX = side * (isMobile ? (7.0 + (idx % 4) * 2.2) : (8.5 + (idx % 5) * 3.2));
-      const posY = ((idx % 6) - 2.5) * 3.6 + (Math.random() - 0.5) * 2;
-      const posZ = -4 - (idx % 4) * 5.0;
+      // Better cinematic distribution (Constellation layout)
+      // We want them to act as a wide background frame, leaving the center mostly clear for content
+      
+      const angle = (idx / glyphs.length) * Math.PI * 2; // Circular distribution
+      const radius = isMobile ? 8.0 + (idx % 3) * 2.0 : 12.0 + (idx % 4) * 3.0; 
+      
+      // Calculate X and Y using polar coordinates for a nice framing effect
+      const baseX = Math.cos(angle) * radius;
+      // Squish the Y axis a bit so they fit the landscape viewport better
+      const baseY = Math.sin(angle) * (radius * 0.6) + ((Math.random() - 0.5) * 4);
+      
+      // Distribute Z depth heavily for parallax effect
+      const baseZ = -8 - (idx % 5) * 6.0;
 
-      mesh.position.set(posX, posY, posZ);
+      mesh.position.set(baseX, baseY, baseZ);
       mesh.rotation.set(
         Math.random() * Math.PI,
         Math.random() * Math.PI,
@@ -130,9 +139,9 @@ export function initThreeScene() {
       );
 
       mesh.userData = {
-        baseX: posX,
-        baseY: posY,
-        baseZ: posZ,
+        baseX: baseX,
+        baseY: baseY,
+        baseZ: baseZ,
         rotSpeedX: (Math.random() - 0.5) * 0.008 + 0.003,
         rotSpeedY: (Math.random() - 0.5) * 0.01 + 0.004,
         rotSpeedZ: (Math.random() - 0.5) * 0.005,
