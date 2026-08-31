@@ -98,7 +98,7 @@ export function initThreeScene() {
     ];
 
     glyphs.forEach((char, idx) => {
-      const size = isMobile ? 1.2 + (idx % 2) * 0.4 : 1.4 + (idx % 3) * 0.5;
+      const size = isMobile ? 1.4 + (idx % 2) * 0.5 : 1.8 + (idx % 3) * 0.6;
       
       const textGeo = new TextGeometry(char, {
         font: font,
@@ -120,16 +120,19 @@ export function initThreeScene() {
       // Better cinematic distribution (Constellation layout)
       // We want them to act as a wide background frame, leaving the center mostly clear for content
       
-      const angle = (idx / glyphs.length) * Math.PI * 2; // Circular distribution
-      const radius = isMobile ? 8.0 + (idx % 3) * 2.0 : 12.0 + (idx % 4) * 3.0; 
-      
-      // Calculate X and Y using polar coordinates for a nice framing effect
-      const baseX = Math.cos(angle) * radius;
-      // Squish the Y axis a bit so they fit the landscape viewport better
-      const baseY = Math.sin(angle) * (radius * 0.6) + ((Math.random() - 0.5) * 4);
-      
       // Distribute Z depth heavily for parallax effect
-      const baseZ = -8 - (idx % 5) * 6.0;
+      const baseZ = -10 - (idx % 5) * 8.0;
+
+      // To keep them on the edges despite perspective, scale radius by depth
+      const depthFactor = Math.abs(baseZ) / 10; 
+      // Base radius pushed much further out
+      const radius = isMobile ? 14.0 * depthFactor : 26.0 * depthFactor; 
+      
+      const angle = (idx / glyphs.length) * Math.PI * 2; 
+      
+      // Push X and Y to the edges, creating a massive frame
+      const baseX = Math.cos(angle) * radius + ((Math.random() - 0.5) * 5 * depthFactor);
+      const baseY = Math.sin(angle) * (radius * 0.6) + ((Math.random() - 0.5) * 8 * depthFactor);
 
       mesh.position.set(baseX, baseY, baseZ);
       const startRotX = Math.random() * Math.PI;
