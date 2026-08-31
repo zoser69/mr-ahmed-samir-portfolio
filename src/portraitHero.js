@@ -21,21 +21,21 @@ export function initPortraitHero() {
     return;
   }
 
-  // 1. Master Hero Entrance (Smooth & Silky)
+  // 1. Master Hero Entrance (Immediate & Crisp)
   const masterTl = gsap.timeline({
     defaults: { ease: 'power3.out' }
   });
 
   gsap.set(img, {
     opacity: 0,
-    x: -60,
-    scale: 0.97,
-    filter: 'blur(6px)',
+    x: -50,
+    scale: 0.98,
+    filter: 'blur(5px)',
   });
 
   gsap.set('.hero-text-item', {
     opacity: 0,
-    x: 25,
+    x: 20,
   });
 
   masterTl.to(img, {
@@ -43,7 +43,7 @@ export function initPortraitHero() {
     x: 0,
     scale: 1,
     filter: 'blur(0px)',
-    duration: 1.2,
+    duration: 1.0,
     clearProps: 'filter',
   })
   .to(
@@ -51,11 +51,25 @@ export function initPortraitHero() {
     {
       opacity: 1,
       x: 0,
-      duration: 0.75,
-      stagger: 0.07,
+      duration: 0.6,
+      stagger: 0.05,
     },
-    '-=0.9'
+    '-=0.8'
   );
+
+  // Helper for Zero-Lag ScrollTrigger configuration
+  const makeZeroLagTrigger = (triggerEl, startPos = 'top 92%') => ({
+    trigger: triggerEl,
+    start: startPos,
+    once: true,
+    fastScrollEnd: 1000,
+    onEnter: (self) => {
+      // If user scrolls quickly (> 1000px/s), snap to completed state immediately with 0ms lag
+      if (Math.abs(self.getVelocity()) > 1000 && self.animation) {
+        self.animation.progress(1);
+      }
+    }
+  });
 
   // 2. Silky Editorial Header Reveal (#about)
   const aboutHeader = document.querySelector('#about .about-header-item');
@@ -64,65 +78,53 @@ export function initPortraitHero() {
       '#about .about-header-item',
       {
         opacity: 0,
-        y: 20
+        y: 16
       },
       {
         opacity: 1,
         y: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: '#about',
-          start: 'top 88%',
-          once: true
-        }
+        duration: 0.55,
+        stagger: 0.06,
+        ease: 'power2.out',
+        scrollTrigger: makeZeroLagTrigger('#about', 'top 92%')
       }
     );
   }
 
-  // 3. Individual Silky Row Glide for Academic Milestones
+  // 3. Individual Milestone Rows (Zero-Lag Silk Glide)
   const milestoneRows = document.querySelectorAll('#about .about-card-item');
-  milestoneRows.forEach((row, idx) => {
+  milestoneRows.forEach((row) => {
     gsap.fromTo(
       row,
       {
         opacity: 0,
-        y: 24
+        y: 18
       },
       {
         opacity: 1,
         y: 0,
-        duration: 0.85,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: row,
-          start: 'top 92%',
-          once: true
-        }
+        duration: 0.55,
+        ease: 'power2.out',
+        scrollTrigger: makeZeroLagTrigger(row, 'top 94%')
       }
     );
   });
 
-  // 4. Silky Reveal for Contact Box & Social Grid (#contact)
+  // 4. Contact Box & Social Grid (Zero-Lag Silk Glide)
   const contactBox = document.querySelector('#contact .contact-reveal-box');
   if (contactBox) {
     gsap.fromTo(
       contactBox,
       {
         opacity: 0,
-        y: 25
+        y: 20
       },
       {
         opacity: 1,
         y: 0,
-        duration: 0.85,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: '#contact',
-          start: 'top 88%',
-          once: true
-        }
+        duration: 0.55,
+        ease: 'power2.out',
+        scrollTrigger: makeZeroLagTrigger('#contact', 'top 94%')
       }
     );
 
@@ -132,25 +134,21 @@ export function initPortraitHero() {
         socialItems,
         {
           opacity: 0,
-          y: 15
+          y: 12
         },
         {
           opacity: 1,
           y: 0,
-          duration: 0.65,
-          stagger: 0.08,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '#contact .social-card-item',
-            start: 'top 94%',
-            once: true
-          }
+          duration: 0.45,
+          stagger: 0.05,
+          ease: 'power2.out',
+          scrollTrigger: makeZeroLagTrigger('#contact .social-card-item', 'top 96%')
         }
       );
     }
   }
 
-  // Refresh ScrollTrigger calculations
+  // Refresh ScrollTrigger coordinates
   setTimeout(() => {
     ScrollTrigger.refresh();
   }, 100);
