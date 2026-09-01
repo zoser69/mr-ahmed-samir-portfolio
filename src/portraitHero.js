@@ -39,38 +39,38 @@ export function initPortraitHero() {
     return;
   }
 
-  // --- SECTION 1: MASTER HERO ENTRANCE (Immediate & Cohesive) ---
+  // --- SECTION 1: MASTER HERO ENTRANCE (Dynamic Split Side Entrance) ---
   const heroTl = gsap.timeline({
     defaults: { ease: 'power3.out', force3D: true }
   });
 
   gsap.set(img, {
     opacity: 0,
-    y: 24,
+    x: -40,
     scale: 0.98
   });
 
   gsap.set('.hero-text-item', {
     opacity: 0,
-    y: 20
+    x: 20
   });
 
   heroTl
     .to(img, {
       opacity: 1,
-      y: 0,
+      x: 0,
       scale: 1,
-      duration: 0.85
+      duration: 0.9
     })
     .to(
       '.hero-text-item',
       {
         opacity: 1,
-        y: 0,
-        duration: 0.6,
-        stagger: 0.07
+        x: 0,
+        duration: 0.55,
+        stagger: 0.05
       },
-      '-=0.65'
+      '-=0.7'
     );
 
   // --- SECTION 2: ACADEMIC CREDENTIALS & EXPERIENCE TIMELINE (#about) ---
