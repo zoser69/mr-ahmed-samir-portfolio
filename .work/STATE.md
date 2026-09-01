@@ -8,9 +8,9 @@
      - Arabic Display & Navigation: `Tajawal` (Bold, 26px/1.35, crisp modern authority).
      - Arabic Body & Bio: `IBM Plex Sans Arabic` (Calibrated to `14px-15px`, `leading-[1.8]`, comfortable secondary hierarchy).
      - Strict Zero-Tracking Law: `letter-spacing: 0 !important;` on all Arabic text.
-  3. **Stepped Academic Journey Component (Shape 4)**:
-     - Unified horizontal track showing pedagogical progression (`1: شهادة إعدادية` ➔ `2: شهادة ثانوية` ➔ `3: بكالوريا عامة`).
-     - Numbered badges, RTL directional flow (`←`), and unified luxury dark truffle card styling.
+  3. **Refined Vertical Journey Component**:
+     - Text-driven vertical track replacing the horizontal stepper.
+     - Removed superficial labels (like "2000" or "دراسات عليا") and pulsing animations in favor of strong semantic titles with supportive descriptive text underneath, aligning with traditional editorial hierarchy.
   4. **Cinematic Depth of Field (Bokeh Effect)**:
      - Tuned to golden `1.8px` blur (`.canvas-ambient-blur`) with `transform: scale(1.015) translateZ(0)` for zero edge-bleed and hardware-accelerated GPU rendering.
      - Separates 3D background letters into a soft ambient particle cloud while keeping foreground text and teacher portrait crystal-sharp.
