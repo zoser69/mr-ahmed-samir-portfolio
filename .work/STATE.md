@@ -14,6 +14,10 @@
   4. **Cinematic Depth of Field (Bokeh Effect)**:
      - Tuned to golden `1.8px` blur (`.canvas-ambient-blur`) with `transform: scale(1.015) translateZ(0)` for zero edge-bleed and hardware-accelerated GPU rendering.
      - Separates 3D background letters into a soft ambient particle cloud while keeping foreground text and teacher portrait crystal-sharp.
+  5. **Harmonized Master Animation System**:
+     - All sections (`#hero`, `#about`, `#contact`) now share a unified motion physics language (`power3.out`, `y: 16-24px` entrance, `force3D: true`).
+     - Sequential cascading triggers: `#about` grows the vertical timeline track before revealing milestones in chronological order.
+     - Manual scroll restoration ensures consistent page-load entrances across all reloads.
 - **Live Local Server**: `http://localhost:5173/` (Active daemon).
 - **Live Production URL**: `https://zoser69.github.io/mr-ahmed-samir-portfolio/`
 - **Blockers**: None. System is in peak production health.
