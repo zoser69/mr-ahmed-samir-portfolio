@@ -417,9 +417,9 @@ export function initThreeScene() {
 
     renderer.render(scene, camera);
 
-    // Smoothly reveal canvas on first valid WebGL frame
-    if (canvas.style.opacity !== '1') {
-      canvas.style.opacity = '1';
+    // Smoothly reveal canvas once first valid WebGL frame is rendered
+    if (!canvas.classList.contains('is-ready')) {
+      canvas.classList.add('is-ready');
     }
   }
 
