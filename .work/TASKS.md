@@ -45,3 +45,10 @@
 - [x] Implemented downward-growing timeline track (`scaleY: 0 -> 1`) with chronological cascade for credentials.
 - [x] Configured `history.scrollRestoration = 'manual'` to ensure clean, consistent page-load entrances across all reloads.
 - [x] Production build verification and dual branch deployment (`origin/main` commit `8122e7d` and `origin/gh-pages` commit `8bbe386`).
+
+## Phase 7: Intermittent White Screen Bug Investigation (ACTIVE / UNRESOLVED)
+- [x] Documented user video proof (`D:\Downloads\Recording 2026-09-02 203944.mp4`).
+- [x] Recorded 7 failed hypotheses in `.work/MEMORY.md`.
+- [ ] Perform isolated browser layer inspection (Chrome DevTools Layers panel) on white-screen state to identify exact rendering layer.
+- [ ] Trace CSS inheritance / body background tree to verify if an element is injected with white.
+- [ ] Fix intermittent white screen permanently with verifiable empirical proof.

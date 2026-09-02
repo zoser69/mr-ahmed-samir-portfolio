@@ -1,4 +1,4 @@
-# Mr. Ahmed Samir 3D Portfolio — Session Handoff (Finalized)
+# Mr. Ahmed Samir 3D Portfolio — Session Handoff (UNRESOLVED BUG)
 
 ## 1. Project Summary
 - **Live Production URL**: https://zoser69.github.io/mr-ahmed-samir-portfolio/
@@ -6,38 +6,22 @@
 - **Tech Stack**: Vanilla JS (ES Modules) + Vite v6 + Three.js r128 + GSAP v3 (ScrollTrigger) + Tailwind CSS v4 + Lucide Icons.
 - **Visual Theme**: Luxury Dark Truffle & Burnt Umber (`#060402`, `#4E2E1B`, `#FAF6F0`, `#A67C5B`, `#2E1E15`).
 
-## 2. Key Architecture & Polish Completed
-1. **Continuous 3D Ambient Atmosphere (`src/threeScene.js`)**:
-   - Hardware-aware tier detection (`High`, `Mid`, `Low`) based on CPU cores and RAM with dynamic real-time FPS watchdog.
-   - Continuous 60fps full-page tumbling 3D letters across all sections without pausing on scroll.
-   - Preserved automated dormancy via `document.addEventListener('visibilitychange')` when tab is hidden.
-2. **Cinematic Depth of Field Bokeh (`src/style.css`, `index.html`)**:
-   - Tuned to the golden `1.8px` blur (`.canvas-ambient-blur`) with `transform: scale(1.015) translateZ(0)` on `#three-canvas`.
-   - Softens background letters into an ambient particle cloud while foreground text and portrait remain 100% crystal-sharp.
-3. **Calibrated Typography Hierarchy (System 3)**:
-   - English Master H1: `Outfit` (Bold, natural 1:1 circular geometric proportions, -0.02em tracking, zero squash/stretch distortion).
-   - Arabic Display & Navigation: `Tajawal` (Bold, 26px/1.35, crisp modern authority).
-   - Arabic Body & Bio: `IBM Plex Sans Arabic` (Calibrated to `14px-15px`, `leading-[1.8]`, comfortable secondary hierarchy).
-   - Strict Zero-Tracking Law: `letter-spacing: 0 !important;` on all Arabic text.
-4. **Stepped Academic Journey Component (Shape 4)**:
-   - Unified horizontal track showing pedagogical progression (`1: شهادة إعدادية` ➔ `2: شهادة ثانوية` ➔ `3: بكالوريا عامة`).
-   - Numbered badges, RTL directional flow (`←`), and unified luxury dark truffle card styling.
-5. **Right-Aligned Minimalist Experience Timeline (`index.html`)**:
-   - Replaced heavy cards and noisy label badges with a clean, right-aligned vertical editorial stepper in RTL.
-   - Removed pinging animations for quiet dignity; integrated duration into primary semantic typography.
-6. **Harmonized Master Animation System (`src/portraitHero.js`)**:
-   - Signature dynamic split side-entrance preserved for Hero (portrait `x: -40 -> 0`, text `x: 20 -> 0`).
-   - Unified Master Timelines on `#about` and `#contact` with vertical track expansion (`scaleY: 0 -> 1`) and chronological cascading.
-   - Forced `history.scrollRestoration = 'manual'` so every page refresh begins at the top for an uncorrupted sequence.
+## 2. CRITICAL UNRESOLVED BUG
+- **Problem**: Intermittent white background appears under the top bar upon page reload/refresh (`Ctrl + F5` or normal `F5`), affecting both Localhost and GitHub Pages.
+- **User Video Proof**: `D:\Downloads\Recording 2026-09-02 203944.mp4` (Frame 00:00 shows the entire hero section background rendered solid white, with dark top bar, dark cards, dark buttons, and teacher portrait).
+- **User Observation**: *"احيانا بتعمل الابيض لما احدث واحيانا لا"* (sometimes it renders white on refresh, sometimes it renders dark).
+- **Current Status**: **STILL UNRESOLVED**.
 
-## 3. High-Rated Design & Arabic Skills Suite (Local Scoped)
-- `arabic-typography-and-design`: Master rules for Arabic typography, Arabic font pairing, zero-tracking rule, optical size compensation (+15%–25%), line-height rules (1.65–1.85), culturally resonant luxury palettes, and CSS logical properties.
-- `color-expert`: David Aerne's (meodai) color science and harmony skill (OKLCH, APCA, WCAG, palette generation, pigment mixing, color naming).
-- `better-colors`, `better-typography`, `better-ui`, `better-layout`: Jakub Krehel's design system and UI polish suite.
-- `impeccable`, `no-ai-design-slop`, `audit-ai-design-slop`: Anti-slop quality gates.
+## 3. Failed Attempts & Lessons Learned (What Did NOT Work)
+1. **Inline styles on `html` and `body`**: Added `style="background-color: #060402 !important;"`. Did not prevent the white background.
+2. **Font `display=block` & preloading**: Preloaded fonts and images in `<head>`. Resolved font flicker, but did not resolve the white background.
+3. **Canvas `visibility: hidden; opacity: 0;` gate**: Set canvas to hidden until first frame. Did not prevent the white background.
+4. **Meta `color-scheme: dark`**: Added to `<head>` and `:root`. Did not prevent the white background.
+5. **Hiding `#app-wrapper` until JS loads**: Hid main container until `requestAnimationFrame`. Resulted in visual desync; user still captured screenshot of white background with content rendered.
+6. **Blaming mobile Force Dark Mode**: Attempted adding `!important` to blur filters. Misdiagnosis — bug occurs on desktop Edge/Chrome.
+7. **Transparent WebGL + `#site-curtain` (`z-index: 999999`)**: Set `alpha: true`, `setClearColor(0, 0)`, and added full-screen dark curtain. Reduced frequency, but as proven in user video frame `00:00`, the bug still recurs intermittently.
 
-## 4. Production Build & Deployment Pipeline
-- Build: `npm run build`
-- Deploy: Pushed directly to `gh-pages` branch via git worktree.
-- Repository: `https://github.com/zoser69/mr-ahmed-samir-portfolio.git` (main: `8122e7d`, gh-pages: `8bbe386`).
-- Git Commit Log: All features committed atomically with clean conventional commits and pushed.
+## 4. Immediate Starting Point for Next Session
+- Open DevTools layer inspector (`chrome://gpu` and Elements -> Layers) during a state where the background is white.
+- Trace exactly which DOM element or compositor surface has `#ffffff` computed background.
+- Determine if the white layer is the canvas framebuffer, the body compositor layer, or an unstyled container during a failed WebGL context lifecycle.

@@ -91,3 +91,17 @@
   2. Coordinated `#about` and `#contact` into unified Master Timelines using GSAP ScrollTrigger: the vertical timeline line grows downward (`scaleY: 0 -> 1`) before cascading milestone items sequentially.
   3. Added `history.scrollRestoration = 'manual'` to ensure every page refresh starts at the top, allowing the entire cinematic choreography to unfold in perfect order.
 - **Consequences**: Completely harmonious motion system across all viewports; zero jarring layout snaps or desynchronized animations on reload.
+
+## ADR-014: Intermittent White Screen Bug Investigation & Architectural Pivot
+- **Date**: 2026-09-02
+- **Context**: User reported that on page reload/refresh (`Ctrl + F5` or `F5`), the area under the top bar intermittently renders solid white instead of dark truffle (`#060402`), proven via video `Recording 2026-09-02 203944.mp4`.
+- **Failed Decisions / Approaches**:
+  1. Adding inline styles (`background-color: #060402 !important;`) on `html` and `body` failed to prevent the white screen.
+  2. Adding Google font `display=block` and preloading assets failed to prevent the white screen.
+  3. Setting CSS `visibility: hidden; opacity: 0;` on `#three-canvas` failed to prevent the white screen.
+  4. Adding `<meta name="color-scheme" content="dark">` failed to prevent the white screen.
+  5. Hiding `#app-wrapper` until `requestAnimationFrame` caused visual desync and failed to prevent the white screen.
+  6. Adding `!important` to canvas blur filters under the assumption of mobile Force Dark Mode failed (bug occurs on desktop).
+  7. Transparent WebGL canvas (`alpha: true`, `clearColor: 0`) + `#site-curtain` (`z-index: 999999`) reduced occurrence but failed to solve the intermittent white screen completely.
+- **Decision**: End session and record all 7 failed hypotheses in `.work/MEMORY.md`. The bug remains active and unresolved.
+- **Consequences**: Future work must not repeat any of the 7 failed hypotheses. It must isolate the exact DOM or GPU layer producing white using Chrome DevTools Layers panel before writing any more code.
