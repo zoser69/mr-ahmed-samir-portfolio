@@ -84,12 +84,12 @@
   mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 82%, rgba(0,0,0,0) 100%);
 }
 
-/* Cinematic Depth of Field (Soft Ambient Background Bokeh) & Force Dark Mode Protection */
-.canvas-ambient-blur {
-  filter: blur(1.8px) !important;
-  transform: scale(1.015) translateZ(0) !important;
-  will-change: transform, filter !important;
-  background-color: #060402 !important;
+/* Clean Transparent 3D Canvas */
+#three-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
 }
 
 /* Ambient Breathing Backlight */

@@ -17,31 +17,15 @@
       color: #FAF6F0 !important;
       margin: 0;
       padding: 0;
+      background: #060402 !important;
     }
-    /* Anti-FOUC: Hide UI content until Tailwind CSS is loaded and applied */
-    #app-wrapper {
-      opacity: 0;
-      visibility: hidden;
-      filter: none !important;
-    }
-    #app-wrapper.is-ready {
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
-    }
-    #three-canvas-container {
-      background-color: #060402 !important;
-      filter: none !important;
-    }
-    #three-canvas {
-      visibility: hidden !important;
-      opacity: 0 !important;
-      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-      background-color: #060402 !important;
-    }
-    #three-canvas.is-ready {
-      visibility: visible !important;
-      opacity: 1 !important;
+    #site-curtain {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      background-color: #060402;
+      pointer-events: none;
+      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
     }
   </style>
 
@@ -80,13 +64,16 @@
 </head>
 <body class="bg-[#060402] text-[#FAF6F0] antialiased selection:bg-[#4E2E1B] selection:text-[#FAF6F0]" style="background-color: #060402; color: #FAF6F0;">
 
-  <!-- Background 3D Canvas -->
-  <div id="three-canvas-container" class="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#060402]" style="background-color: #060402;">
-    <canvas id="three-canvas" class="w-full h-full block canvas-ambient-blur" style="background-color: #060402;"></canvas>
+  <!-- Instant Luxury Dark Curtain Shield (Guarantees 100% Solid Black Viewport from Byte 0) -->
+  <div id="site-curtain"></div>
+
+  <!-- Background 3D Canvas (Clean Transparent WebGL Layer) -->
+  <div id="three-canvas-container" class="fixed inset-0 z-0 pointer-events-none overflow-hidden" style="background: transparent;">
+    <canvas id="three-canvas" class="w-full h-full block"></canvas>
   </div>
 
   <!-- Main Wrapper -->
-  <div id="app-wrapper" class="relative z-10 min-h-screen flex flex-col justify-between">
+  <div class="relative z-10 min-h-screen flex flex-col justify-between">
 
     <!-- Header Navigation (Crisp Frosted Glassmorphism) -->
     <header class="w-full border-b border-[#2E1E15]/60 bg-[#060402]/90 backdrop-blur-md sticky top-0 z-50">

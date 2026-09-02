@@ -72,7 +72,7 @@ function detectDeviceTier() {
   return 'mid';
 }
 
-export function initThreeScene() {
+export function initThreeScene(onReady) {
   const canvas = document.getElementById('three-canvas');
   const heroSection = document.getElementById('hero');
   if (!canvas) return;
@@ -86,24 +86,24 @@ export function initThreeScene() {
 
   console.log(`[ThreeScene] Device capability tier: "${currentTier}" (Cores: ${navigator.hardwareConcurrency || 'N/A'}, RAM: ${navigator.deviceMemory || 'N/A'}GB)`);
 
-  // 2. Scene Setup (Solid Luxury Dark Truffle Background)
+  // 2. Scene Setup (Transparent 3D Kinetic Layer - Background Owned by CSS)
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x060402);
+  scene.background = null;
 
   // 3. Camera Setup
   const aspect = window.innerWidth / window.innerHeight;
   camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 90);
   camera.position.set(0, 0, 32);
 
-  // 4. Studio WebGL Renderer (Solid Opaque Surface - Zero White Flash)
+  // 4. Studio WebGL Renderer (Transparent Canvas Overlay - Zero White Compositor Flashes)
   renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: tierConfig.antialias,
-    alpha: false,
+    alpha: true,
     powerPreference: 'high-performance',
     precision: tierConfig.precision
   });
-  renderer.setClearColor(0x060402, 1.0);
+  renderer.setClearColor(0x000000, 0);
 
   const getOptimalPixelRatio = () => {
     const dpr = window.devicePixelRatio || 1;
@@ -417,9 +417,10 @@ export function initThreeScene() {
 
     renderer.render(scene, camera);
 
-    // Smoothly reveal canvas once first valid WebGL frame is rendered
-    if (!canvas.classList.contains('is-ready')) {
-      canvas.classList.add('is-ready');
+    // Notify caller that first WebGL frame is safely drawn to dissolve curtain
+    if (typeof onReady === 'function') {
+      onReady();
+      onReady = null;
     }
   }
 
