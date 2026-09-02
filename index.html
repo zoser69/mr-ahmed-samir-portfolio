@@ -27,6 +27,12 @@
       pointer-events: none;
       transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    /* Canvas is painted only after verified WebGL frames (main.js reveals it).
+       A hidden canvas can never composite uninitialized GPU buffer garbage. */
+    #three-canvas-container {
+      opacity: 0;
+      transition: opacity 0.45s ease;
+    }
   </style>
 
   <!-- Direct Stylesheet Link (Guarantees Render-Blocking Styles Before Paint in Vite) -->
@@ -67,16 +73,16 @@
   <!-- Instant Luxury Dark Curtain Shield (Guarantees 100% Solid Black Viewport from Byte 0) -->
   <div id="site-curtain"></div>
 
-  <!-- Background 3D Canvas (Clean Transparent WebGL Layer) -->
-  <div id="three-canvas-container" class="fixed inset-0 z-0 pointer-events-none overflow-hidden" style="background: transparent !important; background-color: transparent !important;">
+  <!-- Background 3D Canvas (Clean Transparent WebGL Layer, Opaque Dark DOM Backing) -->
+  <div id="three-canvas-container" class="fixed inset-0 z-0 pointer-events-none overflow-hidden" style="background-color: #060402;">
     <canvas id="three-canvas" class="w-full h-full block" style="background: transparent !important; background-color: transparent !important;"></canvas>
   </div>
 
   <!-- Main Wrapper -->
   <div class="relative z-10 min-h-screen flex flex-col justify-between">
 
-    <!-- Header Navigation (Crisp Frosted Glassmorphism) -->
-    <header class="w-full border-b border-[#2E1E15]/60 bg-[#060402]/90 backdrop-blur-md sticky top-0 z-50">
+    <!-- Header Navigation (Solid Luxury Bar — no backdrop-filter: Chromium backdrop snapshots can composite uninitialized white) -->
+    <header class="w-full border-b border-[#2E1E15]/60 bg-[#060402]/95 sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-10 h-16 sm:h-20 flex items-center justify-center md:justify-between">
         
         <!-- Logo -->

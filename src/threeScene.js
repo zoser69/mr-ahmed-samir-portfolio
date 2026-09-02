@@ -6,6 +6,8 @@ let scene, camera, renderer, animationFrameId;
 let lettersGroup, particlesMesh, pointLight;
 let isDisposed = false;
 let isTabVisible = true;
+let contextGeneration = 0;
+let latestReadyCallback = null;
 let mouseX = 0, mouseY = 0;
 let targetCameraX = 0, targetCameraY = 0;
 let targetLightX = 0, targetLightY = 0;
@@ -72,16 +74,26 @@ function detectDeviceTier() {
   return 'mid';
 }
 
-export function initThreeScene(onReady) {
+export function initThreeScene(onReady, { isRestore = false } = {}) {
   const canvas = document.getElementById('three-canvas');
   if (!canvas) return;
 
-  // Clean up any lingering WebGL instance first (prevents context collisions on fast reloads)
-  disposeThreeScene();
+  if (typeof onReady === 'function') latestReadyCallback = onReady;
+  let readyCallback = typeof onReady === 'function' ? onReady : latestReadyCallback;
+
+  // Clean up any lingering WebGL instance first (prevents context collisions on fast reloads).
+  // During a context-restore re-init the old context is already dead: forcing another loss
+  // fires a synthetic 'webglcontextlost' that fresh listeners misattribute to the new
+  // context, hiding a healthy canvas and looping context churn.
+  disposeThreeScene({ forceLoss: !isRestore });
   isDisposed = false;
+
+  // Generation token: listeners from a superseded init must never act on the canvas.
+  const generation = ++contextGeneration;
 
   // WebGL Context-Loss Resilience (Prevents dead white canvas on GPU resource pressure)
   const handleContextLost = (event) => {
+    if (generation !== contextGeneration) return;
     event.preventDefault();
     console.warn('[ThreeScene] WebGL context lost. Hiding canvas to prevent white artifacts.');
     canvas.style.display = 'none';
@@ -92,9 +104,12 @@ export function initThreeScene(onReady) {
   };
 
   const handleContextRestored = () => {
+    if (generation !== contextGeneration) return;
     console.log('[ThreeScene] WebGL context restored. Rebuilding scene.');
     canvas.style.display = 'block';
-    initThreeScene(onReady);
+    const container = document.getElementById('three-canvas-container');
+    if (container) container.style.opacity = '0';
+    initThreeScene(null, { isRestore: true });
   };
 
   canvas.addEventListener('webglcontextlost', handleContextLost, { once: true });
@@ -116,16 +131,17 @@ export function initThreeScene(onReady) {
   camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 90);
   camera.position.set(0, 0, 32);
 
-  // 4. Studio WebGL Renderer (Transparent Canvas Overlay - Zero White Compositor Flashes)
+  // 4. Studio 3D-Point Lighting-ready Renderer (Transparent Canvas Overlay)
+  // NOTE: no 'powerPreference' — 'high-performance' routes context creation to the
+  // discrete GPU on hybrid-GPU Windows machines, a known source of failed presents
+  // that composite uninitialized (white) swapchain memory.
   renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: tierConfig.antialias,
     alpha: true,
-    powerPreference: 'high-performance',
+    preserveDrawingBuffer: false,
     precision: tierConfig.precision
   });
-  renderer.setClearColor(0x000000, 0);
-  renderer.clear(); // Clear immediately to guaranteed 100% transparent buffer at 0ms!
 
   const getOptimalPixelRatio = () => {
     const dpr = window.devicePixelRatio || 1;
@@ -139,6 +155,13 @@ export function initThreeScene(onReady) {
 
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(getOptimalPixelRatio());
+
+  // CRITICAL: clear AFTER setSize/setPixelRatio. Both reallocate the drawing
+  // buffer, so clearing earlier would only clear a buffer that is immediately
+  // discarded — leaving the final full-size buffer uninitialized (intermittent
+  // white garbage on Windows D3D/ANGLE) until the first render tick.
+  renderer.setClearColor(0x000000, 0);
+  renderer.clear();
 
   // 5. Studio 3-Point Lighting Setup (Warm Truffle & Ambient Gold)
   const ambientLight = new THREE.AmbientLight(0xA67C5B, 0.95);
@@ -365,6 +388,8 @@ export function initThreeScene(onReady) {
   // 11. Optimized Kinetic Animation Loop with Self-Healing Dynamic FPS Watchdog
   const clock = new THREE.Clock();
   let frameCount = 0;
+  let framesRendered = 0;
+  const READY_FRAME_COUNT = 3;
   let lastFpsCheckTime = performance.now();
   let lowFpsCount = 0;
 
@@ -439,10 +464,12 @@ export function initThreeScene(onReady) {
 
     renderer.render(scene, camera);
 
-    // Notify caller that first WebGL frame is safely drawn to dissolve curtain
-    if (typeof onReady === 'function') {
-      onReady();
-      onReady = null;
+    // Notify caller only after several VERIFIED presented frames — a single
+    // rendered frame is not proof the compositor published a valid buffer.
+    framesRendered++;
+    if (typeof readyCallback === 'function' && framesRendered >= READY_FRAME_COUNT) {
+      readyCallback();
+      readyCallback = null;
     }
   }
 
@@ -456,7 +483,7 @@ export function initThreeScene(onReady) {
   };
 }
 
-export function disposeThreeScene() {
+export function disposeThreeScene({ forceLoss = true } = {}) {
   isDisposed = true;
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
@@ -479,7 +506,9 @@ export function disposeThreeScene() {
   }
   if (renderer) {
     renderer.dispose();
-    renderer.forceContextLoss();
+    if (forceLoss) {
+      renderer.forceContextLoss();
+    }
     renderer = null;
   }
 }
