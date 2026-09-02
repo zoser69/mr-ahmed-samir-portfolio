@@ -22,6 +22,13 @@
 4. **Stepped Academic Journey Component (Shape 4)**:
    - Unified horizontal track showing pedagogical progression (`1: شهادة إعدادية` ➔ `2: شهادة ثانوية` ➔ `3: بكالوريا عامة`).
    - Numbered badges, RTL directional flow (`←`), and unified luxury dark truffle card styling.
+5. **Right-Aligned Minimalist Experience Timeline (`index.html`)**:
+   - Replaced heavy cards and noisy label badges with a clean, right-aligned vertical editorial stepper in RTL.
+   - Removed pinging animations for quiet dignity; integrated duration into primary semantic typography.
+6. **Harmonized Master Animation System (`src/portraitHero.js`)**:
+   - Signature dynamic split side-entrance preserved for Hero (portrait `x: -40 -> 0`, text `x: 20 -> 0`).
+   - Unified Master Timelines on `#about` and `#contact` with vertical track expansion (`scaleY: 0 -> 1`) and chronological cascading.
+   - Forced `history.scrollRestoration = 'manual'` so every page refresh begins at the top for an uncorrupted sequence.
 
 ## 3. High-Rated Design & Arabic Skills Suite (Local Scoped)
 - `arabic-typography-and-design`: Master rules for Arabic typography, Arabic font pairing, zero-tracking rule, optical size compensation (+15%–25%), line-height rules (1.65–1.85), culturally resonant luxury palettes, and CSS logical properties.
@@ -31,6 +38,6 @@
 
 ## 4. Production Build & Deployment Pipeline
 - Build: `npm run build`
-- Deploy: `npx --yes gh-pages -d dist`
-- Repository: `https://github.com/zoser69/mr-ahmed-samir-portfolio.git` (branch `main`).
+- Deploy: Pushed directly to `gh-pages` branch via git worktree.
+- Repository: `https://github.com/zoser69/mr-ahmed-samir-portfolio.git` (main: `8122e7d`, gh-pages: `8bbe386`).
 - Git Commit Log: All features committed atomically with clean conventional commits and pushed.

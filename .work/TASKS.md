@@ -36,3 +36,12 @@
 - [x] Replaced static vertical list with Shape 4: Stepped Academic Journey (`1: شهادة إعدادية` ➔ `2: شهادة ثانوية` ➔ `3: بكالوريا عامة`) with unified card styling.
 - [x] Implemented hardware-accelerated Cinematic Depth of Field blur on 3D canvas tuned to the golden `1.8px` sweet spot (`.canvas-ambient-blur`).
 - [x] Independent Fresh-Context Verification & Production Deployment (Verdict: PASS).
+
+## Phase 6: Experience Section Redesign, Motion Harmonization & Production Deployment
+- [x] Eradicated repetitive boxes and confusing timeline labels in Experience section; replaced with right-aligned vertical minimalist timeline (`index.html`).
+- [x] Removed unnecessary top badges and pinging glow animation for quiet, professional authority.
+- [x] Built cohesive Master Animation Timeline across all sections (`#hero`, `#about`, `#contact`) in `src/portraitHero.js`.
+- [x] Preserved signature dynamic split side-entrance for Hero portrait (`x: -40 -> 0`) and hero text (`x: 20 -> 0`).
+- [x] Implemented downward-growing timeline track (`scaleY: 0 -> 1`) with chronological cascade for credentials.
+- [x] Configured `history.scrollRestoration = 'manual'` to ensure clean, consistent page-load entrances across all reloads.
+- [x] Production build verification and dual branch deployment (`origin/main` commit `8122e7d` and `origin/gh-pages` commit `8bbe386`).

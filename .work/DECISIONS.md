@@ -76,3 +76,18 @@
 - **Context**: User suggested adding a background blur to the floating 3D letters to create cinematic depth, separate background from foreground, and elevate visual luxury.
 - **Decision**: Added `.canvas-ambient-blur` to `#three-canvas` using `filter: blur(2.5px)` with `transform: scale(1.02) translateZ(0)` for hardware-accelerated, edge-safe cinematic bokeh. Foreground elements (text, buttons, portrait) remain isolated in `z-10` with 100% crystal sharpness.
 - **Consequences**: Instant optical depth separation, zero cognitive distraction from sharp background glyphs, silky 60 FPS performance. Audited and approved by independent subagent review (`PASS`).
+
+## ADR-012: Right-Aligned Minimalist Vertical Stepper for Experience Section
+- **Date**: 2026-09-01
+- **Context**: User found heavy card boxes, Bento grid cards, and centered timelines visually cluttered ("boxiness") on mobile, and disliked repetitive badges ("2000", "دراسات عليا") and ping animations as "AI slop".
+- **Decision**: Implemented an editorial right-aligned vertical minimalist stepper in `index.html`. Removed all redundant card borders and centered margins (`mx-auto`), letting the timeline naturally align directly under the section header in RTL reading flow. Removed pinging light animations and integrated durations into semantic typography.
+- **Consequences**: Flawless readability and pacing on mobile and desktop, zero boxiness clutter, quiet pedagogical authority.
+
+## ADR-013: Synchronized Master Animation Timelines & Hero Split Side Entrance
+- **Date**: 2026-09-01
+- **Context**: Page animations felt disconnected across sections; Hero had dynamic side entrance while subsequent sections had independent uncoordinated triggers, and reloading the page mid-scroll caused jarring jumps.
+- **Decision**: 
+  1. Preserved Hero's signature dynamic split side entrance (portrait `x: -40 -> 0`, text `x: 20 -> 0`).
+  2. Coordinated `#about` and `#contact` into unified Master Timelines using GSAP ScrollTrigger: the vertical timeline line grows downward (`scaleY: 0 -> 1`) before cascading milestone items sequentially.
+  3. Added `history.scrollRestoration = 'manual'` to ensure every page refresh starts at the top, allowing the entire cinematic choreography to unfold in perfect order.
+- **Consequences**: Completely harmonious motion system across all viewports; zero jarring layout snaps or desynchronized animations on reload.
