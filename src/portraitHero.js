@@ -84,7 +84,7 @@ export function initPortraitHero() {
     const aboutTl = gsap.timeline({
       scrollTrigger: {
         trigger: '#about',
-        start: 'top 80%',
+        start: 'top 65%',
         once: true
       },
       defaults: { ease: 'power3.out', force3D: true }
@@ -120,7 +120,7 @@ export function initPortraitHero() {
     const contactTl = gsap.timeline({
       scrollTrigger: {
         trigger: '#contact',
-        start: 'top 80%',
+        start: 'top 65%',
         once: true
       },
       defaults: { ease: 'power3.out', force3D: true }

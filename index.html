@@ -41,16 +41,16 @@
 
     <!-- Header Navigation (Crisp Frosted Glassmorphism) -->
     <header class="w-full border-b border-[#2E1E15]/60 bg-[#060402]/90 backdrop-blur-md sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-10 h-16 sm:h-20 flex items-center justify-between">
+      <div class="max-w-7xl mx-auto px-4 sm:px-10 h-16 sm:h-20 flex items-center justify-center md:justify-between">
         
         <!-- Logo -->
-        <a href="#" class="flex flex-col text-start group">
+        <a href="#" class="flex flex-col items-center md:items-start group">
           <span class="font-en-display text-lg sm:text-2xl font-bold tracking-tight text-[#FAF6F0]">MR. AHMED SAMIR</span>
           <span class="tabular-numbers text-xs font-bold text-[#A67C5B]"><span class="tracking-wider font-en-display">ENGLISH MASTER</span> • <span class="font-ar-display">خبرة 26 عاماً</span></span>
         </a>
 
         <!-- Left Side: Navigation & CTA -->
-        <div class="flex items-center gap-6 sm:gap-8">
+        <div class="hidden md:flex items-center gap-6 sm:gap-8">
           
           <!-- Desktop Navigation Links -->
           <nav class="hidden md:flex items-center gap-8 text-sm font-bold font-ar-display text-[#CDB19B]">
@@ -59,8 +59,8 @@
             <a href="#contact" class="hover:text-[#FAF6F0] transition-colors">طرق التواصل</a>
           </nav>
   
-          <!-- Mobile Quick CTA Button -->
-          <a href="#contact" class="md:hidden px-3.5 py-1.5 rounded-lg bg-[#4E2E1B] hover:bg-[#6E4227] text-[#FAF6F0] text-xs font-bold font-ar-display border border-[#3D281C] flex items-center gap-1.5 shadow-sm active:scale-95 transition-colors">
+          <!-- Quick CTA Button -->
+          <a href="#contact" class="px-3.5 py-1.5 rounded-lg bg-[#4E2E1B] hover:bg-[#6E4227] text-[#FAF6F0] text-xs font-bold font-ar-display border border-[#3D281C] flex items-center gap-1.5 shadow-sm active:scale-95 transition-colors">
             <i data-lucide="phone-call" class="w-3.5 h-3.5" aria-hidden="true"></i>
             <span>تواصل</span>
           </a>
@@ -73,7 +73,7 @@
     <main class="flex-grow">
 
       <!-- HERO SECTION -->
-      <section id="hero" class="max-w-7xl mx-auto px-4 sm:px-10 py-8 sm:py-12 min-h-[calc(100vh-80px)] flex items-center">
+      <section id="hero" class="max-w-7xl mx-auto px-4 sm:px-10 py-8 sm:py-12 min-h-[calc(100svh-80px)] flex items-center">
         <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           <!-- Left: Text & Bio & Refined Editorial Stages (7 Columns in RTL -> Right Side) -->
@@ -91,7 +91,7 @@
 
             <!-- Concise General Bio (Optically Scaled & Balanced to 14px-15px) -->
             <p class="hero-text-item text-[#CDB19B] text-sm sm:text-[15px] leading-[1.8] max-w-xl font-ar-body font-normal">
-              معلم لغة إنجليزية بخبرة تمتد لأكثر من 26 عاماً في تدريس المناهج وتأسيس مهارات التفكير اللغوي وحل الامتحانات، خريج كلية التربية جامعة المنوفية (عام 2000) وحاصل على دبلومتين في الدراسات العليا.
+              مُكرّس لتبسيط اللغة الإنجليزية وتحويلها من عقبة دراسية إلى مهارة ممتعة ومفتاح للتفوق. أركز على الفهم العميق وتأسيس مهارات التفكير اللغوي السليم، لتمكين الطلاب من اجتياز الامتحانات بثقة وبناء أساس قوي للمستقبل.
             </p>
 
             <!-- Refined Stepped Academic Journey (Shape 4) -->
@@ -99,23 +99,32 @@
               <span class="text-xs font-bold text-[#A67C5B] block font-ar-display">المراحل والأنظمة التعليمية المعتمدة:</span>
               <div class="flex flex-wrap items-center gap-2.5 sm:gap-3.5">
                 
-                <div class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0D0906] border border-[#2E1E15] hover:border-[#A67C5B] transition-colors shadow-sm">
-                  <span class="w-5 h-5 rounded-full bg-[#1E150F] border border-[#A67C5B] text-[#A67C5B] text-[11px] font-bold flex items-center justify-center font-en-display">1</span>
-                  <span class="text-xs sm:text-sm font-bold text-[#FAF6F0] font-ar-display">شهادة إعدادية</span>
+                <div class="flex flex-col gap-0.5 px-3.5 py-2 rounded-xl bg-[#0D0906] border border-[#2E1E15] hover:border-[#A67C5B] transition-colors shadow-sm">
+                  <div class="flex items-center gap-2">
+                    <span class="w-5 h-5 rounded-full bg-[#1E150F] border border-[#A67C5B] text-[#A67C5B] text-[11px] font-bold flex items-center justify-center font-en-display">1</span>
+                    <span class="text-xs sm:text-sm font-bold text-[#FAF6F0] font-ar-display">مرحلة إعدادية</span>
+                  </div>
+                  <span class="text-[10px] text-[#CDB19B] font-ar-body text-start mr-7">صف أول، ثاني، ثالث</span>
                 </div>
 
                 <span class="text-[#4E2E1B] text-xs font-bold hidden sm:inline" aria-hidden="true">←</span>
 
-                <div class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0D0906] border border-[#2E1E15] hover:border-[#A67C5B] transition-colors shadow-sm">
-                  <span class="w-5 h-5 rounded-full bg-[#1E150F] border border-[#A67C5B] text-[#A67C5B] text-[11px] font-bold flex items-center justify-center font-en-display">2</span>
-                  <span class="text-xs sm:text-sm font-bold text-[#FAF6F0] font-ar-display">شهادة ثانوية</span>
+                <div class="flex flex-col gap-0.5 px-3.5 py-2 rounded-xl bg-[#0D0906] border border-[#2E1E15] hover:border-[#A67C5B] transition-colors shadow-sm">
+                  <div class="flex items-center gap-2">
+                    <span class="w-5 h-5 rounded-full bg-[#1E150F] border border-[#A67C5B] text-[#A67C5B] text-[11px] font-bold flex items-center justify-center font-en-display">2</span>
+                    <span class="text-xs sm:text-sm font-bold text-[#FAF6F0] font-ar-display">مرحلة ثانوية</span>
+                  </div>
+                  <span class="text-[10px] text-[#CDB19B] font-ar-body text-start mr-7">صف أول، ثاني، ثالث</span>
                 </div>
 
                 <span class="text-[#4E2E1B] text-xs font-bold hidden sm:inline" aria-hidden="true">←</span>
 
-                <div class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#0D0906] border border-[#2E1E15] hover:border-[#A67C5B] transition-colors shadow-sm">
-                  <span class="w-5 h-5 rounded-full bg-[#1E150F] border border-[#A67C5B] text-[#A67C5B] text-[11px] font-bold flex items-center justify-center font-en-display">3</span>
-                  <span class="text-xs sm:text-sm font-bold text-[#FAF6F0] font-ar-display">بكالوريا عامة</span>
+                <div class="flex flex-col gap-0.5 px-3.5 py-2 rounded-xl bg-[#0D0906] border border-[#2E1E15] hover:border-[#A67C5B] transition-colors shadow-sm">
+                  <div class="flex items-center gap-2">
+                    <span class="w-5 h-5 rounded-full bg-[#1E150F] border border-[#A67C5B] text-[#A67C5B] text-[11px] font-bold flex items-center justify-center font-en-display">3</span>
+                    <span class="text-xs sm:text-sm font-bold text-[#FAF6F0] font-ar-display">بكالوريا عامة</span>
+                  </div>
+                  <span class="text-[10px] text-[#CDB19B] font-ar-body text-start mr-7">صف أول، ثاني</span>
                 </div>
 
               </div>
