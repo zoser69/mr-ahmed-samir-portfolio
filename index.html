@@ -5,13 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mr. Ahmed Samir | خبير اللغة الإنجليزية • خبرة 26 عاماً</title>
 
+  <meta name="color-scheme" content="dark">
+  
   <!-- Critical Anti-White-Flash & Anti-FOUC Base Styles (Paints Dark Grounding Instantly) -->
   <style>
+    :root {
+      color-scheme: dark;
+    }
     html, body {
       background-color: #060402 !important;
       color: #FAF6F0 !important;
       margin: 0;
       padding: 0;
+    }
+    /* Anti-FOUC: Hide UI content until Tailwind CSS is loaded and applied */
+    #app-wrapper {
+      opacity: 0;
+      visibility: hidden;
+    }
+    #app-wrapper.is-ready {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
     }
     #three-canvas-container {
       background-color: #060402 !important;
@@ -69,7 +84,7 @@
   </div>
 
   <!-- Main Wrapper -->
-  <div class="relative z-10 min-h-screen flex flex-col justify-between">
+  <div id="app-wrapper" class="relative z-10 min-h-screen flex flex-col justify-between">
 
     <!-- Header Navigation (Crisp Frosted Glassmorphism) -->
     <header class="w-full border-b border-[#2E1E15]/60 bg-[#060402]/90 backdrop-blur-md sticky top-0 z-50">

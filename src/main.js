@@ -6,6 +6,12 @@ import { createIcons, PhoneCall, MessageCircle, Phone, Facebook, Youtube, Video,
 function initApp() {
   console.log('[App] Initializing Mr. Ahmed Samir Portfolio...');
 
+  // Reveal App Wrapper safely after CSS is parsed and DOM is ready
+  requestAnimationFrame(() => {
+    const appWrapper = document.getElementById('app-wrapper');
+    if (appWrapper) appWrapper.classList.add('is-ready');
+  });
+
   // 1. Initialize Lucide Icons with aria-hidden for accessibility
   try {
     createIcons({ 
