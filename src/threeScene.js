@@ -86,23 +86,24 @@ export function initThreeScene() {
 
   console.log(`[ThreeScene] Device capability tier: "${currentTier}" (Cores: ${navigator.hardwareConcurrency || 'N/A'}, RAM: ${navigator.deviceMemory || 'N/A'}GB)`);
 
-  // 2. Scene Setup
+  // 2. Scene Setup (Solid Luxury Dark Truffle Background)
   scene = new THREE.Scene();
-  scene.background = null;
+  scene.background = new THREE.Color(0x060402);
 
   // 3. Camera Setup
   const aspect = window.innerWidth / window.innerHeight;
   camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 90);
   camera.position.set(0, 0, 32);
 
-  // 4. Studio WebGL Renderer (Adaptive Quality)
+  // 4. Studio WebGL Renderer (Solid Opaque Surface - Zero White Flash)
   renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: tierConfig.antialias,
-    alpha: true,
+    alpha: false,
     powerPreference: 'high-performance',
     precision: tierConfig.precision
   });
+  renderer.setClearColor(0x060402, 1.0);
 
   const getOptimalPixelRatio = () => {
     const dpr = window.devicePixelRatio || 1;
@@ -415,6 +416,11 @@ export function initThreeScene() {
     }
 
     renderer.render(scene, camera);
+
+    // Smoothly reveal canvas on first valid WebGL frame
+    if (canvas.style.opacity !== '1') {
+      canvas.style.opacity = '1';
+    }
   }
 
   animate();

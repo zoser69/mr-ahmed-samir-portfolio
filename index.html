@@ -51,8 +51,8 @@
 <body class="bg-[#060402] text-[#FAF6F0] antialiased selection:bg-[#4E2E1B] selection:text-[#FAF6F0]" style="background-color: #060402; color: #FAF6F0;">
 
   <!-- Background 3D Canvas -->
-  <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden" style="transform: translateZ(0); will-change: transform;">
-    <canvas id="three-canvas" class="w-full h-full block canvas-ambient-blur"></canvas>
+  <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#060402]" style="background-color: #060402; transform: translateZ(0); will-change: transform;">
+    <canvas id="three-canvas" class="w-full h-full block canvas-ambient-blur" style="background-color: #060402; opacity: 0; transition: opacity 0.5s ease-out;"></canvas>
   </div>
 
   <!-- Main Wrapper -->

@@ -89,6 +89,7 @@
   filter: blur(1.8px);
   transform: scale(1.015) translateZ(0);
   will-change: transform, filter;
+  background-color: #060402;
 }
 
 /* Ambient Breathing Backlight */
