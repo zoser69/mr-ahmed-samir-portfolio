@@ -74,10 +74,31 @@ function detectDeviceTier() {
 
 export function initThreeScene(onReady) {
   const canvas = document.getElementById('three-canvas');
-  const heroSection = document.getElementById('hero');
   if (!canvas) return;
 
+  // Clean up any lingering WebGL instance first (prevents context collisions on fast reloads)
+  disposeThreeScene();
   isDisposed = false;
+
+  // WebGL Context-Loss Resilience (Prevents dead white canvas on GPU resource pressure)
+  const handleContextLost = (event) => {
+    event.preventDefault();
+    console.warn('[ThreeScene] WebGL context lost. Hiding canvas to prevent white artifacts.');
+    canvas.style.display = 'none';
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+  };
+
+  const handleContextRestored = () => {
+    console.log('[ThreeScene] WebGL context restored. Rebuilding scene.');
+    canvas.style.display = 'block';
+    initThreeScene(onReady);
+  };
+
+  canvas.addEventListener('webglcontextlost', handleContextLost, { once: true });
+  canvas.addEventListener('webglcontextrestored', handleContextRestored, { once: true });
 
   // 1. Device Capability & Tier Detection
   const isMobile = window.innerWidth < 768 || (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 1);
@@ -104,6 +125,7 @@ export function initThreeScene(onReady) {
     precision: tierConfig.precision
   });
   renderer.setClearColor(0x000000, 0);
+  renderer.clear(); // Clear immediately to guaranteed 100% transparent buffer at 0ms!
 
   const getOptimalPixelRatio = () => {
     const dpr = window.devicePixelRatio || 1;
@@ -438,6 +460,7 @@ export function disposeThreeScene() {
   isDisposed = true;
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
   }
   if (scene) {
     scene.traverse((object) => {
@@ -452,8 +475,11 @@ export function disposeThreeScene() {
         }
       }
     });
+    scene = null;
   }
   if (renderer) {
     renderer.dispose();
+    renderer.forceContextLoss();
+    renderer = null;
   }
 }

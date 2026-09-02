@@ -42,7 +42,11 @@ function initApp() {
     });
     console.log('[App] Three.js scene initialized successfully');
   } catch (err) {
-    console.error('[App] Three.js error:', err);
+    console.error('[App] Three.js initialization error:', err);
+    const canvas = document.getElementById('three-canvas');
+    if (canvas) canvas.style.display = 'none';
+    const container = document.getElementById('three-canvas-container');
+    if (container) container.style.display = 'none';
     liftCurtain();
   }
 

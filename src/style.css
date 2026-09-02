@@ -90,6 +90,8 @@
   height: 100%;
   display: block;
   pointer-events: none;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 /* Ambient Breathing Backlight */
