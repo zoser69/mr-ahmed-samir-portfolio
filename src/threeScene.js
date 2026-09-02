@@ -103,8 +103,19 @@ export function initThreeScene() {
     powerPreference: 'high-performance',
     precision: tierConfig.precision
   });
+
+  const getOptimalPixelRatio = () => {
+    const dpr = window.devicePixelRatio || 1;
+    if (isMobile) {
+      if (currentTier === 'high') return Math.min(dpr, 1.5);
+      if (currentTier === 'mid') return Math.min(dpr, 1.25);
+      return Math.min(dpr, 1.0);
+    }
+    return Math.min(dpr, tierConfig.pixelRatioMax);
+  };
+
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tierConfig.pixelRatioMax));
+  renderer.setPixelRatio(getOptimalPixelRatio());
 
   // 5. Studio 3-Point Lighting Setup (Warm Truffle & Ambient Gold)
   const ambientLight = new THREE.AmbientLight(0xA67C5B, 0.95);
@@ -318,7 +329,7 @@ export function initThreeScene() {
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tierConfig.pixelRatioMax));
+    renderer.setPixelRatio(getOptimalPixelRatio());
   };
   window.addEventListener('resize', onResize, { passive: true });
 
@@ -356,12 +367,12 @@ export function initThreeScene() {
           if (currentTier === 'high') {
             currentTier = 'mid';
             tierConfig = TIER_CONFIG.mid;
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tierConfig.pixelRatioMax));
+            renderer.setPixelRatio(getOptimalPixelRatio());
             console.warn('[ThreeScene FPS Watchdog] Downscaled quality tier to "mid" for smooth 60 FPS');
           } else if (currentTier === 'mid') {
             currentTier = 'low';
             tierConfig = TIER_CONFIG.low;
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tierConfig.pixelRatioMax));
+            renderer.setPixelRatio(getOptimalPixelRatio());
             console.warn('[ThreeScene FPS Watchdog] Downscaled quality tier to "low" for smooth 60 FPS');
           }
           lowFpsCount = 0;
