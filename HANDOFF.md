@@ -120,6 +120,17 @@
     - Scrolling down to contact: Cards animate in natural viewing sequence as they enter the screen.
     - Scrolling back up to 0: Complete reversal to initial state.
 
-## 11. Immediate Next Step
+## 11. UNIFIED PROGRESS-LINE & MILESTONE DOT COUPLING (2026-09-05, Commit `238d699`)
+- **Problems Solved**:
+  - User uploaded screenshot `media_1788560856474.png` showing the golden progress line had passed milestone dot 2 by 30-40px, but dot 2 was still dark ("مشكلتي مع الخط الاصفر ده ساعات بيعدي النقطة لكنها مش بتنور وبتفضل مطفية").
+  - Root Cause: The progress line was controlled by a scrubbed ScrollTrigger on `#about`, while the dots were on independent ScrollTriggers checking `item` at `top 68%`. Because they used different triggers and math, the line could reach fraction 0.55 while the card hadn't crossed 68% of the viewport.
+  - Solution: Eliminated decoupled dot ScrollTriggers. Milestone dot illumination is now driven directly by the progress line's tween via `onUpdate: function() { updateDots(this.progress()); }` and `onRefresh: (self) => updateDots(self.progress)`. Dot positions along `timeline-track-base` are measured dynamically (0.079, 0.517, 0.955). The moment the golden line tip touches or passes a dot, that dot illuminates instantly. When scrolling back up, it turns dark the instant the line recedes above it.
+- **Empirical Verification**:
+  - `npm run build` passed in 3.21s with 0 errors.
+  - Native Edge CDP tested across 10 fine-grained scroll positions:
+    - ZERO violations where `scaleY >= 0.505` and dot 2 was dark.
+    - Screenshot `dot2-synced.png` captured showing the golden line passing Milestone 2 with dot 2 brilliantly illuminated and dot 3 dark.
+
+## 12. Immediate Next Step
 - Verify on `http://localhost:5173/`.
 - Deploy to GitHub Pages upon user command.
