@@ -84,6 +84,17 @@
   mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 82%, rgba(0,0,0,0) 100%);
 }
 
+/* Cinematic Depth of Field (Soft Ambient Background Bokeh) */
+:root {
+  --canvas-blur: 1.2px;
+}
+
+.canvas-ambient-blur {
+  filter: blur(var(--canvas-blur, 1.2px));
+  transform: scale(1.015) translateZ(0);
+  will-change: transform, filter;
+}
+
 /* Clean Transparent 3D Canvas */
 #three-canvas {
   width: 100%;

@@ -376,6 +376,8 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
     renderer.setPixelRatio(getOptimalPixelRatio());
+    renderer.setClearColor(0x000000, 0);
+    renderer.clear();
   };
   window.addEventListener('resize', onResize, { passive: true });
 
