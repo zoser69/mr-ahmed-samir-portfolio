@@ -17,21 +17,22 @@ function liftCurtain() {
 
 function revealCanvas() {
   const container = document.getElementById('three-canvas-container');
+  const canvas = document.getElementById('three-canvas');
   if (container) {
     container.style.opacity = '1';
+  }
+  if (canvas) {
+    canvas.classList.add('canvas-ambient-blur');
   }
 }
 
 function initApp() {
   console.log('[App] Initializing Mr. Ahmed Samir Portfolio...');
 
-  // Fallback safety: guarantee curtain dissolves even if WebGL is delayed
-  const curtainSafetyTimer = setTimeout(liftCurtain, 800);
-
-  // Fallback safety: reveal the canvas even if the ready callback never fires,
-  // as long as scene initialization itself succeeded (context lost mid-flight
-  // keeps the canvas display:none, so this stays safe).
-  const canvasRevealSafetyTimer = setTimeout(revealCanvas, 1200);
+  // Fallback curtain lift (1200ms): if WebGL initialization is delayed or fails,
+  // ensure the user can still read the site content. The canvas is NEVER forcibly
+  // revealed on a timer — it stays hidden (opacity: 0) unless WebGL reports ready.
+  const curtainSafetyTimer = setTimeout(liftCurtain, 1200);
 
   // 1. Initialize Lucide Icons with aria-hidden for accessibility
   try {
@@ -50,14 +51,13 @@ function initApp() {
   try {
     initThreeScene(() => {
       clearTimeout(curtainSafetyTimer);
-      clearTimeout(canvasRevealSafetyTimer);
       revealCanvas();
       liftCurtain();
     });
     console.log('[App] Three.js scene initialized successfully');
   } catch (err) {
     console.error('[App] Three.js initialization error:', err);
-    clearTimeout(canvasRevealSafetyTimer);
+    clearTimeout(curtainSafetyTimer);
     const canvas = document.getElementById('three-canvas');
     if (canvas) canvas.style.display = 'none';
     const container = document.getElementById('three-canvas-container');

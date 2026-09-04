@@ -139,7 +139,8 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
     canvas,
     antialias: tierConfig.antialias,
     alpha: true,
-    preserveDrawingBuffer: false,
+    premultipliedAlpha: false,
+    preserveDrawingBuffer: true,
     precision: tierConfig.precision
   });
 
@@ -185,6 +186,7 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
   lettersGroup = new THREE.Group();
   scene.add(lettersGroup);
 
+  let lettersReady = false;
   const fontLoader = new FontLoader();
   const fontPath = `${import.meta.env.BASE_URL}fonts/serif_bold.json`;
 
@@ -314,6 +316,10 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
 
       lettersGroup.add(mesh);
     });
+    lettersReady = true;
+  }, undefined, (err) => {
+    console.warn('[ThreeScene] Font loading fallback, proceeding with particles:', err);
+    lettersReady = true;
   });
 
   // 7. Ambient Floating Dust Particles (Scaled by Tier)
@@ -466,12 +472,14 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
 
     renderer.render(scene, camera);
 
-    // Notify caller only after several VERIFIED presented frames — a single
-    // rendered frame is not proof the compositor published a valid buffer.
-    framesRendered++;
-    if (typeof readyCallback === 'function' && framesRendered >= READY_FRAME_COUNT) {
-      readyCallback();
-      readyCallback = null;
+    // Notify caller only after letters are created AND several VERIFIED presented frames.
+    // This ensures the canvas is never revealed with an empty or uninitialized buffer.
+    if (lettersReady) {
+      framesRendered++;
+      if (typeof readyCallback === 'function' && framesRendered >= READY_FRAME_COUNT) {
+        readyCallback();
+        readyCallback = null;
+      }
     }
   }
 
