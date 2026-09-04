@@ -111,13 +111,14 @@
           <!-- Left: Text & Bio & Refined Editorial Stages (7 Columns in RTL -> Right Side) -->
           <div class="lg:col-span-7 flex flex-col items-start text-start space-y-6 sm:space-y-7 order-2 lg:order-1">
             
-            <!-- Main Title -->
+            <!-- Main Title with Editorial Eyebrow -->
             <div class="hero-text-item space-y-2 sm:space-y-3">
+              <span class="text-xs sm:text-[13px] font-bold tracking-widest uppercase font-en-display text-[#A67C5B] block">VETERAN ENGLISH EDUCATOR • EST. 2000</span>
               <h1 class="text-3xl sm:text-5xl lg:text-[56px] font-bold font-en-display text-[#FAF6F0] tracking-tight leading-[1.08]">
                 MR. AHMED SAMIR
               </h1>
               <p class="text-lg sm:text-2xl lg:text-[26px] text-[#A67C5B] font-bold font-ar-display leading-[1.35]">
-                مدرس اللغة الإنجليزية للمرحلتين الإعدادية والثانوية
+                كبير معلّمي اللغة الإنجليزية للمرحلتين الإعدادية والثانوية
               </p>
             </div>
 
@@ -125,6 +126,12 @@
             <p class="hero-text-item text-[#CDB19B] text-sm sm:text-base leading-[1.8] max-w-xl font-ar-body font-normal">
               تأسيس لغوي متين وشرح يفكك تفاصيل المنهج بمنطق واضح؛ ليتجاوز الطالب فكرة الحفظ إلى التمكن التام من أساليب الحل والتعامل مع أي امتحان بثقة وهدوء.
             </p>
+
+            <!-- Verified Geographic Location Badge (Quesna, Menofia & Online) -->
+            <div class="hero-text-item flex items-center gap-2 text-xs sm:text-sm text-[#CDB19B] font-ar-body pt-0.5">
+              <i data-lucide="map-pin" class="w-4 h-4 text-[#A67C5B] shrink-0" aria-hidden="true"></i>
+              <span>المقرات والسناتر المعتمدة: <strong class="text-[#FAF6F0] font-semibold">قويسنا، محافظة المنوفية</strong> • متاح المتابعة أونلاين</span>
+            </div>
 
             <!-- Refined Stepped Academic Journey (3-Column Luxury Editorial Grid) -->
             <div class="hero-text-item w-full pt-1 space-y-2.5">
@@ -222,7 +229,7 @@
         
         <!-- Header -->
         <div class="text-start mb-12 sm:mb-16 space-y-3">
-          <h2 class="about-header-item text-2xl sm:text-4xl lg:text-5xl font-bold font-ar-display text-[#FAF6F0] leading-[1.3] text-start">
+          <h2 class="about-header-item word-reveal text-2xl sm:text-4xl lg:text-5xl font-bold font-ar-display text-[#FAF6F0] leading-[1.3] text-start" data-word-reveal>
             المسيرة الأكاديمية والخبرة المهنية
           </h2>
           <p class="about-header-item text-[#A67C5B] text-sm sm:text-base font-medium max-w-2xl leading-relaxed">
@@ -230,11 +237,14 @@
           </p>
         </div>
 
-        <!-- Minimalist Vertical Journey -->
+        <!-- Minimalist Vertical Journey (Scroll-Scrubbed Progress Architecture) -->
         <div class="relative mt-12 mb-8 max-w-3xl">
           
-          <!-- Continuous Vertical Line (Logical Start Position) -->
-          <div class="timeline-track-line absolute start-[15px] top-4 bottom-4 w-[2px] bg-gradient-to-b from-[#A67C5B] to-transparent opacity-60"></div>
+          <!-- Base Quiet Track Line -->
+          <div class="timeline-track-base absolute start-[15px] top-4 bottom-4 w-[2px] bg-[#2E1E15] rounded-full"></div>
+
+          <!-- Dynamic Golden Progress Fill Line (Scrubbed on Scroll) -->
+          <div class="timeline-track-progress absolute start-[15px] top-4 bottom-4 w-[2px] bg-gradient-to-b from-[#A67C5B] via-[#CDB19B] to-[#FAF6F0] rounded-full origin-top scale-y-0"></div>
 
           <div class="space-y-12 sm:space-y-16">
             
@@ -242,7 +252,7 @@
             <div class="about-card-item relative flex items-start group cursor-default">
               <!-- Dot Container -->
               <div class="w-8 flex justify-center absolute start-0 mt-2">
-                  <div class="w-4 h-4 rounded-full bg-[#0D0906] border-[2px] border-[#A67C5B] z-10 transition-all duration-300 group-hover:bg-[#A67C5B] group-hover:scale-125"></div>
+                  <div class="timeline-milestone-dot w-4 h-4 rounded-full bg-[#0D0906] border-[2px] border-[#2E1E15] z-10 transition-all duration-300"></div>
               </div>
               
               <!-- Content -->
@@ -260,7 +270,7 @@
             <div class="about-card-item relative flex items-start group cursor-default">
               <!-- Dot Container -->
               <div class="w-8 flex justify-center absolute start-0 mt-2">
-                  <div class="w-4 h-4 rounded-full bg-[#0D0906] border-[2px] border-[#A67C5B] z-10 transition-all duration-300 group-hover:bg-[#A67C5B] group-hover:scale-125"></div>
+                  <div class="timeline-milestone-dot w-4 h-4 rounded-full bg-[#0D0906] border-[2px] border-[#2E1E15] z-10 transition-all duration-300"></div>
               </div>
               
               <!-- Content -->
@@ -278,7 +288,7 @@
             <div class="about-card-item relative flex items-start group cursor-default">
               <!-- Dot Container -->
               <div class="w-8 flex justify-center absolute start-0 mt-2">
-                  <div class="w-4 h-4 rounded-full bg-[#0D0906] border-[2px] border-[#A67C5B] z-10 transition-all duration-300 group-hover:bg-[#A67C5B] group-hover:scale-125"></div>
+                  <div class="timeline-milestone-dot w-4 h-4 rounded-full bg-[#0D0906] border-[2px] border-[#2E1E15] z-10 transition-all duration-300"></div>
               </div>
               
               <!-- Content -->
@@ -302,7 +312,7 @@
         <div class="contact-reveal-box text-center max-w-4xl mx-auto space-y-10 sm:space-y-12">
           
           <div class="space-y-3">
-            <h2 class="text-2xl sm:text-4xl font-bold font-ar-display text-[#FAF6F0] leading-[1.3]">أرقام الحجز والتواصل المباشر</h2>
+            <h2 class="word-reveal text-2xl sm:text-4xl font-bold font-ar-display text-[#FAF6F0] leading-[1.3]" data-word-reveal>أرقام الحجز والتواصل المباشر</h2>
             <p class="text-[#CDB19B] text-xs sm:text-sm max-w-lg mx-auto font-ar-body leading-relaxed">
               للحجز والاستفسار عن المواعيد والسناتر، يمكنك التواصل مباشرة عبر الأرقام التالية:
             </p>

@@ -33,7 +33,8 @@ export function initPortraitHero() {
       '#hero-portrait-img',
       '.hero-text-item',
       '#about .about-header-item',
-      '#about .timeline-track-line',
+      '#about .timeline-track-base',
+      '#about .timeline-track-progress',
       '#about .about-card-item',
       '#contact .contact-reveal-box > *',
       '#contact .social-card-item'
@@ -44,8 +45,31 @@ export function initPortraitHero() {
       scale: 1,
       scaleY: 1
     });
+
+    document.querySelectorAll('[data-word-reveal]').forEach((el) => {
+      el.classList.add('is-visible');
+    });
+    document.querySelectorAll('.timeline-milestone-dot').forEach((dot) => {
+      dot.classList.add('is-active');
+    });
     return;
   }
+
+  // --- FEATURE 1: EDITORIAL STAGGERED WORD REVEAL (Pentagram / Awwwards Standard) ---
+  document.querySelectorAll('[data-word-reveal]').forEach((heading) => {
+    const rawText = heading.textContent.trim();
+    const words = rawText.split(/\s+/);
+    heading.innerHTML = words.map((word, idx) => 
+      `<span class="word-reveal-word" style="--word-index: ${idx}">${word}</span>`
+    ).join(' ');
+
+    ScrollTrigger.create({
+      trigger: heading,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => heading.classList.add('is-visible')
+    });
+  });
 
   // --- SECTION 1: MASTER HERO ENTRANCE (Dynamic Split Side Entrance) ---
   heroEntranceTimeline = gsap.timeline({
@@ -82,48 +106,95 @@ export function initPortraitHero() {
       '-=0.7'
     );
 
-  // --- SECTION 2: ACADEMIC CREDENTIALS & EXPERIENCE TIMELINE (#about) ---
+  // --- FEATURE 2: HOLOGRAPHIC PSEUDO-3D PARALLAX (Desktop Mouse Reaction) ---
+  if (window.innerWidth >= 1024) {
+    let mouseX = 0, mouseY = 0;
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+      gsap.to(img, {
+        x: mouseX * -14,
+        y: mouseY * -9,
+        rotationY: mouseX * 3.8,
+        rotationX: -mouseY * 2.8,
+        transformPerspective: 950,
+        duration: 0.85,
+        ease: 'power2.out',
+        overwrite: 'auto',
+        force3D: true
+      });
+    }, { passive: true });
+  }
+
+  // --- SECTION 2: SCROLL-SCRUBBED ACADEMIC JOURNEY (#about) ---
   const aboutSection = document.getElementById('about');
   if (aboutSection) {
-    // Initial states for About
-    gsap.set('#about .about-header-item', { opacity: 0, y: 20 });
-    gsap.set('#about .timeline-track-line', { scaleY: 0, transformOrigin: 'top center' });
-    gsap.set('#about .about-card-item', { opacity: 0, y: 24 });
+    // Initial states for About items
+    gsap.set('#about .about-header-item:not([data-word-reveal])', { opacity: 0, y: 20 });
+    gsap.set('#about .about-card-item', { opacity: 0, y: 20 });
 
-    const aboutTl = gsap.timeline({
+    // Section header subtitle reveal
+    gsap.to('#about .about-header-item:not([data-word-reveal])', {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
       scrollTrigger: {
         trigger: '#about',
-        start: 'top 65%',
+        start: 'top 75%',
         once: true
-      },
-      defaults: { ease: 'power3.out', force3D: true }
+      }
     });
 
-    aboutTl
-      .to('#about .about-header-item', {
-        opacity: 1,
-        y: 0,
-        duration: 0.55,
-        stagger: 0.08
-      })
-      .to('#about .timeline-track-line', {
+    // Continuous Scroll-Scrubbed Progress Line
+    const progressLine = aboutSection.querySelector('.timeline-track-progress');
+    if (progressLine) {
+      gsap.to(progressLine, {
         scaleY: 1,
-        duration: 0.7,
-        ease: 'power2.inOut'
-      }, '-=0.3')
-      .to('#about .about-card-item', {
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#about',
+          start: 'top 65%',
+          end: 'bottom 80%',
+          scrub: 0.4
+        }
+      });
+    }
+
+    // Progressive milestone dot activation & card arrival
+    const milestones = aboutSection.querySelectorAll('.about-card-item');
+    milestones.forEach((item) => {
+      const dot = item.querySelector('.timeline-milestone-dot');
+
+      // Card arrival reveal
+      gsap.to(item, {
         opacity: 1,
         y: 0,
-        duration: 0.65,
-        stagger: 0.14
-      }, '-=0.5');
+        duration: 0.6,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: item,
+          start: 'top 80%',
+          once: true
+        }
+      });
+
+      // Interactive milestone dot illumination triggered by scroll progress
+      if (dot) {
+        ScrollTrigger.create({
+          trigger: item,
+          start: 'top 68%',
+          onEnter: () => dot.classList.add('is-active'),
+          onLeaveBack: () => dot.classList.remove('is-active')
+        });
+      }
+    });
   }
 
   // --- SECTION 3: CONTACT & SOCIAL HUB (#contact) ---
   const contactSection = document.getElementById('contact');
   if (contactSection) {
     // Initial states for Contact
-    gsap.set('#contact .contact-reveal-box > *', { opacity: 0, y: 20 });
+    gsap.set('#contact .contact-reveal-box > *:not([data-word-reveal])', { opacity: 0, y: 20 });
     gsap.set('#contact .social-card-item', { opacity: 0, y: 16, scale: 0.96 });
 
     const contactTl = gsap.timeline({
@@ -136,7 +207,7 @@ export function initPortraitHero() {
     });
 
     contactTl
-      .to('#contact .contact-reveal-box > *', {
+      .to('#contact .contact-reveal-box > *:not([data-word-reveal])', {
         opacity: 1,
         y: 0,
         duration: 0.6,

@@ -154,9 +154,40 @@
   box-shadow: 0 8px 24px -6px rgba(78, 46, 27, 0.4);
 }
 
+/* Staggered Word Reveal (Editorial Pentagram Standard) */
+.word-reveal {
+  visibility: visible;
+}
+.word-reveal-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--word-index, 0) * 0.08s);
+  will-change: opacity, transform;
+}
+.word-reveal.is-visible .word-reveal-word {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Active Timeline Milestone State */
+.timeline-milestone-dot.is-active {
+  background-color: #A67C5B !important;
+  border-color: #FAF6F0 !important;
+  transform: scale(1.25);
+  box-shadow: 0 0 14px rgba(166, 124, 91, 0.6);
+}
+
 /* Reduced Motion Fallback */
 @media (prefers-reduced-motion: reduce) {
   .ambient-backlight {
     animation: none;
+  }
+  .word-reveal-word {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }

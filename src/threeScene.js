@@ -3,7 +3,7 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
 let scene, camera, renderer, animationFrameId;
-let lettersGroup, particlesMesh, pointLight;
+let lettersGroup, particlesMesh, bokehEmbersMesh, pointLight;
 let isDisposed = false;
 let isTabVisible = true;
 let contextGeneration = 0;
@@ -329,29 +329,54 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
     lettersReady = true;
   });
 
-  // 7. Ambient Floating Dust Particles (Scaled by Tier)
+  // 7. Dual-Strata Particle Bokeh System (Scaled by Tier)
+  // Strata A: Deep Ambient Stardust
   const particleCount = isMobile ? tierConfig.mobileParticles : tierConfig.desktopParticles;
   const particleGeo = new THREE.BufferGeometry();
   const positions = new Float32Array(particleCount * 3);
 
   for (let i = 0; i < particleCount * 3; i += 3) {
-    positions[i] = (Math.random() - 0.5) * 55;
+    positions[i] = (Math.random() - 0.5) * 60;
     positions[i + 1] = (Math.random() - 0.5) * 45;
-    positions[i + 2] = -8 - Math.random() * 25;
+    positions[i + 2] = -12 - Math.random() * 24;
   }
 
   particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
   const particleMat = new THREE.PointsMaterial({
     color: 0xA67C5B,
-    size: isMobile ? 0.18 : 0.22,
+    size: isMobile ? 0.16 : 0.20,
     transparent: true,
-    opacity: 0.4,
+    opacity: 0.32,
     blending: THREE.AdditiveBlending
   });
 
   particlesMesh = new THREE.Points(particleGeo, particleMat);
   scene.add(particlesMesh);
+
+  // Strata B: Foreground Amber Bokeh Embers (Passes through subtle blur creating photographic bokeh)
+  const emberCount = isMobile ? 12 : 24;
+  const emberGeo = new THREE.BufferGeometry();
+  const emberPositions = new Float32Array(emberCount * 3);
+
+  for (let i = 0; i < emberCount * 3; i += 3) {
+    emberPositions[i] = (Math.random() - 0.5) * 48;
+    emberPositions[i + 1] = (Math.random() - 0.5) * 36;
+    emberPositions[i + 2] = -4 + Math.random() * 8; // Near camera depth: -4 to +4
+  }
+
+  emberGeo.setAttribute('position', new THREE.BufferAttribute(emberPositions, 3));
+
+  const emberMat = new THREE.PointsMaterial({
+    color: 0xCDB19B,
+    size: isMobile ? 0.34 : 0.44,
+    transparent: true,
+    opacity: 0.52,
+    blending: THREE.AdditiveBlending
+  });
+
+  bokehEmbersMesh = new THREE.Points(emberGeo, emberMat);
+  scene.add(bokehEmbersMesh);
 
   // 8. Mouse / Touch Parallax (Only on desktop to save mobile battery)
   const onMouseMove = (e) => {
@@ -475,9 +500,13 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
       });
     }
 
-    // Swirling Particles
+    // Swirling Dual-Strata Particles (Deep Ambient Stardust + Foreground Amber Bokeh Embers)
     if (particlesMesh) {
-      particlesMesh.rotation.y = t * 0.015;
+      particlesMesh.rotation.y = t * 0.012;
+    }
+    if (bokehEmbersMesh) {
+      bokehEmbersMesh.rotation.y = -t * 0.018;
+      bokehEmbersMesh.position.y = Math.sin(t * 0.4) * 0.5;
     }
 
     renderer.render(scene, camera);
@@ -541,6 +570,7 @@ export function disposeThreeScene({ forceLoss = false } = {}) {
   }
   lettersGroup = null;
   particlesMesh = null;
+  bokehEmbersMesh = null;
   pointLight = null;
   camera = null;
   if (renderer) {
