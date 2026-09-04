@@ -1,21 +1,23 @@
 # System State - Mr. Ahmed Samir 3D Portfolio
 
-- **Current Status**: DESIGN & TYPOGRAPHY AUDIT COMPLETED & APPLIED — Two independent review subagents (3.1 Pro & 3.8 Flash) conducted exhaustive macro and micro audits.
-- **Critical Fixes Applied (Verified via Edge CDP & Build)**:
-  1. **Fixed Phone Link Bug**: In `index.html:334`, corrected second phone call URL from invalid 13-digit `tel:+2010000233902` to valid 12-digit `tel:+201000233902`.
-  2. **Scoped Zero-Tracking to Arabic Script**: Scoped `letter-spacing: 0` in `src/style.css` strictly to Arabic fonts (`.font-ar-display`, `.font-ar-body`, `:lang(ar)`), freeing English display typography (`Outfit`) to use its intended `tracking-tight` and `tracking-wider` values without being clobbered by `!important`.
-  3. **Standardized WCAG 2.2 Touch Targets (44px)**: Enforced `min-h-[44px]` across all primary CTA buttons (hero booking button, WhatsApp, and telephone action buttons).
-  4. **Optical Scale & RTL Modernization**:
-     - Upgraded stage card font size from unreadable 10px to clean `text-xs` (12px).
-     - Converted physical CSS classes (`mr-`, `pr-`, `right-`) to modern RTL logical properties (`ms-`, `ps-`, `start-`).
-     - Upgraded hero bio font scale to `text-sm sm:text-base` for optical balance against Outfit display headers.
-  5. **Concentric Border Radius**: Elevated outer contact card radius to `rounded-3xl` (24px) to achieve geometric concentricity with inner `rounded-xl` (12px) buttons and 24px padding.
-  6. **Anti-Slop Cleanups**:
-     - Removed AI template neon hover glow `shadow-[0_0_10px_rgba(166,124,91,0.5)]` on timeline milestone dots in favor of crisp scale-125 and color transition.
-     - Dialed down ambient breathing backlight behind portrait to subtle editorial warmth.
-     - Cleaned up disabled YouTube placeholder card: removed active button hover effect and applied `pointer-events-none opacity-60`.
-  7. **Performance & Typography Preloads**: Added Google Fonts `preload` for `IBM Plex Sans Arabic` woff2 in `<head>` to prevent FOUT.
-- **Build Status**: `npm run build` passed cleanly in 3.11s. All action targets verified at 44px in Edge CDP.
+- **Current Status**: EDITORIAL & INTERACTION ENHANCEMENTS APPLIED & VERIFIED — Holographic portrait parallax, scroll-scrubbed timeline journey, dual-strata particle bokeh, and editorial branding implemented and empirically verified.
+- **Features Implemented & Verified (`8646034`)**:
+  1. **Editorial Eyebrow & Title Upgrade**:
+     - Added authoritative kicker: `VETERAN ENGLISH EDUCATOR • EST. 2000` above hero title.
+     - Upgraded Arabic title to: `كبير معلّمي اللغة الإنجليزية للمرحلتين الإعدادية والثانوية`.
+  2. **Clear Geographic Trust Signal**: Added verified center location badge: `المقرات والسناتر المعتمدة: قويسنا، محافظة المنوفية • متاح المتابعة أونلاين`.
+  3. **Holographic Pseudo-3D Portrait Parallax**: Tied desktop portrait image to cursor movement with subtle inverse micro-tilt (`rotationY`, `rotationX`, `transformPerspective: 950`), creating depth cohesion with the 3D scene.
+  4. **Scroll-Scrubbed Academic Journey**:
+     - Replaced static timeline line with dual-track architecture: a quiet base track (`#2E1E15`) and a dynamic golden progress fill line that scrubs continuously with scroll (`scrub: 0.4`).
+     - Interactive milestone dots illuminate dynamically (`is-active` state with golden core and subtle ring glow) as the progress line arrives.
+  5. **Editorial Staggered Word Reveal**: Applied word-by-word staggered reveal (`cubic-bezier(0.16, 1, 0.3, 1)`) on section headers (`#about`, `#contact`).
+  6. **Dual-Strata Particle Bokeh**: Upgraded Three.js particles into two depth layers:
+     - Deep background ambient stardust (60 particles, z: -12 to -36, warm ochre `0xA67C5B`).
+     - Foreground amber bokeh embers (24 particles, z: -4 to +4, warm gold `0xCDB19B`), passing through the 1.2px CSS ambient blur to create authentic photographic camera bokeh.
+- **Empirical Verification**:
+  - `npm run build` completed in 3.13s with zero errors.
+  - Edge CDP verified 8 word-reveal spans, active scroll-scrubbed progress line, illuminated milestone dots, and 0 console exceptions.
+  - Screenshots confirmed: `hero-enhancements.png` & `about-scrubbed.png`.
 
 ## Active Files & Dynamic Docs Registry
 - [index.html](file:///d:/Anti%20Projects/MR%20Ahmed%20Samir/index.html) — Root HTML shell, color-scheme: only dark, critical CSS curtain & head preconnects.

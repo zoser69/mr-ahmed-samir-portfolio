@@ -73,6 +73,16 @@
   7. **Performance & Typography Preloads**: Added Google Fonts `preload` for `IBM Plex Sans Arabic` woff2 in `<head>` to prevent FOUT.
 - **Verification**: `npm run build` passed cleanly in 3.11s. Live Edge CDP confirmed 44px hit heights, 12px stage font size, 24px concentric radius, and verified valid telephone URI.
 
-## 6. Immediate Next Step
+## 6. EDITORIAL & INTERACTIVE ENHANCEMENTS (2026-09-05, Commit `8646034`)
+- **Key Enhancements Implemented**:
+  1. **Editorial Eyebrow & Senior Educator Branding**: Added `VETERAN ENGLISH EDUCATOR • EST. 2000` above hero title, and upgraded Arabic title to `كبير معلّمي اللغة الإنجليزية للمرحلتين الإعدادية والثانوية`.
+  2. **Location Trust Signal**: Added verified center location badge: `المقرات والسناتر المعتمدة: قويسنا، محافظة المنوفية • متاح المتابعة أونلاين`.
+  3. **Holographic Pseudo-3D Parallax on Portrait**: Linked teacher portrait to desktop cursor movement with subtle inverse micro-tilt (`rotationY: mouseX * 3.8`, `rotationX: -mouseY * 2.8`), blending the portrait seamlessly with the 3D typography environment.
+  4. **Scroll-Scrubbed Academic Journey**: Replaced static line with dual-track architecture (quiet `#2E1E15` base line + golden progress line scrubbed at `scrub: 0.4`), with milestone dots dynamically illuminating (`.is-active`) as the line reaches each milestone.
+  5. **Staggered Word Reveal**: Applied word-by-word staggered reveal (`cubic-bezier(0.16, 1, 0.3, 1)`) on `#about` and `#contact` titles.
+  6. **Dual-Strata Particle Bokeh in Three.js**: Separated particles into deep ambient stardust (60 particles, z: -12 to -36) and foreground amber bokeh embers (24 particles, z: -4 to +4) that produce genuine photographic optical bokeh as they float behind the portrait and through the ambient blur.
+- **Verification**: `npm run build` succeeded (3.13s), Edge CDP verified all 8 word spans, illuminated dots, and zero exceptions.
+
+## 7. Immediate Next Step
 - Verify on `http://localhost:5173/`.
 - Deploy to GitHub Pages upon user command.
