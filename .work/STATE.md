@@ -1,19 +1,16 @@
 # System State - Mr. Ahmed Samir 3D Portfolio
 
-- **Current Status**: REVERSIBLE BIDIRECTIONAL SCROLL REPLAY & CIRCULAR BOKEH APPLIED & VERIFIED — Animations play on scroll down, smoothly reverse when scrolling up, replay on scrolling down, and particles upgraded from square sprites to soft circular radial glowing embers.
-- **Key Polish Items Implemented (`521a125`)**:
-  1. **Bidirectional Scroll Reversal & Replay**:
-     - Word Reveal: Added `onLeaveBack: () => heading.classList.remove('is-visible')` so headings reset when scrolling back up above them, and re-animate when scrolling back down.
-     - Journey Cards: Switched from static `once: true` to `toggleActions: 'play none none reverse'`, enabling cards to smoothly reverse to initial state when scrolling up, and cleanly replay when scrolling down.
-     - Contact Section: Configured with `toggleActions: 'play none none reverse'` for seamless bidirectional replay.
-     - Scrolled Reload Replay: On page reload while scrolled to `#about` or `#contact`, in-view animations smoothly replay as the curtain lifts rather than being swallowed during the initial load.
-  2. **Soft Circular Glowing Embers (Zero Square Edges)**:
-     - Replaced default Three.js square point sprites with an in-memory 64x64 dynamic radial gradient canvas texture (`createCircularParticleTexture`).
-     - Applied soft circular falloff to both deep stardust (`size: 0.28`) and foreground amber bokeh embers (`size: 0.46`), eliminating all ugly square pixel artifacts and giving rich organic ambient light.
+- **Current Status**: HERO DECLUTTER & TIMELINE SCRUB RELOAD BUG FIXED & VERIFIED (`7885a26`) —
+  1. **Hero Section De-cluttered**: Removed redundant uppercase eyebrow (`VETERAN ENGLISH EDUCATOR`) and separate location row from `#hero`. Relocated verified center location (`قويسنا، محافظة المنوفية • متاح المتابعة أونلاين`) into `#contact` header subtitle where booking occurs. Hero text column reduced from 7 stacked items to 5 spacious, breathing editorial blocks.
+  2. **Timeline Scrub Reload Bug Fixed**: Shielded scrubbed ScrollTriggers with `!st.vars.scrub` inside `playHeroEntrance()` and synchronized with `ScrollTrigger.refresh()`. The progress line now strictly tracks scroll position on reload (e.g. scaleY: 0.77 at scrollY: 750) and never shoots to 1.0.
+  3. **Deterministic Milestone Illumination**: Added `self.scroll() >= self.start` check inside `onRefresh` and `onEnter`/`onLeaveBack`. Dots illuminate only when reached and turn off when scrolled above, with zero desync on reload.
 - **Empirical Verification**:
-  - `npm run build` passed in 3.29s with zero errors.
-  - Automated Edge CDP script verified: scroll down to 850 (active: 3, visible: true) -> scroll up to 0 (active: 0, visible: false) -> scroll down to 850 (active: 3, visible: true). Complete bidirectional reversal and replay confirmed!
-  - Screenshot `circular-particles.png` verified zero square edges.
+  - `npm run build` passed in 3.33s with 0 errors.
+  - Native Edge CDP verified:
+    - Eyebrow and map-pin removed from `#hero`; location present in `#contact`.
+    - At scrollY 750: `scaleY = 0.77`, dots = `[true, true, false]`. After entrance reload simulation: `scaleY = 0.77`, dots = `[true, true, false]`. Progress line stayed locked to scroll position.
+    - Bidirectional scroll: scrolling down progresses line and illuminates dots, scrolling back up to 0 reverses line to 0 and turns off all dots.
+  - Screenshots `decluttered-hero.png` and `timeline-at-750.png` verified visually.
 
 ## Active Files & Dynamic Docs Registry
 - [index.html](file:///d:/Anti%20Projects/MR%20Ahmed%20Samir/index.html) — Root HTML shell, color-scheme: only dark, critical CSS curtain & head preconnects.

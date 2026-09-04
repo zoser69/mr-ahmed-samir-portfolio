@@ -94,6 +94,19 @@
   3. **Circular Radial Particle Orbs**: Generated an in-memory 64x64 dynamic radial gradient canvas texture (`createCircularParticleTexture`) with soft quadratic alpha falloff. Every particle in the scene now renders as a soft, spherical glowing orb with zero square edges or harsh pixel corners.
 - **Verification**: Verified via `test-reversible-scroll.mjs` using Edge CDP: complete reversal on scroll up to 0, complete replay on scroll down to 850, clean reload replay, and visual screenshot `circular-particles.png`.
 
-## 8. Immediate Next Step
+## 8. HERO DECLUTTERING & TIMELINE SCRUB RELOAD FIX (2026-09-05, Commit `7885a26`)
+- **Problems Solved**:
+  1. **Hero Visual Congestion**: The hero section had become overcrowded with 7 stacked vertical elements. Removed the uppercase eyebrow (`VETERAN ENGLISH EDUCATOR • EST. 2000`) and the separate location badge from `#hero`. Relocated center location (`قويسنا، محافظة المنوفية • متاح المتابعة أونلاين`) into `#contact` header subtitle where booking occurs. Hero text column reduced to 5 clean, breathing editorial blocks.
+  2. **Timeline Progress Line Shooting to 100% on Reload**: In `playHeroEntrance()`, `st.animation.restart()` was running on all ScrollTriggers, overriding GSAP's scroll mapping and forcing `scaleY: 1` (100%) even when scrolled only halfway down. Shielded scrubbed timelines with `if (!st.vars.scrub)` and called `ScrollTrigger.refresh()`.
+  3. **Milestone Dot Synchronization**: Added deterministic scroll position check `self.scroll() >= self.start` on `onRefresh` so dots illuminate if and only if reached, staying dark when above them and reversing cleanly when scrolling back up.
+- **Empirical Verification**:
+  - `npm run build` passed in 3.33s with 0 errors.
+  - Native Edge CDP confirmed:
+    - Zero eyebrow or map-pin in `#hero`.
+    - At scrollY = 750: `scaleY = 0.77`, dots = `[true, true, false]`. After entrance reload simulation: `scaleY = 0.77`, dots = `[true, true, false]`. Zero shooting to 100%.
+    - Bidirectional scroll tested: scrolling up to 0 reverses line to 0 and turns off all dots.
+  - Screenshots `decluttered-hero.png` and `timeline-at-750.png` captured and visually confirmed.
+
+## 9. Immediate Next Step
 - Verify on `http://localhost:5173/`.
 - Deploy to GitHub Pages upon user command.
