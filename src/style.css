@@ -47,9 +47,10 @@
   }
 }
 
-/* Strict Zero-Tracking & High-Legibility OpenType for Arabic Script */
-[dir="rtl"], :lang(ar), .font-ar-display, .font-ar-body, .font-body-sans, .font-body-naskh, .font-body-manrope {
-  letter-spacing: 0 !important;
+/* Strict Zero-Tracking & High-Legibility OpenType for Arabic Script Only */
+.font-ar-display, .font-ar-body, .font-body-sans, .font-body-naskh, .font-body-manrope,
+:lang(ar):not(.font-en-display):not([dir="ltr"]):not(.tabular-numbers) {
+  letter-spacing: 0;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   font-synthesis-style: none;
   text-rendering: optimizeLegibility;
@@ -105,15 +106,15 @@
   background-color: #060402 !important;
 }
 
-/* Ambient Breathing Backlight */
+/* Ambient Breathing Backlight (Subtle Warmth) */
 @keyframes ambientPulse {
   0%, 100% {
-    opacity: 0.22;
-    transform: scale(1.05);
+    opacity: 0.14;
+    transform: scale(1.02);
   }
   50% {
-    opacity: 0.38;
-    transform: scale(1.15);
+    opacity: 0.26;
+    transform: scale(1.08);
   }
 }
 
