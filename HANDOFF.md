@@ -131,6 +131,29 @@
     - ZERO violations where `scaleY >= 0.505` and dot 2 was dark.
     - Screenshot `dot2-synced.png` captured showing the golden line passing Milestone 2 with dot 2 brilliantly illuminated and dot 3 dark.
 
-## 12. Immediate Next Step
+## 12. MILESTONE DOT 3 SYNCHRONIZATION & STATIC ANCHORING (2026-09-05, Commit `71fb6ba`)
+- **Problem Solved**:
+  - User uploaded screenshot `media_1788561145095.png` showing the golden progress line had drawn past Milestone 3 ("خبرة ممتدة لأكثر من +26 عاماً"), but the 3rd milestone dot remained dark brown ("اخر نقطة مش مظبوطة لسة").
+- **Root Cause Discovered**:
+  - `gsap.fromTo(item, { opacity: 0, y: 24 })` was translating the entire `.about-card-item` container (including the dot).
+  - During page load, `ScrollTrigger.refresh()` ran while the cards were at `y: 24`. Measuring `dot.getBoundingClientRect()` shifted the dot down by 24px, artificially inflating Dot 3's target fraction from its true resting `0.849` up to `0.955+`.
+  - When the user scrolled down and the card animated to `y: 0`, the dot moved up 24px to its true resting place, but `updateDots()` still waited for `currentProgress >= 0.955 - 0.015 = 0.940`!
+  - By the time `progress` reached `0.940`, the golden line had visually overshot the dot by 20px, keeping Dot 3 dark in the user's view.
+- **Permanent Solution Applied**:
+  1. **Decoupled Animation from Track Anchors**: Shifted the `fromTo` translation exclusively to the card's text content (`item.querySelector('.ps-14')`), leaving the card container and milestone dot statically anchored on the timeline track with zero Y transform.
+  2. **Top-Edge Precision Geometry**: Calculated activation fractions relative to the top edge of the dot (`dotTopY = dotRect.top - baseRect.top`) divided by `baseRect.height` (`0.849` for Dot 3), ensuring the dot illuminates the exact moment the line touches it.
+  3. **Initial State Guard**: Added `currentProgress > 0.01` so that all dots remain cleanly dark when the page is at scroll 0.
+- **Empirical Verification**:
+  - `npm run build` passed in 3.78s with 0 errors.
+  - Native Edge CDP automated testing across 10 scroll positions confirmed:
+    - `scrollY: 0` -> `dots: [false, false, false]`.
+    - `scrollY: 800` -> `dots: [true, true, true]`.
+    - `scrollY: 840` (user screenshot location) -> `dots: [true, true, true]` (screenshot `verified-dot3-at-840.png` confirmed brilliant illumination).
+    - Reverse scroll to 0 -> `dots: [false, false, false]`.
+    - Reload at `scrollY: 840` -> `dots: [true, true, true]`.
+  - Independent Reviewer Subagent (`Gemini 3.1 Pro High`) conducted fresh-context architectural audit: APPROVED with zero issues.
+
+## 13. Immediate Next Step
 - Verify on `http://localhost:5173/`.
 - Deploy to GitHub Pages upon user command.
+

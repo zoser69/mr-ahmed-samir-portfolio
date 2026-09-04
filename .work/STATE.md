@@ -1,15 +1,18 @@
 # System State - Mr. Ahmed Samir 3D Portfolio
 
-- **Current Status**: PROGRESS-LINE & MILESTONE DOT COUPLING FIXED & VERIFIED (`238d699`) —
-  1. **Root Cause Solved**: Previously, the scrubbed progress line was on `#about` (`start: 'top 65%'`), while the dots were on separate item triggers (`start: 'top 68%'`), causing the line to pass Milestone 2 by 30-40px before the dot's viewport trigger fired.
-  2. **Unified Line-Driven Illumination**: Eliminated separate dot ScrollTriggers. Milestone dots are now directly driven by the progress line's tween via `onUpdate: function() { updateDots(this.progress()); }` and `onRefresh: (self) => updateDots(self.progress)`.
-  3. **Mathematical Precision**: Dot center fractions are calculated dynamically along `timeline-track-base` (`dotCenterY / baseHeight` = 0.079, 0.517, 0.955). Whenever the golden line tip reaches or passes the dot's center (`this.progress() >= targetFraction - 0.015`), the dot illuminates instantly. When scrolling back up and the line recedes, the dot turns dark instantly.
+- **Current Status**: MILESTONE DOT 3 SYNCHRONIZATION & STATIC ANCHORING COMPLETED (`71fb6ba`) —
+  1. **Root Cause Solved**: GSAP was animating `.about-card-item` with `translateY(24px)`. During `ScrollTrigger.refresh()` on page load, `dot.getBoundingClientRect()` measured the dot with the active `+24px` downward offset. This inflated Dot 3's target fraction from its real resting position `0.849` up to `0.955+`. When the card animated to `y: 0`, the dot moved up 24px, but the code still waited for the golden line to reach `0.955+`, causing the line to pass the dot by 20px while the dot stayed dark.
+  2. **Architectural Decoupling**: Moved the entrance translation exclusively to the inner card content (`item.querySelector('.ps-14')`), leaving the `.about-card-item` container and the milestone dot permanently stationary on the timeline track with zero Y transform.
+  3. **Precision Geometry**: Calibrated fractions to the top edge (`dotTopY = dotRect.top - baseRect.top`), so the dot lights up the exact moment the line tip makes visual contact. Added `currentProgress > 0.01` guard to guarantee all dots are dark at scroll 0.
 - **Empirical Verification**:
-  - `npm run build` passed in 3.21s with 0 errors.
-  - Native Edge CDP automated tests across 10 fine-grained scroll positions verified:
-    - `scaleY >= 0.505` had ZERO violations where dot 2 was dark.
-    - Screenshot `dot2-synced.png` visually verified: line at Milestone 2 shows dot 2 fully illuminated, matching the golden line tip.
-    - Full bidirectional reversal tested: all dots and lines return to 0 when scrolling back to top.
+  - `npm run build` passed in 3.78s with 0 errors.
+  - Native Edge CDP automated tests across 10 scroll positions confirmed:
+    - At `scrollY = 0`: `dots: [false, false, false]` (clean initial state).
+    - At `scrollY = 800`: `dots: [true, true, true]`.
+    - At `scrollY = 840` (user screenshot location): `dots: [true, true, true]` (100% illuminated, verified via `verified-dot3-at-840.png`).
+    - Backward scroll to 0: `dots: [false, false, false]` (clean reversal).
+    - Reload at `scrollY = 840`: `dots: [true, true, true]` (zero race condition).
+  - Independent Reviewer Subagent (Gemini 3.1 Pro High) conducted fresh-context architectural audit: APPROVED with zero issues.
 
 ## Active Files & Dynamic Docs Registry
 - [index.html](file:///d:/Anti%20Projects/MR%20Ahmed%20Samir/index.html) — Root HTML shell, color-scheme: only dark, critical CSS curtain & head preconnects.
