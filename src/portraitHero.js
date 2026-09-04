@@ -170,8 +170,40 @@ export function initPortraitHero() {
       }
     );
 
-    // Continuous Scroll-Scrubbed Progress Line (Fills down, recedes up)
+    // Continuous Scroll-Scrubbed Progress Line & Unified Dot Illumination
+    const baseLine = aboutSection.querySelector('.timeline-track-base');
     const progressLine = aboutSection.querySelector('.timeline-track-progress');
+    const milestones = aboutSection.querySelectorAll('.about-card-item');
+
+    let dotFractions = [0.079, 0.517, 0.955];
+    const updateDotFractions = () => {
+      if (!baseLine) return;
+      const baseRect = baseLine.getBoundingClientRect();
+      if (baseRect.height > 0) {
+        dotFractions = Array.from(milestones).map((item) => {
+          const dot = item.querySelector('.timeline-milestone-dot');
+          if (!dot) return 0;
+          const dotRect = dot.getBoundingClientRect();
+          const dotCenterY = (dotRect.top + dotRect.height / 2) - baseRect.top;
+          return dotCenterY / baseRect.height;
+        });
+      }
+    };
+
+    const updateDots = (currentProgress) => {
+      milestones.forEach((item, idx) => {
+        const dot = item.querySelector('.timeline-milestone-dot');
+        if (!dot) return;
+        const targetFraction = dotFractions[idx] ?? 0;
+        // As soon as the golden line tip reaches or passes the dot's center:
+        if (currentProgress >= targetFraction - 0.015) {
+          dot.classList.add('is-active');
+        } else {
+          dot.classList.remove('is-active');
+        }
+      });
+    };
+
     if (progressLine) {
       gsap.to(progressLine, {
         scaleY: 1,
@@ -180,17 +212,21 @@ export function initPortraitHero() {
           trigger: '#about',
           start: 'top 65%',
           end: 'bottom 80%',
-          scrub: 0.4
+          scrub: 0.4,
+          onRefresh: (self) => {
+            updateDotFractions();
+            updateDots(self.progress);
+          }
+        },
+        onUpdate: function () {
+          // this.progress() is the exact visual scaleY of the golden line on screen
+          updateDots(this.progress());
         }
       });
     }
 
-    // Progressive milestone dot activation & card arrival (Bidirectional reversible)
-    const milestones = aboutSection.querySelectorAll('.about-card-item');
+    // Progressive milestone card arrival (Bidirectional reversible)
     milestones.forEach((item) => {
-      const dot = item.querySelector('.timeline-milestone-dot');
-
-      // Card arrival reveal (Plays forward on scroll down, reverses on scroll up)
       gsap.fromTo(item,
         { opacity: 0, y: 24 },
         {
@@ -205,16 +241,6 @@ export function initPortraitHero() {
           }
         }
       );
-
-      // Interactive milestone dot illumination triggered by scroll progress
-      if (dot) {
-        ScrollTrigger.create({
-          trigger: item,
-          start: 'top 68%',
-          end: 'max',
-          toggleClass: { targets: dot, className: 'is-active' }
-        });
-      }
     });
   }
 
