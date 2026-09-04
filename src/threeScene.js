@@ -329,8 +329,26 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
     lettersReady = true;
   });
 
-  // 7. Dual-Strata Particle Bokeh System (Scaled by Tier)
-  // Strata A: Deep Ambient Stardust
+  // 7. Dual-Strata Circular Particle Bokeh System (Soft Radial Orbs, Zero Square Edges)
+  const createCircularParticleTexture = () => {
+    const pCanvas = document.createElement('canvas');
+    pCanvas.width = 64;
+    pCanvas.height = 64;
+    const ctx = pCanvas.getContext('2d');
+    const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+    grad.addColorStop(0.25, 'rgba(245, 225, 200, 0.85)');
+    grad.addColorStop(0.55, 'rgba(166, 124, 91, 0.35)');
+    grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 64, 64);
+    const tex = new THREE.CanvasTexture(pCanvas);
+    return tex;
+  };
+
+  const circleParticleTexture = createCircularParticleTexture();
+
+  // Strata A: Deep Ambient Stardust (Soft Circular Specks)
   const particleCount = isMobile ? tierConfig.mobileParticles : tierConfig.desktopParticles;
   const particleGeo = new THREE.BufferGeometry();
   const positions = new Float32Array(particleCount * 3);
@@ -345,17 +363,19 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
 
   const particleMat = new THREE.PointsMaterial({
     color: 0xA67C5B,
-    size: isMobile ? 0.16 : 0.20,
+    map: circleParticleTexture,
+    size: isMobile ? 0.22 : 0.28,
     transparent: true,
-    opacity: 0.32,
+    opacity: 0.35,
+    depthWrite: false,
     blending: THREE.AdditiveBlending
   });
 
   particlesMesh = new THREE.Points(particleGeo, particleMat);
   scene.add(particlesMesh);
 
-  // Strata B: Foreground Amber Bokeh Embers (Passes through subtle blur creating photographic bokeh)
-  const emberCount = isMobile ? 12 : 24;
+  // Strata B: Foreground Amber Bokeh Embers (Soft Glowing Circular Spheres)
+  const emberCount = isMobile ? 10 : 20;
   const emberGeo = new THREE.BufferGeometry();
   const emberPositions = new Float32Array(emberCount * 3);
 
@@ -369,9 +389,11 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
 
   const emberMat = new THREE.PointsMaterial({
     color: 0xCDB19B,
-    size: isMobile ? 0.34 : 0.44,
+    map: circleParticleTexture,
+    size: isMobile ? 0.36 : 0.46,
     transparent: true,
-    opacity: 0.52,
+    opacity: 0.55,
+    depthWrite: false,
     blending: THREE.AdditiveBlending
   });
 

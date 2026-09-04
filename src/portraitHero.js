@@ -19,6 +19,27 @@ export function playHeroEntrance() {
   if (heroEntranceTimeline) {
     heroEntranceTimeline.play();
   }
+
+  // If the page reloads while the user is already scrolled down, replay in-view elements smoothly as curtain lifts
+  requestAnimationFrame(() => {
+    document.querySelectorAll('[data-word-reveal]').forEach((heading) => {
+      const rect = heading.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
+        heading.classList.remove('is-visible');
+        void heading.offsetWidth; // trigger reflow
+        heading.classList.add('is-visible');
+      }
+    });
+
+    ScrollTrigger.getAll().forEach((st) => {
+      if (st.trigger && st.animation) {
+        const rect = st.trigger.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
+          st.animation.restart();
+        }
+      }
+    });
+  });
 }
 
 export function initPortraitHero() {
@@ -55,7 +76,7 @@ export function initPortraitHero() {
     return;
   }
 
-  // --- FEATURE 1: EDITORIAL STAGGERED WORD REVEAL (Pentagram / Awwwards Standard) ---
+  // --- FEATURE 1: EDITORIAL STAGGERED WORD REVEAL (Bidirectional Reversible) ---
   document.querySelectorAll('[data-word-reveal]').forEach((heading) => {
     const rawText = heading.textContent.trim();
     const words = rawText.split(/\s+/);
@@ -65,9 +86,9 @@ export function initPortraitHero() {
 
     ScrollTrigger.create({
       trigger: heading,
-      start: 'top 85%',
-      once: true,
-      onEnter: () => heading.classList.add('is-visible')
+      start: 'top 88%',
+      onEnter: () => heading.classList.add('is-visible'),
+      onLeaveBack: () => heading.classList.remove('is-visible')
     });
   });
 
@@ -129,23 +150,22 @@ export function initPortraitHero() {
   // --- SECTION 2: SCROLL-SCRUBBED ACADEMIC JOURNEY (#about) ---
   const aboutSection = document.getElementById('about');
   if (aboutSection) {
-    // Initial states for About items
-    gsap.set('#about .about-header-item:not([data-word-reveal])', { opacity: 0, y: 20 });
-    gsap.set('#about .about-card-item', { opacity: 0, y: 20 });
-
-    // Section header subtitle reveal
-    gsap.to('#about .about-header-item:not([data-word-reveal])', {
-      opacity: 1,
-      y: 0,
-      duration: 0.6,
-      scrollTrigger: {
-        trigger: '#about',
-        start: 'top 75%',
-        once: true
+    // Section header subtitle reveal (Bidirectional reversible)
+    gsap.fromTo('#about .about-header-item:not([data-word-reveal])',
+      { opacity: 0, y: 20 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        scrollTrigger: {
+          trigger: '#about',
+          start: 'top 78%',
+          toggleActions: 'play none none reverse'
+        }
       }
-    });
+    );
 
-    // Continuous Scroll-Scrubbed Progress Line
+    // Continuous Scroll-Scrubbed Progress Line (Fills down, recedes up)
     const progressLine = aboutSection.querySelector('.timeline-track-progress');
     if (progressLine) {
       gsap.to(progressLine, {
@@ -160,23 +180,26 @@ export function initPortraitHero() {
       });
     }
 
-    // Progressive milestone dot activation & card arrival
+    // Progressive milestone dot activation & card arrival (Bidirectional reversible)
     const milestones = aboutSection.querySelectorAll('.about-card-item');
     milestones.forEach((item) => {
       const dot = item.querySelector('.timeline-milestone-dot');
 
-      // Card arrival reveal
-      gsap.to(item, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: item,
-          start: 'top 80%',
-          once: true
+      // Card arrival reveal (Plays forward on scroll down, reverses on scroll up)
+      gsap.fromTo(item,
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.65,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: item,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          }
         }
-      });
+      );
 
       // Interactive milestone dot illumination triggered by scroll progress
       if (dot) {
@@ -193,33 +216,36 @@ export function initPortraitHero() {
   // --- SECTION 3: CONTACT & SOCIAL HUB (#contact) ---
   const contactSection = document.getElementById('contact');
   if (contactSection) {
-    // Initial states for Contact
-    gsap.set('#contact .contact-reveal-box > *:not([data-word-reveal])', { opacity: 0, y: 20 });
-    gsap.set('#contact .social-card-item', { opacity: 0, y: 16, scale: 0.96 });
-
     const contactTl = gsap.timeline({
       scrollTrigger: {
         trigger: '#contact',
-        start: 'top 65%',
-        once: true
+        start: 'top 68%',
+        toggleActions: 'play none none reverse'
       },
       defaults: { ease: 'power3.out', force3D: true }
     });
 
     contactTl
-      .to('#contact .contact-reveal-box > *:not([data-word-reveal])', {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        stagger: 0.1
-      })
-      .to('#contact .social-card-item', {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.5,
-        stagger: 0.06
-      }, '-=0.3');
+      .fromTo('#contact .contact-reveal-box > *:not([data-word-reveal])',
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.1
+        }
+      )
+      .fromTo('#contact .social-card-item',
+        { opacity: 0, y: 16, scale: 0.96 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.5,
+          stagger: 0.06
+        },
+        '-=0.3'
+      );
   }
 
   // Refresh ScrollTrigger calculations after all resources are loaded
