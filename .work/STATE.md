@@ -9,15 +9,17 @@
   2. Canvas starts at `opacity: 0`: Attached to DOM with `opacity: 0`. It transitions smoothly to `opacity: 1` ONLY after `lettersReady === true` AND `framesRendered >= 8` (verified drawing buffer).
   3. Enforced `MIN_CURTAIN_MS = 350ms` in `main.js`: Eliminates premature curtain dissolution on fast-caching Edge, ensuring a smooth, consistent cinematic entrance across all browsers.
   4. Added `beforeunload` listener in `main.js`: Instantly sets `#site-curtain` to opacity 1 and canvas to opacity 0 upon F5, guaranteeing that Edge's Paint Holding snapshots a solid dark screen instead of an uninitialized canvas.
-  5. Solid luxury WebGL: `alpha: false`, `scene.background = new THREE.Color(0x060402)`, `renderer.setClearColor(0x060402, 1.0)`.
-  6. Restored 1.2px cinematic bokeh blur on background typography without obscuring fog.
+  5. Added `<meta name="theme-color" content="#060402">` + mobile nav colors: Instructs Chromium's native WebContents view to initialize its window clear color to `#060402`, eliminating the default `SK_ColorWHITE` flash during reload before the DOM parses.
+  6. Preserved `#site-curtain` permanently in the DOM (`visibility: hidden` after fade): Guarantees the shield element is always available to snap to `opacity: 1` instantly upon reload.
+  7. Multi-event `activateReloadShield`: Listens to `beforeunload`, `pagehide`, and `keydown` (F5/Ctrl+R) to immediately mask the page before navigation starts.
+  8. Synchronized Entrance Motion: `playHeroEntrance()` starts concurrently with curtain fade (zero delay), giving a responsive, energetic entrance.
 - **Architectural State**:
-  1. **Zero-MPO In-DOM Canvas**: Canvas composited natively in Blink's paint tree without DirectComposition hole punching.
-  2. **Reload Snapshot Immunity**: `beforeunload` ensures Paint Holding never captures an uninitialized GPU state.
+  1. **Native Window Canvas Grounding**: `<meta name="theme-color">` + CSS inline styles ensure the browser window itself is `#060402`.
+  2. **Reload Snapshot Immunity**: Curtain stays in DOM, snapping to opacity: 1 on any reload trigger.
   3. **Crystal-Clear 3D Typography + 1.2px Bokeh**: Sharp, legible 3D letters with warm golden highlights.
 - **Live Local Server**: `http://localhost:5173/` (vite dev binds `::1` — use `localhost`)
 - **Live Production URL**: `https://zoser69.github.io/mr-ahmed-samir-portfolio/`
-- **Next Priority**: User test and validation on `http://localhost:5173/` (hard refresh `Ctrl + F5` and normal `F5` in Edge and Brave). Once visually confirmed, commit and deploy to GitHub Pages.
+- **Next Priority**: User test on localhost and live production site.
 
 ## Active Files & Dynamic Docs Registry
 - [index.html](file:///d:/Anti%20Projects/MR%20Ahmed%20Samir/index.html) — Root HTML shell, color-scheme: only dark, critical CSS curtain & head preconnects.

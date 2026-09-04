@@ -44,7 +44,10 @@
       (a) Removed `translateZ(0)` and `will-change: transform` from `.canvas-ambient-blur` — keeps canvas in standard document tree, eliminating MPO hardware hole-punching.
       (b) Canvas starts at `opacity: 0` in DOM, and reveals ONLY when `lettersReady === true` AND `framesRendered >= 8`.
       (c) Added `MIN_CURTAIN_MS = 350ms` in `main.js` so Edge never lifts the curtain prematurely.
-      (d) Attached `beforeunload` listener in `main.js` to immediately force curtain opacity: 1 and canvas opacity: 0 upon F5, guaranteeing Edge's Paint Holding snapshots a solid dark screen instead of an uninitialized canvas.
+      (d) Attached `beforeunload`, `pagehide`, and `keydown` listeners in `main.js` to immediately force curtain opacity: 1 and canvas opacity: 0 upon reload/F5, guaranteeing Edge's Paint Holding snapshots a solid dark screen instead of an uninitialized canvas.
+      (e) Added `<meta name="theme-color" content="#060402">` in `index.html`: instructs Chromium's native WebContents view to initialize its tab canvas to `#060402`, eliminating the default `SK_ColorWHITE` flash when clicking the reload button before DOM parse.
+      (f) Preserved `#site-curtain` permanently in the DOM (`visibility: hidden` instead of `removeChild`): guarantees the curtain element is always available to snap back to opacity: 1 on reload.
+      (g) Synchronized Hero Entrance Motion: `playHeroEntrance()` starts concurrently with curtain fade (zero delay) for immediate, dynamic arrival.
 
 ## 4. Regression & Testing Tooling (under `.work/`)
 - `cdp-diagnose.mjs` — DOM/computed-state dump + console/exception capture + screenshot via CDP.

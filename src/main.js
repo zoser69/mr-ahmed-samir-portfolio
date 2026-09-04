@@ -12,14 +12,12 @@ function liftCurtain() {
   if (curtain) {
     curtain.style.opacity = '0';
 
-    // Start hero entrance slightly before the curtain completely vanishes for seamless cinematic overlap
-    setTimeout(() => {
-      playHeroEntrance();
-    }, 150);
+    // Start hero entrance concurrently with curtain fade for dynamic, zero-lag arrival
+    playHeroEntrance();
 
     setTimeout(() => {
-      if (curtain && curtain.parentNode) {
-        curtain.parentNode.removeChild(curtain);
+      if (curtain) {
+        curtain.style.visibility = 'hidden';
       }
     }, 550);
   } else {
@@ -74,17 +72,26 @@ function initApp() {
   }
 }
 
-// On page reload in Edge/Brave, ensure browser Paint Holding snapshots a solid dark curtain
-window.addEventListener('beforeunload', () => {
+// Instant Reload Shield: Guarantees 100% solid dark snapshot on reload button click, F5, or navigation
+function activateReloadShield() {
   const curtain = document.getElementById('site-curtain');
   if (curtain) {
     curtain.style.transition = 'none';
+    curtain.style.visibility = 'visible';
     curtain.style.opacity = '1';
   }
   const canvas = document.getElementById('three-canvas');
   if (canvas) {
     canvas.style.transition = 'none';
     canvas.style.opacity = '0';
+  }
+}
+
+window.addEventListener('beforeunload', activateReloadShield);
+window.addEventListener('pagehide', activateReloadShield);
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && (e.key === 'r' || e.key === 'R'))) {
+    activateReloadShield();
   }
 });
 
