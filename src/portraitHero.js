@@ -31,6 +31,10 @@ export function playHeroEntrance() {
       }
     });
 
+    // 1. Refresh all ScrollTriggers FIRST on clean DOM layout
+    ScrollTrigger.refresh();
+
+    // 2. Safely restart in-view entrance animations for elements currently in the viewport
     ScrollTrigger.getAll().forEach((st) => {
       // Exclude scrubbed timelines so the progress line strictly matches current scroll position
       if (st.trigger && st.animation && !st.vars.scrub) {
@@ -40,9 +44,6 @@ export function playHeroEntrance() {
         }
       }
     });
-
-    // Refresh all scrubbed timelines to sync exactly with current scroll position
-    ScrollTrigger.refresh();
   });
 }
 
@@ -210,15 +211,8 @@ export function initPortraitHero() {
         ScrollTrigger.create({
           trigger: item,
           start: 'top 68%',
-          onEnter: () => dot.classList.add('is-active'),
-          onLeaveBack: () => dot.classList.remove('is-active'),
-          onRefresh: (self) => {
-            if (self.scroll() >= self.start) {
-              dot.classList.add('is-active');
-            } else {
-              dot.classList.remove('is-active');
-            }
-          }
+          end: 'max',
+          toggleClass: { targets: dot, className: 'is-active' }
         });
       }
     });
@@ -227,36 +221,95 @@ export function initPortraitHero() {
   // --- SECTION 3: CONTACT & SOCIAL HUB (#contact) ---
   const contactSection = document.getElementById('contact');
   if (contactSection) {
-    const contactTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: '#contact',
-        start: 'top 68%',
-        toggleActions: 'play none none reverse'
-      },
-      defaults: { ease: 'power3.out', force3D: true }
-    });
+    // 1. Contact Subtitle Reveal (Header title is animated via data-word-reveal)
+    const subtitle = contactSection.querySelector('.contact-reveal-box p');
+    if (subtitle) {
+      gsap.fromTo(subtitle,
+        { opacity: 0, y: 16 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.55,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: subtitle,
+            start: 'top 82%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    }
 
-    contactTl
-      .fromTo('#contact .contact-reveal-box > *:not([data-word-reveal])',
-        { opacity: 0, y: 20 },
+    // 2. Direct Phone & Booking Cards (Triggered comfortably when cards enter viewport)
+    const phoneGrid = contactSection.querySelector('.contact-reveal-box > .grid');
+    if (phoneGrid) {
+      const cards = phoneGrid.querySelectorAll('.solid-card');
+      gsap.fromTo(cards,
+        { opacity: 0, y: 24 },
         {
           opacity: 1,
           y: 0,
           duration: 0.6,
-          stagger: 0.1
+          stagger: 0.14,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: phoneGrid,
+            start: 'top 84%',
+            toggleActions: 'play none none reverse'
+          }
         }
-      )
-      .fromTo('#contact .social-card-item',
-        { opacity: 0, y: 16, scale: 0.96 },
+      );
+    }
+
+    // 3. Official Channels & Social Media Hub (Cascades smoothly as user reaches the bottom)
+    const socialContainer = contactSection.querySelector('.space-y-4.pt-4');
+    if (socialContainer) {
+      const socialTitle = socialContainer.querySelector('h4');
+      const socialCards = socialContainer.querySelectorAll('.social-card-item');
+
+      const socialTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: socialContainer,
+          start: 'top 88%',
+          toggleActions: 'play none none reverse'
+        },
+        defaults: { ease: 'power2.out', force3D: true }
+      });
+
+      if (socialTitle) {
+        socialTl.fromTo(socialTitle,
+          { opacity: 0, y: 12 },
+          { opacity: 1, y: 0, duration: 0.4 }
+        );
+      }
+
+      if (socialCards.length) {
+        socialTl.fromTo(socialCards,
+          { opacity: 0, y: 16, scale: 0.96 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.5, stagger: 0.08 },
+          '-=0.2'
+        );
+      }
+    }
+
+    // 4. Availability Footer Note
+    const availabilityNote = contactSection.querySelector('.contact-reveal-box > div:last-child');
+    if (availabilityNote) {
+      gsap.fromTo(availabilityNote,
+        { opacity: 0, y: 10 },
         {
           opacity: 1,
           y: 0,
-          scale: 1,
-          duration: 0.5,
-          stagger: 0.06
-        },
-        '-=0.3'
+          duration: 0.4,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: availabilityNote,
+            start: 'top 92%',
+            toggleActions: 'play none none reverse'
+          }
+        }
       );
+    }
   }
 
   // Refresh ScrollTrigger calculations after all resources are loaded
