@@ -1,25 +1,21 @@
 # System State - Mr. Ahmed Samir 3D Portfolio
 
-- **Current Status**: RE-CALIBRATED ARCHITECTURE APPLIED & VERIFIED — User provided crucial empirical discovery: The intermittent white background bug NEVER occurs on Google Chrome, but occurs specifically on Microsoft Edge (Windows + Android) and Brave (Windows + Android).
-- **Critical Cross-Browser Discovery**:
-  - Google Chrome does not enable forced web contents dark mode by default and initializes its window backing to dark.
-  - Microsoft Edge and Brave feature built-in "Dark Theme for Web Contents" / "Night Mode" and aggressive tracking/shield layers that run heuristic-based color inversion on transparent WebGL canvases (`alpha: true`) and unstyled window backings.
-- **Permanent Solution Applied**:
-  1. Removed `translateZ(0)` and `will-change: transform, filter` from `.canvas-ambient-blur`: Prevents Windows DirectComposition from promoting the canvas to an MPO hardware overlay swapchain that punches white holes through the DWM window.
-  2. Canvas starts at `opacity: 0`: Attached to DOM with `opacity: 0`. It transitions smoothly to `opacity: 1` ONLY after `lettersReady === true` AND `framesRendered >= 8` (verified drawing buffer).
-  3. Enforced `MIN_CURTAIN_MS = 350ms` in `main.js`: Eliminates premature curtain dissolution on fast-caching Edge, ensuring a smooth, consistent cinematic entrance across all browsers.
-  4. Added `beforeunload` listener in `main.js`: Instantly sets `#site-curtain` to opacity 1 and canvas to opacity 0 upon F5, guaranteeing that Edge's Paint Holding snapshots a solid dark screen instead of an uninitialized canvas.
-  5. Added `<meta name="theme-color" content="#060402">` + mobile nav colors: Instructs Chromium's native WebContents view to initialize its window clear color to `#060402`, eliminating the default `SK_ColorWHITE` flash during reload before the DOM parses.
-  6. Preserved `#site-curtain` permanently in the DOM (`visibility: hidden` after fade): Guarantees the shield element is always available to snap to `opacity: 1` instantly upon reload.
-  7. Multi-event `activateReloadShield`: Listens to `beforeunload`, `pagehide`, and `keydown` (F5/Ctrl+R) to immediately mask the page before navigation starts.
-  8. Synchronized Entrance Motion: `playHeroEntrance()` starts concurrently with curtain fade (zero delay), giving a responsive, energetic entrance.
-- **Architectural State**:
-  1. **Native Window Canvas Grounding**: `<meta name="theme-color">` + CSS inline styles ensure the browser window itself is `#060402`.
-  2. **Reload Snapshot Immunity**: Curtain stays in DOM, snapping to opacity: 1 on any reload trigger.
-  3. **Crystal-Clear 3D Typography + 1.2px Bokeh**: Sharp, legible 3D letters with warm golden highlights.
-- **Live Local Server**: `http://localhost:5173/` (vite dev binds `::1` — use `localhost`)
-- **Live Production URL**: `https://zoser69.github.io/mr-ahmed-samir-portfolio/`
-- **Next Priority**: User test on localhost and live production site.
+- **Current Status**: DESIGN & TYPOGRAPHY AUDIT COMPLETED & APPLIED — Two independent review subagents (3.1 Pro & 3.8 Flash) conducted exhaustive macro and micro audits.
+- **Critical Fixes Applied (Verified via Edge CDP & Build)**:
+  1. **Fixed Phone Link Bug**: In `index.html:334`, corrected second phone call URL from invalid 13-digit `tel:+2010000233902` to valid 12-digit `tel:+201000233902`.
+  2. **Scoped Zero-Tracking to Arabic Script**: Scoped `letter-spacing: 0` in `src/style.css` strictly to Arabic fonts (`.font-ar-display`, `.font-ar-body`, `:lang(ar)`), freeing English display typography (`Outfit`) to use its intended `tracking-tight` and `tracking-wider` values without being clobbered by `!important`.
+  3. **Standardized WCAG 2.2 Touch Targets (44px)**: Enforced `min-h-[44px]` across all primary CTA buttons (hero booking button, WhatsApp, and telephone action buttons).
+  4. **Optical Scale & RTL Modernization**:
+     - Upgraded stage card font size from unreadable 10px to clean `text-xs` (12px).
+     - Converted physical CSS classes (`mr-`, `pr-`, `right-`) to modern RTL logical properties (`ms-`, `ps-`, `start-`).
+     - Upgraded hero bio font scale to `text-sm sm:text-base` for optical balance against Outfit display headers.
+  5. **Concentric Border Radius**: Elevated outer contact card radius to `rounded-3xl` (24px) to achieve geometric concentricity with inner `rounded-xl` (12px) buttons and 24px padding.
+  6. **Anti-Slop Cleanups**:
+     - Removed AI template neon hover glow `shadow-[0_0_10px_rgba(166,124,91,0.5)]` on timeline milestone dots in favor of crisp scale-125 and color transition.
+     - Dialed down ambient breathing backlight behind portrait to subtle editorial warmth.
+     - Cleaned up disabled YouTube placeholder card: removed active button hover effect and applied `pointer-events-none opacity-60`.
+  7. **Performance & Typography Preloads**: Added Google Fonts `preload` for `IBM Plex Sans Arabic` woff2 in `<head>` to prevent FOUT.
+- **Build Status**: `npm run build` passed cleanly in 3.11s. All action targets verified at 44px in Edge CDP.
 
 ## Active Files & Dynamic Docs Registry
 - [index.html](file:///d:/Anti%20Projects/MR%20Ahmed%20Samir/index.html) — Root HTML shell, color-scheme: only dark, critical CSS curtain & head preconnects.

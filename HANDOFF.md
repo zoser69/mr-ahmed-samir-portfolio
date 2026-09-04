@@ -55,6 +55,24 @@
 - `gpu-reload-test.mjs` — attaches to a visible Edge launched with `--remote-debugging-port=9222` for real-GPU reload tests.
 - `ghpages-sim.mjs` — serves `dist/` under the `/mr-ahmed-samir-portfolio/` prefix like GitHub Pages (port 4180).
 
-## 5. Immediate Next Step
-- Have the user refresh `http://localhost:5173/` in Edge / Brave multiple times (`F5` / `Ctrl + F5`) to visually confirm that the white background is 100% eliminated and the 3D typography is pristine.
-- Once user confirms, commit and deploy to GitHub Pages.
+## 5. DESIGN & TYPOGRAPHY STANDARDS AUDIT (2026-09-05)
+- **Review Architecture**: Ran dual-subagent review in parallel (`Gemini 3.1 Pro High` for Macro Architecture & Creative Direction; `Gemini 3.8 Flash High` for Micro CSS & Layout Inspection).
+- **Critical Fixes Implemented & Committed (`5a89d42`)**:
+  1. **Phone URL Bug Fix**: `index.html:334` second phone call link corrected from invalid 13-digit `tel:+2010000233902` to valid 12-digit `tel:+201000233902`.
+  2. **Latin Tracking Restoration**: Scoped zero-tracking strictly to Arabic scripts (`.font-ar-display`, `.font-ar-body`, `:lang(ar)`), freeing English display typography (`Outfit`) to utilize `tracking-tight` and `tracking-wider` without `!important` overriding.
+  3. **WCAG 2.2 Touch Targets (44px)**: Standardized `min-h-[44px]` across all primary CTA buttons (hero booking button, WhatsApp, and direct call buttons).
+  4. **Optical Scale & RTL Modernization**:
+     - Upgraded stage card font size from unreadable 10px to clean `text-xs` (12px).
+     - Converted physical CSS classes (`mr-`, `pr-`, `right-`) to modern RTL logical properties (`ms-`, `ps-`, `start-`).
+     - Upgraded hero bio font scale to `text-sm sm:text-base` for optical balance against Outfit display headers.
+  5. **Concentric Border Radius**: Outer contact card radius upgraded to `rounded-3xl` (24px) for geometric concentricity with inner `rounded-xl` (12px) buttons and 24px padding.
+  6. **Anti-Slop Cleanups**:
+     - Removed AI template neon hover glow `shadow-[0_0_10px_rgba(166,124,91,0.5)]` on timeline milestone dots in favor of crisp scale-125 and color transition.
+     - Dialed down ambient breathing backlight behind portrait to subtle editorial warmth.
+     - Cleaned up disabled YouTube placeholder card: removed active button hover effect and applied `pointer-events-none opacity-60`.
+  7. **Performance & Typography Preloads**: Added Google Fonts `preload` for `IBM Plex Sans Arabic` woff2 in `<head>` to prevent FOUT.
+- **Verification**: `npm run build` passed cleanly in 3.11s. Live Edge CDP confirmed 44px hit heights, 12px stage font size, 24px concentric radius, and verified valid telephone URI.
+
+## 6. Immediate Next Step
+- Verify on `http://localhost:5173/`.
+- Deploy to GitHub Pages upon user command.
