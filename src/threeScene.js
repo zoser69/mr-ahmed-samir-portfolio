@@ -11,6 +11,7 @@ let latestReadyCallback = null;
 let mouseX = 0, mouseY = 0;
 let targetCameraX = 0, targetCameraY = 0;
 let targetLightX = 0, targetLightY = 0;
+let activeResizeHandler = null, activeMouseMoveHandler = null, activeVisibilityHandler = null;
 
 // Dynamic Adaptive Quality Configuration
 const TIER_CONFIG = {
@@ -364,6 +365,7 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
     }
   };
   if (!isMobile) {
+    activeMouseMoveHandler = onMouseMove;
     window.addEventListener('mousemove', onMouseMove, { passive: true });
   }
 
@@ -391,12 +393,14 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
     renderer.setClearColor(0x060402, 1.0);
     renderer.clear();
   };
+  activeResizeHandler = onResize;
   window.addEventListener('resize', onResize, { passive: true });
 
   // 10. Pause GPU Rendering Only When Browser Tab is Hidden (Save Battery)
   const onVisibilityChange = () => {
     isTabVisible = !document.hidden;
   };
+  activeVisibilityHandler = onVisibilityChange;
   document.addEventListener('visibilitychange', onVisibilityChange);
 
   // 11. Optimized Kinetic Animation Loop with Self-Healing Dynamic FPS Watchdog
@@ -508,6 +512,18 @@ export function disposeThreeScene({ forceLoss = false } = {}) {
     cancelAnimationFrame(animationFrameId);
     animationFrameId = null;
   }
+  if (activeResizeHandler) {
+    window.removeEventListener('resize', activeResizeHandler);
+    activeResizeHandler = null;
+  }
+  if (activeMouseMoveHandler) {
+    window.removeEventListener('mousemove', activeMouseMoveHandler);
+    activeMouseMoveHandler = null;
+  }
+  if (activeVisibilityHandler) {
+    document.removeEventListener('visibilitychange', activeVisibilityHandler);
+    activeVisibilityHandler = null;
+  }
   if (scene) {
     scene.traverse((object) => {
       if (object.geometry) {
@@ -523,6 +539,10 @@ export function disposeThreeScene({ forceLoss = false } = {}) {
     });
     scene = null;
   }
+  lettersGroup = null;
+  particlesMesh = null;
+  pointLight = null;
+  camera = null;
   if (renderer) {
     if (renderer.domElement && renderer.domElement.parentNode) {
       renderer.domElement.parentNode.removeChild(renderer.domElement);
