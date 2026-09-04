@@ -32,13 +32,17 @@ export function playHeroEntrance() {
     });
 
     ScrollTrigger.getAll().forEach((st) => {
-      if (st.trigger && st.animation) {
+      // Exclude scrubbed timelines so the progress line strictly matches current scroll position
+      if (st.trigger && st.animation && !st.vars.scrub) {
         const rect = st.trigger.getBoundingClientRect();
         if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
           st.animation.restart();
         }
       }
     });
+
+    // Refresh all scrubbed timelines to sync exactly with current scroll position
+    ScrollTrigger.refresh();
   });
 }
 
@@ -207,7 +211,14 @@ export function initPortraitHero() {
           trigger: item,
           start: 'top 68%',
           onEnter: () => dot.classList.add('is-active'),
-          onLeaveBack: () => dot.classList.remove('is-active')
+          onLeaveBack: () => dot.classList.remove('is-active'),
+          onRefresh: (self) => {
+            if (self.scroll() >= self.start) {
+              dot.classList.add('is-active');
+            } else {
+              dot.classList.remove('is-active');
+            }
+          }
         });
       }
     });
