@@ -107,6 +107,19 @@
     - Bidirectional scroll tested: scrolling up to 0 reverses line to 0 and turns off all dots.
   - Screenshots `decluttered-hero.png` and `timeline-at-750.png` captured and visually confirmed.
 
-## 9. Immediate Next Step
+## 10. MILESTONE DOT REFRESH RACE CONDITION & CONTACT TRIGGER TIMING (2026-09-05, Commit `64468c7`)
+- **Problems Solved**:
+  1. **Milestone Dots Reload Bug**: User reported that on refresh, milestone dot 2 would fail to illuminate, and sometimes dot 3 was active while dot 2 was inactive. Root cause: `st.animation.restart()` was called before `ScrollTrigger.refresh()`, polluting layout measurements with `translateY(24px)`. Fixed by calling `ScrollTrigger.refresh()` first on clean layout and switching dot illumination to GSAP native `toggleClass: { targets: dot, className: 'is-active' }` with `end: 'max'`.
+  2. **Contact Section Premature Animation**: User complained that the contact animation ("أرقام الحجز والتواصل المباشر") and platforms at the bottom were triggering too early offscreen. Root cause: The entire contact section was bound to a single parent trigger (`#contact`, `top 68%`), firing while the cards were 400-600px below the viewport. Decoupled into component-level triggers: Subtitle at 82%, Phone Cards at 84%, Social Grid at 88%, and Note at 92%.
+- **Empirical Verification**:
+  - `npm run build` passed in 3.15s with 0 errors.
+  - Native Edge CDP verified:
+    - At scrollY = 0: dots = `[false, false, false]`, contact cards = `['0', '0']`.
+    - At scrollY = 750: `scaleY = 0.77`, dots = `[true, true, false]`, contact cards = `['0', '0']`.
+    - Reload simulation at scrollY = 750: `scaleY = 0.77`, dots = `[true, true, false]`, zero race conditions.
+    - Scrolling down to contact: Cards animate in natural viewing sequence as they enter the screen.
+    - Scrolling back up to 0: Complete reversal to initial state.
+
+## 11. Immediate Next Step
 - Verify on `http://localhost:5173/`.
 - Deploy to GitHub Pages upon user command.

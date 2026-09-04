@@ -1,16 +1,24 @@
 # System State - Mr. Ahmed Samir 3D Portfolio
 
-- **Current Status**: HERO DECLUTTER & TIMELINE SCRUB RELOAD BUG FIXED & VERIFIED (`7885a26`) —
-  1. **Hero Section De-cluttered**: Removed redundant uppercase eyebrow (`VETERAN ENGLISH EDUCATOR`) and separate location row from `#hero`. Relocated verified center location (`قويسنا، محافظة المنوفية • متاح المتابعة أونلاين`) into `#contact` header subtitle where booking occurs. Hero text column reduced from 7 stacked items to 5 spacious, breathing editorial blocks.
-  2. **Timeline Scrub Reload Bug Fixed**: Shielded scrubbed ScrollTriggers with `!st.vars.scrub` inside `playHeroEntrance()` and synchronized with `ScrollTrigger.refresh()`. The progress line now strictly tracks scroll position on reload (e.g. scaleY: 0.77 at scrollY: 750) and never shoots to 1.0.
-  3. **Deterministic Milestone Illumination**: Added `self.scroll() >= self.start` check inside `onRefresh` and `onEnter`/`onLeaveBack`. Dots illuminate only when reached and turn off when scrolled above, with zero desync on reload.
+- **Current Status**: MILESTONE DOT REFRESH RACE CONDITION & CONTACT TRIGGER TIMING FIXED & VERIFIED (`64468c7`) —
+  1. **Milestone Dots Refresh Race Condition Fixed**:
+     - `ScrollTrigger.refresh()` is now called FIRST on clean DOM coordinates before any selective in-view animation restarts in `playHeroEntrance()`, eliminating `y: 24` transform pollution.
+     - Milestone dot illumination switched to GSAP native `toggleClass: { targets: dot, className: 'is-active' }` with `end: 'max'`, ensuring 100% deterministic active states that stay illuminated on scroll-down and reverse cleanly on scroll-up. Milestone 2 never fails to light up, and Milestone 3 never illuminates prematurely.
+  2. **Contact Section Trigger Timing Decoupled**:
+     - Replaced bulk `#contact` container trigger (`top 68%`) with granular component triggers:
+       - Subtitle: `top 82%`
+       - Phone Cards: `top 84%`
+       - Social Platforms: `top 88%`
+       - Availability Note: `top 92%`
+     - Phone and social cards no longer animate prematurely while 400-600px offscreen; each section cascades in naturally only when comfortably visible to the user, and reverses cleanly on scroll up.
 - **Empirical Verification**:
-  - `npm run build` passed in 3.33s with 0 errors.
-  - Native Edge CDP verified:
-    - Eyebrow and map-pin removed from `#hero`; location present in `#contact`.
-    - At scrollY 750: `scaleY = 0.77`, dots = `[true, true, false]`. After entrance reload simulation: `scaleY = 0.77`, dots = `[true, true, false]`. Progress line stayed locked to scroll position.
-    - Bidirectional scroll: scrolling down progresses line and illuminates dots, scrolling back up to 0 reverses line to 0 and turns off all dots.
-  - Screenshots `decluttered-hero.png` and `timeline-at-750.png` verified visually.
+  - `npm run build` passed in 3.15s with 0 errors.
+  - Native Edge CDP automated tests verified:
+    - At scrollY = 0: dots = `[false, false, false]`, phoneCards = `['0', '0']`, socialCards = `['0', '0', '0', '0']`.
+    - At scrollY = 750: `scaleY = 0.77`, dots = `[true, true, false]`, contact completely hidden `['0', '0']`.
+    - Reload at scrollY = 750: `scaleY = 0.77`, dots = `[true, true, false]`, zero race conditions.
+    - Scrolling to contact (scrollY 1300 -> 1600 -> 2100): Phone cards and social channels animate progressively as they enter view.
+    - Scrolling back to 0: Complete reversal of all dots, phone cards, and social channels to initial hidden state.
 
 ## Active Files & Dynamic Docs Registry
 - [index.html](file:///d:/Anti%20Projects/MR%20Ahmed%20Samir/index.html) — Root HTML shell, color-scheme: only dark, critical CSS curtain & head preconnects.
