@@ -1,23 +1,19 @@
 # System State - Mr. Ahmed Samir 3D Portfolio
 
-- **Current Status**: EDITORIAL & INTERACTION ENHANCEMENTS APPLIED & VERIFIED — Holographic portrait parallax, scroll-scrubbed timeline journey, dual-strata particle bokeh, and editorial branding implemented and empirically verified.
-- **Features Implemented & Verified (`8646034`)**:
-  1. **Editorial Eyebrow & Title Upgrade**:
-     - Added authoritative kicker: `VETERAN ENGLISH EDUCATOR • EST. 2000` above hero title.
-     - Upgraded Arabic title to: `كبير معلّمي اللغة الإنجليزية للمرحلتين الإعدادية والثانوية`.
-  2. **Clear Geographic Trust Signal**: Added verified center location badge: `المقرات والسناتر المعتمدة: قويسنا، محافظة المنوفية • متاح المتابعة أونلاين`.
-  3. **Holographic Pseudo-3D Portrait Parallax**: Tied desktop portrait image to cursor movement with subtle inverse micro-tilt (`rotationY`, `rotationX`, `transformPerspective: 950`), creating depth cohesion with the 3D scene.
-  4. **Scroll-Scrubbed Academic Journey**:
-     - Replaced static timeline line with dual-track architecture: a quiet base track (`#2E1E15`) and a dynamic golden progress fill line that scrubs continuously with scroll (`scrub: 0.4`).
-     - Interactive milestone dots illuminate dynamically (`is-active` state with golden core and subtle ring glow) as the progress line arrives.
-  5. **Editorial Staggered Word Reveal**: Applied word-by-word staggered reveal (`cubic-bezier(0.16, 1, 0.3, 1)`) on section headers (`#about`, `#contact`).
-  6. **Dual-Strata Particle Bokeh**: Upgraded Three.js particles into two depth layers:
-     - Deep background ambient stardust (60 particles, z: -12 to -36, warm ochre `0xA67C5B`).
-     - Foreground amber bokeh embers (24 particles, z: -4 to +4, warm gold `0xCDB19B`), passing through the 1.2px CSS ambient blur to create authentic photographic camera bokeh.
+- **Current Status**: REVERSIBLE BIDIRECTIONAL SCROLL REPLAY & CIRCULAR BOKEH APPLIED & VERIFIED — Animations play on scroll down, smoothly reverse when scrolling up, replay on scrolling down, and particles upgraded from square sprites to soft circular radial glowing embers.
+- **Key Polish Items Implemented (`521a125`)**:
+  1. **Bidirectional Scroll Reversal & Replay**:
+     - Word Reveal: Added `onLeaveBack: () => heading.classList.remove('is-visible')` so headings reset when scrolling back up above them, and re-animate when scrolling back down.
+     - Journey Cards: Switched from static `once: true` to `toggleActions: 'play none none reverse'`, enabling cards to smoothly reverse to initial state when scrolling up, and cleanly replay when scrolling down.
+     - Contact Section: Configured with `toggleActions: 'play none none reverse'` for seamless bidirectional replay.
+     - Scrolled Reload Replay: On page reload while scrolled to `#about` or `#contact`, in-view animations smoothly replay as the curtain lifts rather than being swallowed during the initial load.
+  2. **Soft Circular Glowing Embers (Zero Square Edges)**:
+     - Replaced default Three.js square point sprites with an in-memory 64x64 dynamic radial gradient canvas texture (`createCircularParticleTexture`).
+     - Applied soft circular falloff to both deep stardust (`size: 0.28`) and foreground amber bokeh embers (`size: 0.46`), eliminating all ugly square pixel artifacts and giving rich organic ambient light.
 - **Empirical Verification**:
-  - `npm run build` completed in 3.13s with zero errors.
-  - Edge CDP verified 8 word-reveal spans, active scroll-scrubbed progress line, illuminated milestone dots, and 0 console exceptions.
-  - Screenshots confirmed: `hero-enhancements.png` & `about-scrubbed.png`.
+  - `npm run build` passed in 3.29s with zero errors.
+  - Automated Edge CDP script verified: scroll down to 850 (active: 3, visible: true) -> scroll up to 0 (active: 0, visible: false) -> scroll down to 850 (active: 3, visible: true). Complete bidirectional reversal and replay confirmed!
+  - Screenshot `circular-particles.png` verified zero square edges.
 
 ## Active Files & Dynamic Docs Registry
 - [index.html](file:///d:/Anti%20Projects/MR%20Ahmed%20Samir/index.html) — Root HTML shell, color-scheme: only dark, critical CSS curtain & head preconnects.

@@ -83,6 +83,17 @@
   6. **Dual-Strata Particle Bokeh in Three.js**: Separated particles into deep ambient stardust (60 particles, z: -12 to -36) and foreground amber bokeh embers (24 particles, z: -4 to +4) that produce genuine photographic optical bokeh as they float behind the portrait and through the ambient blur.
 - **Verification**: `npm run build` succeeded (3.13s), Edge CDP verified all 8 word spans, illuminated dots, and zero exceptions.
 
-## 7. Immediate Next Step
+## 7. REVERSIBLE BIDIRECTIONAL SCROLL REPLAY & CIRCULAR BOKEH (2026-09-05, Commit `521a125`)
+- **Problems Solved**:
+  1. User observed that refreshing while scrolled to "المسيرة الأكاديمية والخبرة المهنية" did not replay the entrance animation.
+  2. User requested that the animation play when scrolling down, and reverse back when scrolling up, so it replays seamlessly on subsequent scrolls like high-end Awwwards/Apple websites.
+  3. User disliked square point sprites ("الغبار المربع ده شكله مش حلو").
+- **Solutions Implemented**:
+  1. **Bidirectional Scroll Reversal**: Added `onLeaveBack: () => heading.classList.remove('is-visible')` to word reveal headers, and `toggleActions: 'play none none reverse'` to journey cards, subtitles, and contact sections. When scrolling up above any section, elements gracefully reverse to initial state; when scrolling down, they animate in.
+  2. **Scrolled Reload Replay**: Handled page reload when already scrolled down to `#about` or `#contact`. In `playHeroEntrance()`, any active in-view elements reflow and replay right as the curtain lifts.
+  3. **Circular Radial Particle Orbs**: Generated an in-memory 64x64 dynamic radial gradient canvas texture (`createCircularParticleTexture`) with soft quadratic alpha falloff. Every particle in the scene now renders as a soft, spherical glowing orb with zero square edges or harsh pixel corners.
+- **Verification**: Verified via `test-reversible-scroll.mjs` using Edge CDP: complete reversal on scroll up to 0, complete replay on scroll down to 850, clean reload replay, and visual screenshot `circular-particles.png`.
+
+## 8. Immediate Next Step
 - Verify on `http://localhost:5173/`.
 - Deploy to GitHub Pages upon user command.
