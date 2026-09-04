@@ -75,27 +75,37 @@ function detectDeviceTier() {
 }
 
 export function initThreeScene(onReady, { isRestore = false } = {}) {
-  const canvas = document.getElementById('three-canvas');
-  if (!canvas) return;
+  const container = document.getElementById('three-canvas-container');
+  if (!container) return;
 
   if (typeof onReady === 'function') latestReadyCallback = onReady;
   let readyCallback = typeof onReady === 'function' ? onReady : latestReadyCallback;
 
-  // Clean up any lingering WebGL instance first (prevents context collisions on fast reloads).
-  // During a context-restore re-init the old context is already dead: forcing another loss
-  // fires a synthetic 'webglcontextlost' that fresh listeners misattribute to the new
-  // context, hiding a healthy canvas and looping context churn.
-  disposeThreeScene({ forceLoss: !isRestore });
+  // Clean up any lingering WebGL instance first without forcing context loss
+  disposeThreeScene({ forceLoss: false });
   isDisposed = false;
+
+  // Clear container to guarantee zero stale canvas elements
+  container.innerHTML = '';
+
+  // Dynamically create a brand new canvas in memory with opacity: 0
+  const canvas = document.createElement('canvas');
+  canvas.id = 'three-canvas';
+  canvas.className = 'w-full h-full block canvas-ambient-blur';
+  canvas.style.backgroundColor = '#060402';
+  canvas.style.opacity = '0';
+  canvas.style.transition = 'opacity 0.5s ease-out';
+  container.appendChild(canvas);
 
   // Generation token: listeners from a superseded init must never act on the canvas.
   const generation = ++contextGeneration;
 
-  // WebGL Context-Loss Resilience (Prevents dead white canvas on GPU resource pressure)
+  // WebGL Context-Loss Resilience (Guarantees zero white artifacts on GPU context loss)
   const handleContextLost = (event) => {
     if (generation !== contextGeneration) return;
     event.preventDefault();
     console.warn('[ThreeScene] WebGL context lost. Hiding canvas to prevent white artifacts.');
+    canvas.style.opacity = '0';
     canvas.style.display = 'none';
     if (animationFrameId) {
       cancelAnimationFrame(animationFrameId);
@@ -106,9 +116,6 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
   const handleContextRestored = () => {
     if (generation !== contextGeneration) return;
     console.log('[ThreeScene] WebGL context restored. Rebuilding scene.');
-    canvas.style.display = 'block';
-    const container = document.getElementById('three-canvas-container');
-    if (container) container.style.opacity = '0';
     initThreeScene(null, { isRestore: true });
   };
 
@@ -122,9 +129,10 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
 
   console.log(`[ThreeScene] Device capability tier: "${currentTier}" (Cores: ${navigator.hardwareConcurrency || 'N/A'}, RAM: ${navigator.deviceMemory || 'N/A'}GB)`);
 
-  // 2. Scene Setup (Transparent 3D Kinetic Layer - Background Owned by CSS)
+  // 2. Scene Setup (Solid Luxury Dark Truffle Grounding - Zero Fog for Crystal Clarity)
   scene = new THREE.Scene();
-  scene.background = null;
+  scene.background = new THREE.Color(0x060402);
+  // Fog removed completely: foreground letters remain 100% crisp, sharp, and readable!
 
   // 3. Camera Setup
   const aspect = window.innerWidth / window.innerHeight;
@@ -138,9 +146,7 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
   renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: tierConfig.antialias,
-    alpha: true,
-    premultipliedAlpha: false,
-    preserveDrawingBuffer: true,
+    alpha: false,
     precision: tierConfig.precision
   });
 
@@ -161,7 +167,7 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
   // buffer, so clearing earlier would only clear a buffer that is immediately
   // discarded — leaving the final full-size buffer uninitialized (intermittent
   // white garbage on Windows D3D/ANGLE) until the first render tick.
-  renderer.setClearColor(0x000000, 0);
+  renderer.setClearColor(0x060402, 1.0);
   renderer.clear();
 
   // 5. Studio 3-Point Lighting Setup (Warm Truffle & Ambient Gold)
@@ -198,25 +204,25 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
     const maxLetters = isMobile ? tierConfig.mobileLetters : tierConfig.desktopLetters;
     const glyphs = allGlyphs.slice(0, maxLetters);
 
-    // Luxury Dark Truffle & Warm Umber Materials
+    // Luxury Dark Truffle & Warm Umber Materials (Crisp, Distinct, Reflective Finish)
     const materials = [
       new THREE.MeshStandardMaterial({
-        color: 0x4E2E1B,
-        emissive: 0x140A04,
-        metalness: 0.4,
-        roughness: 0.25,
+        color: 0x5C3822,
+        emissive: 0x1A0E06,
+        metalness: 0.38,
+        roughness: 0.28,
       }),
       new THREE.MeshStandardMaterial({
-        color: 0x6E4227,
-        emissive: 0x1E0E06,
-        metalness: 0.5,
-        roughness: 0.3,
-      }),
-      new THREE.MeshStandardMaterial({
-        color: 0x8E5A38,
+        color: 0x7D4C2D,
         emissive: 0x241208,
+        metalness: 0.42,
+        roughness: 0.26,
+      }),
+      new THREE.MeshStandardMaterial({
+        color: 0x9E653E,
+        emissive: 0x2E160A,
         metalness: 0.35,
-        roughness: 0.35,
+        roughness: 0.30,
       })
     ];
 
@@ -382,7 +388,7 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
     renderer.setPixelRatio(getOptimalPixelRatio());
-    renderer.setClearColor(0x000000, 0);
+    renderer.setClearColor(0x060402, 1.0);
     renderer.clear();
   };
   window.addEventListener('resize', onResize, { passive: true });
@@ -397,7 +403,7 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
   const clock = new THREE.Clock();
   let frameCount = 0;
   let framesRendered = 0;
-  const READY_FRAME_COUNT = 3;
+  const READY_FRAME_COUNT = 8;
   let lastFpsCheckTime = performance.now();
   let lowFpsCount = 0;
 
@@ -472,11 +478,14 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
 
     renderer.render(scene, camera);
 
-    // Notify caller only after letters are created AND several VERIFIED presented frames.
-    // This ensures the canvas is never revealed with an empty or uninitialized buffer.
-    if (lettersReady) {
-      framesRendered++;
-      if (typeof readyCallback === 'function' && framesRendered >= READY_FRAME_COUNT) {
+    framesRendered++;
+
+    // Reveal canvas smoothly from opacity 0 to 1 and notify ready ONLY after letters exist and verified frames rendered
+    if (lettersReady && framesRendered >= READY_FRAME_COUNT) {
+      if (canvas.style.opacity !== '1') {
+        canvas.style.opacity = '1';
+      }
+      if (typeof readyCallback === 'function') {
         readyCallback();
         readyCallback = null;
       }
@@ -493,7 +502,7 @@ export function initThreeScene(onReady, { isRestore = false } = {}) {
   };
 }
 
-export function disposeThreeScene({ forceLoss = true } = {}) {
+export function disposeThreeScene({ forceLoss = false } = {}) {
   isDisposed = true;
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
@@ -515,6 +524,9 @@ export function disposeThreeScene({ forceLoss = true } = {}) {
     scene = null;
   }
   if (renderer) {
+    if (renderer.domElement && renderer.domElement.parentNode) {
+      renderer.domElement.parentNode.removeChild(renderer.domElement);
+    }
     renderer.dispose();
     if (forceLoss) {
       renderer.forceContextLoss();

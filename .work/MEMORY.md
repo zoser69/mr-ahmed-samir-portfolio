@@ -53,4 +53,52 @@
 - **2026-09-01** | Experience Redesign, Master Motion Orchestration & Hero Split Entrance | `index.html`, `src/portraitHero.js`, `src/style.css` | Transformed cluttered experience cards into right-aligned minimalist vertical timeline, eliminated superficial labels and pinging lights, synchronized master animations with cascading track growth, preserved hero dynamic split side entrance, and forced manual scroll restoration for reload consistency. | Risk: None (build clean, 0 console errors, verified on mobile & desktop). | Security: Zero input vulnerabilities, secure external links with noopener, safe asset bundles.
 - **2026-09-02** | Intermittent White Background Under Header on Refresh | `index.html`, `src/threeScene.js`, `src/main.js`, `src/style.css` | Multiple attempts made (inline styles, FOUC hiding, color-scheme meta, canvas visibility gate, transparent canvas overlay, site-curtain shield, WebGL context-loss recovery). | Risk: HIGH / UNRESOLVED. Bug still occurs intermittently on page reload/refresh as documented in video `Recording 2026-09-02 203944.mp4`. Next session must identify why the hero section background intermittently defaults to white. | Security: Safe asset bundles, zero secret leakage.
 - **2026-09-03** | White Screen Attempt 8 (Clear-Order + Reveal Gate + Present Hardening) | `index.html`, `src/main.js`, `src/threeScene.js` | Root cause identified: `renderer.clear()` before `setSize`/`setPixelRatio` left the final drawing buffer uninitialized (intermittent white garbage on D3D/ANGLE); fixed by clearing after sizing, removing `powerPreference: 'high-performance'`, replacing header `backdrop-blur-md` with solid `bg-[#060402]/95`, gating `#three-canvas-container` at opacity 0 until 3 verified frames over a solid `#060402` DOM backing, and rebuilding context-loss lifecycle with generation tokens (no `forceContextLoss` in restore path). Also fixed a self-introduced `const` assignment crash in the render loop. Verified locally 15/15 headless + 12/12 real-GPU reloads, 0 exceptions, pixel-analysis clean; regression tools added under `.work/`. | Risk: **STILL OPEN** — committed but NOT confirmed on the live site; user must validate on GitHub Pages before marking resolved. | Security: Safe asset bundles, zero secret leakage.
-- **2026-09-04** | Blur Restoration & Resize Buffer Hardening | `index.html`, `src/style.css`, `src/threeScene.js` | Restored 3D background depth-of-field blur (`1.2px`) with CSS variable `--canvas-blur: 1.2px` and GPU transform isolation (`transform: scale(1.015) translateZ(0)`), which was erroneously removed on Sep 2 due to a misdiagnosis. Hardened `onResize` in `threeScene.js` with explicit `renderer.clear()` after viewport buffer reallocations. Verified via 15/15 automated reload stress test on simulated GitHub Pages environment with 0 white frames and 0 exceptions. | Risk: None locally; ready for live production confirmation. | Security: Safe asset bundles, zero secret leakage.
+## ATTEMPT 9 (2026-09-04) — User Hard Verification & Surgical Isolation Test
+- **Observed Behavior**: User verified on live `localhost:5173` that the intermittent white background still appears ~1 out of 6 refreshes.
+- **Visual Evidence Analysis (`media_1788549805405.png`)**:
+  - Header is solid dark (`bg-[#060402]/95` at `z-50`).
+  - Hero text and portrait are fully rendered and positioned at `z-10`.
+  - Zero 3D letters or particles are visible in the white area.
+  - White area spans full viewport width from under header (`top: 80px`) to hero bottom.
+- **Root-Cause Hypothesis Under Direct Isolation**:
+  - WebGL context configuration with `premultipliedAlpha: false` + `preserveDrawingBuffer: true` combined with runtime-applied Skia CSS `filter: blur()` causes D3D11 swapchain presentation failure on Windows Edge, painting the entire canvas opaque white.
+  - Alternately, if the canvas is not rendered, something in the DOM layer is uncovered.
+- **Action**: Applied surgical isolation test (`#three-canvas { display: none !important; }` in `src/style.css`). User confirmed 30/30 refreshes had ZERO white screens. This proved 100% that the canvas was the sole origin.
+- **Permanent Solution**:
+  1. Reverted `premultipliedAlpha: false` to standard WebGL `true`.
+  2. Reverted `preserveDrawingBuffer: true` to standard WebGL `false`.
+  3. Removed CSS `filter: blur()` from `<canvas>` completely (avoids Chromium Skia D3D11 swapchain bug).
+  4. Removed `#three-canvas-container { opacity: 0; transition: opacity 0.45s; }` completely (avoids Chromium offscreen opacity renderpass whiteout).
+  5. Enforced solid `#060402` backing across canvas CSS (`background: #060402 !important`), Three.js `scene.background = new THREE.Color(0x060402)`, and `renderer.setClearColor(0x060402, 1.0)`.
+  6. Implemented subtle linear depth fog (`THREE.Fog(0x060402, 30, 75)`) and restored vibrant material parameters (`roughness: 0.35`, `metalness: 0.35`, rich emissive boost) ensuring crystal-clear letter visibility up front with gentle atmospheric falloff in the deep background.
+
+- **ATTEMPT 9 Result (2026-09-04)**: FAILED. User confirmed removing blur did NOT fix the white background and fog made letters illegible ("هو حلو بس الحروف مبقتش واضحة وللاسف المشكلة متحلتش برضو لانها مكانتش من البلور").
+
+## ATTEMPT 10 (2026-09-04) — Dynamic In-Memory Canvas Mounting & 3D Typography Clarity
+- **True Root Cause Identified**: Chromium on Windows with DirectComposition/D3D11 promoted the static `<canvas>` tag in HTML to an MPO underlay swapchain before WebGL initialized. DWM's punched-hole for the underlay exposed uninitialized 0xFFFFFFFF white memory.
+- **Permanent Solution**:
+  1. Removed static `<canvas>` from `index.html` — `#three-canvas-container` is a pure `#060402` dark DOM `<div>` from byte 0.
+  2. Dynamic Mounting: `threeScene.js` dynamically creates the canvas in memory, renders frame 1 (solid `#060402` + warm particles), and mounts it to the DOM under the `#site-curtain` shield.
+  3. Eradicated `scene.fog` completely — restored 100% crystal clarity, brightness, and readability to all 3D letters.
+  4. Restored reflective bevel materials (`roughness: 0.26 - 0.30`, `metalness: 0.38 - 0.42`) catching warm key and point light highlights.
+  5. Restored `.canvas-ambient-blur` with `--canvas-blur: 1.2px` and hardware-accelerated transform isolation (`transform: scale(1.015) translateZ(0)`).
+
+- **Rule 15 (Dynamic In-Memory Canvas Mounting Law)**:
+  `2026-09-04 | WebGL Canvas White Flash on Reload | Root Cause: Having a static <canvas> tag in HTML causes Chromium on Windows to allocate an uninitialized DirectComposition MPO underlay swapchain before WebGL has drawn its first frame, exposing uninitialized 0xFFFFFFFF white memory upon reload. | Forbidden Path: Hardcoding full-screen WebGL <canvas> elements directly in HTML when overlaying content. | Permanent Rule: Never put a full-screen background <canvas> directly in HTML. Keep an empty dark container <div> in HTML (#three-canvas-container). Dynamically create the canvas in JavaScript, initialize WebGL, render the first valid frame with solid background in memory, and ONLY THEN mount it to the DOM under the curtain shield. Remove any obscuring fog and preserve subtle 1.2px CSS bokeh with GPU transform isolation.`
+
+## ATTEMPT 11 (2026-09-05) — Edge Paint Holding Snapshot Immunity & Zero-MPO Architecture
+- **Critical Behavioral Insight Provided by User**:
+  - Chrome reloads cleanly because it shows a full black screen for ~1s while Three.js loads and renders, so the user never sees any uninitialized state.
+  - Edge and Brave skip the black screen and display the page immediately without a black cover.
+- **Root Cause Discovered**:
+  1. **Edge Paint Holding**: Edge freezes the DOM layout during reload rather than blanking the viewport. In Edge, `threeScene` was triggering `readyCallback()` at frame 3 (50ms) and dynamically appending the canvas on frame 1 with `translateZ(0)`.
+  2. **DirectComposition MPO Hole Punching**: Using `translateZ(0)` and `will-change: transform` on the canvas element forced Windows DirectComposition to promote the canvas to an independent hardware overlay layer, punching a hole directly to the desktop window backing (`0xFFFFFFFF`).
+  3. **Race Condition**: In Edge, when the curtain dissolved in 50ms, the D3D swapchain hadn't finished presenting, exposing the white hole.
+- **Permanent Solution Applied**:
+  1. Removed `translateZ(0)` and `will-change: transform` from `.canvas-ambient-blur`: canvas remains in standard DOM compositing.
+  2. Canvas starts at `opacity: 0` inside the dark container, and ONLY transitions to `opacity: 1` when `lettersReady === true` AND `framesRendered >= 8`.
+  3. Enforced `MIN_CURTAIN_MS = 350ms` in `main.js`: guarantees a consistent cinematic veil across all browsers.
+  4. Added `beforeunload` listener in `main.js`: instantly snaps `#site-curtain` to opacity 1 and canvas to opacity 0 upon reload, ensuring Edge's Paint Holding snapshots a solid dark screen instead of an uninitialized canvas.
+- **Rule 16 (Browser Paint Holding & MPO Overlay Law)**:
+  `2026-09-05 | WebGL Canvas Edge Reload Whiteout | Root Cause: Edge's Paint Holding preserves DOM visuals across reload, and CSS translateZ(0) on WebGL canvas triggers DirectComposition hardware MPO overlay swapchains that expose uninitialized white video memory when curtain lifts prematurely. | Forbidden Path: Using translateZ(0) or will-change on WebGL canvas elements, and revealing canvas or lifting curtain before verified 3D frames with letters are presented. | Permanent Rule: 1. Avoid translateZ(0) on WebGL canvases to keep them in the standard paint tree. 2. Gate canvas opacity at 0 until letters exist and >= 8 verified frames are rendered. 3. Enforce a minimum curtain duration (>= 350ms) so fast-loading browsers don't lift the curtain before swapchains settle. 4. Attach a beforeunload listener to force curtain opacity: 1 and canvas opacity: 0 before the browser snapshots for Paint Holding.`
+

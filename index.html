@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mr. Ahmed Samir | خبير اللغة الإنجليزية • خبرة 26 عاماً</title>
 
-  <meta name="color-scheme" content="dark">
+  <meta name="color-scheme" content="only dark">
   
   <!-- Critical Anti-White-Flash & Anti-FOUC Base Styles (Paints Dark Grounding Instantly) -->
   <style>
     :root {
-      color-scheme: dark;
+      color-scheme: only dark;
     }
     html, body {
       background-color: #060402 !important;
@@ -18,6 +18,10 @@
       margin: 0;
       padding: 0;
       background: #060402 !important;
+      color-scheme: only dark;
+    }
+    #three-canvas-container, #three-canvas {
+      color-scheme: only dark;
     }
     #site-curtain {
       position: fixed;
@@ -27,17 +31,10 @@
       pointer-events: none;
       transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    /* Canvas is painted only after verified WebGL frames (main.js reveals it).
-       A hidden canvas can never composite uninitialized GPU buffer garbage. */
-    #three-canvas-container {
-      opacity: 0;
-      transition: opacity 0.45s ease;
-    }
   </style>
 
   <!-- Direct Stylesheet Link (Guarantees Render-Blocking Styles Before Paint in Vite) -->
   <link rel="stylesheet" href="/src/style.css">
-  
   <!-- SEO & Social Meta Tags (WhatsApp / Facebook / Telegram) -->
   <meta name="description" content="مستر أحمد سمير — معلم خبير لغة إنجليزية للمرحلتين الإعدادية والثانوية بخبرة أكثر من 26 عاماً في تدريس المناهج وتأسيس مهارات التفكير اللغوي وحل الامتحانات.">
   <meta name="keywords" content="أحمد سمير, لغة إنجليزية, ثانوية عامة, إعدادية, مدرس إنجليزي, ثانوية, منوفية">
@@ -73,10 +70,8 @@
   <!-- Instant Luxury Dark Curtain Shield (Guarantees 100% Solid Black Viewport from Byte 0) -->
   <div id="site-curtain"></div>
 
-  <!-- Background 3D Canvas (Clean Transparent WebGL Layer, Opaque Dark DOM Backing) -->
-  <div id="three-canvas-container" class="fixed inset-0 z-0 pointer-events-none overflow-hidden" style="background-color: #060402;">
-    <canvas id="three-canvas" class="w-full h-full block" style="background: transparent !important; background-color: transparent !important;"></canvas>
-  </div>
+  <!-- Background 3D Canvas Container (Solid Luxury Dark Grounding) -->
+  <div id="three-canvas-container" class="fixed inset-0 z-0 pointer-events-none overflow-hidden" style="background-color: #060402;"></div>
 
   <!-- Main Wrapper -->
   <div class="relative z-10 min-h-screen flex flex-col justify-between">

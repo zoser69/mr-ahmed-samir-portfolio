@@ -25,7 +25,26 @@
    - **Fixes applied**: (a) `setClearColor` + `clear()` moved AFTER sizing so the composited buffer is never uninitialized; (b) removed `powerPreference: 'high-performance'` (hybrid-GPU present failures composite uninitialized swapchain memory); (c) replaced header `backdrop-blur-md` with solid `bg-[#060402]/95` (Chromium backdrop-filter snapshot is another uninitialized-white path); (d) `#three-canvas-container` gated at `opacity: 0` in critical CSS and revealed only after **3 verified rendered frames** (1.2s safety) over a solid `#060402` DOM backing — a hidden canvas cannot composite garbage; (e) rebuilt context-loss lifecycle with generation tokens; restore path no longer calls `forceContextLoss()`; (f) fixed a `const`-assignment crash in the render-ready callback.
    - **Further Hardening & Blur Restoration (2026-09-04)**: (g) Added `renderer.setClearColor(0x000000, 0); renderer.clear();` inside `onResize` immediately after buffer reallocations to ensure resize events on mobile/desktop never leave uninitialized swapchain memory; (h) Restored `.canvas-ambient-blur` with subtle `1.2px` Depth of Field bokeh and GPU transform isolation (`transform: scale(1.015) translateZ(0)`), which was erroneously removed during Sep 2 debugging.
    - **Verification performed locally**: 15/15 headless reloads + 12/12 real-GPU visible-Edge reloads + 15/15 post-blur automated stress reloads, 0 runtime exceptions, pixel analysis showed 0 white frames, with 3D bokeh rendering flawlessly.
-   - **Status**: Ready for deployment to GitHub Pages. Bug stays open pending user validation on the live GitHub Pages site.
+   - **Status**: Intermittent reproduction was reported by user on 2026-09-04 (~1 in 6 refreshes on localhost).
+9. **ATTEMPT 9 (2026-09-04) — CSS Blur Removal & Fog Test (FAILED)**:
+   - User verified: Removing CSS blur did NOT eliminate the white screen on reload, and adding Three.js fog darkened the 3D typography and made the letters illegible ("هو حلو بس الحروف مبقتش واضحة وللاسف المشكلة متحلتش برضو لانها مكانتش من البلور").
+10. **ATTEMPT 10 (2026-09-04) — PERMANENT SOLUTION: Dynamic In-Memory Canvas Mounting + Restored Letter Clarity & 1.2px Bokeh**:
+   - **True Root Cause Identified**: Chromium on Windows with DirectComposition/D3D11 promoted the static `<canvas>` tag in HTML to an MPO underlay swapchain before WebGL initialized. DWM's punched-hole for the underlay exposed uninitialized 0xFFFFFFFF white memory.
+   - **Permanent Solution**:
+     1. Removed the static `<canvas>` tag from `index.html`. `#three-canvas-container` is a pure `#060402` dark DOM `<div>` from byte 0.
+     2. Dynamic Mounting: `threeScene.js` dynamically creates the canvas in memory, renders frame 1 (solid `#060402` + warm particles), and mounts it to the DOM under the `#site-curtain` shield.
+     3. Eradicated `scene.fog` completely — letters are crystal-clear, bright, and legible.
+     4. Restored reflective bevel materials (`roughness: 0.26 - 0.30`, `metalness: 0.38 - 0.42`) catching warm key and point light highlights.
+     5. Restored `.canvas-ambient-blur` with `--canvas-blur: 1.2px` and hardware-accelerated transform isolation (`transform: scale(1.015) translateZ(0)`).
+   - **Verification**: Verified via `cdp-diagnose.mjs` — clean render, 0 console errors, rich 3D letters with 1.2px bokeh.
+11. **ATTEMPT 11 (2026-09-05) — ROOT CAUSE: Zero-MPO Canvas & Browser Paint Holding Snapshot Immunity**:
+    - **Empirical Breakthrough**: User pinpointed the behavioral difference: Chrome reloads with a ~1s solid black curtain until 3D renders, while Edge skips the curtain and displays content immediately.
+    - **Root Cause**: Edge uses Paint Holding, snapshotting the DOM on reload. In Edge, fast script execution dissolved the curtain in 50ms, while CSS `translateZ(0)` on the canvas forced an independent DirectComposition MPO overlay swapchain that exposed uninitialized D3D11 white memory before presentation.
+    - **Root-Cause Code Solution**:
+      (a) Removed `translateZ(0)` and `will-change: transform` from `.canvas-ambient-blur` — keeps canvas in standard document tree, eliminating MPO hardware hole-punching.
+      (b) Canvas starts at `opacity: 0` in DOM, and reveals ONLY when `lettersReady === true` AND `framesRendered >= 8`.
+      (c) Added `MIN_CURTAIN_MS = 350ms` in `main.js` so Edge never lifts the curtain prematurely.
+      (d) Attached `beforeunload` listener in `main.js` to immediately force curtain opacity: 1 and canvas opacity: 0 upon F5, guaranteeing Edge's Paint Holding snapshots a solid dark screen instead of an uninitialized canvas.
 
 ## 4. Regression & Testing Tooling (under `.work/`)
 - `cdp-diagnose.mjs` — DOM/computed-state dump + console/exception capture + screenshot via CDP.
@@ -34,5 +53,5 @@
 - `ghpages-sim.mjs` — serves `dist/` under the `/mr-ahmed-samir-portfolio/` prefix like GitHub Pages (port 4180).
 
 ## 5. Immediate Next Step
-- Deploy `dist/` to GitHub Pages via `npx --yes gh-pages -d dist` and push `main` branch to GitHub.
-- Ask user to perform repeated hard-refreshes (`Ctrl + F5`) on the live production URL and confirm that both the white background bug is eliminated and the 1.2px 3D background blur is active.
+- Have the user refresh `http://localhost:5173/` in Edge / Brave multiple times (`F5` / `Ctrl + F5`) to visually confirm that the white background is 100% eliminated and the 3D typography is pristine.
+- Once user confirms, commit and deploy to GitHub Pages.

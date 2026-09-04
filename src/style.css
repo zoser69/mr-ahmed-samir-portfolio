@@ -84,6 +84,7 @@
   mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 82%, rgba(0,0,0,0) 100%);
 }
 
+
 /* Cinematic Depth of Field (Soft Ambient Background Bokeh) */
 :root {
   --canvas-blur: 1.2px;
@@ -91,18 +92,17 @@
 
 .canvas-ambient-blur {
   filter: blur(var(--canvas-blur, 1.2px));
-  transform: scale(1.015) translateZ(0);
-  will-change: transform, filter;
+  transform: scale(1.015);
 }
 
-/* Clean Transparent 3D Canvas */
+/* Solid Luxury 3D Canvas */
 #three-canvas {
   width: 100%;
   height: 100%;
   display: block;
   pointer-events: none;
-  background: transparent !important;
-  background-color: transparent !important;
+  background: #060402 !important;
+  background-color: #060402 !important;
 }
 
 /* Ambient Breathing Backlight */

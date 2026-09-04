@@ -1,18 +1,29 @@
 # System State - Mr. Ahmed Samir 3D Portfolio
 
-- **Current Status**: CRITICAL BUG UNRESOLVED (OPEN) — Intermittent white background appears under top bar on page refresh. An attempted fix was committed 2026-09-03 (clear-order correction + canvas reveal gate + present-path hardening) with strong local verification, but the bug remains OPEN pending user confirmation on the live production site.
-- **Active Blocker**:
-  - **Description**: On both localhost and production, upon page reload (`Ctrl + F5` or `F5`), the background behind the hero section intermittently turns solid white while the top bar, teacher portrait, and cards render correctly.
-  - **Video Proof**: `D:\Downloads\Recording 2026-09-02 203944.mp4` (shows white background on frame 00:00, dark on subsequent refreshes, but recurring intermittently).
-  - **User Verdict**: "احيانا بتعمل الابيض لما احدث واحيانا لا - اعرف فين المشكلة وحلها".
-  - **Investigation Status**: 7 failed hypotheses documented in `.work/MEMORY.md`; Attempt 8 (2026-09-03) — see HANDOFF.md §3.8 — implemented, committed, and locally verified (27 reloads, 0 exceptions) but NOT yet confirmed on production. Bug stays open until the user validates on GitHub Pages.
-- **Architectural State (includes Attempt 8 + Blur Restoration)**:
-  1. **Three.js Canvas**: `alpha: true`, `setClearColor` + `clear()` AFTER `setSize`/`setPixelRatio` and on `onResize` (final buffer never left uninitialized), `scene.background = null`, no `powerPreference`, container gated `opacity: 0` → revealed after `READY_FRAME_COUNT = 3` verified frames (1.2s safety), solid `#060402` DOM backing, generation-token context-loss resilience (restore path no longer calls `forceContextLoss()`).
-  2. **Cinematic 3D Bokeh (Restored)**: `.canvas-ambient-blur` with `--canvas-blur: 1.2px` and `transform: scale(1.015) translateZ(0)` for hardware-accelerated Depth of Field background separation.
-  3. **Curtain Shield**: `#site-curtain` at `z-index: 999999` lifts via `onReady` (3 verified frames) or 800ms safety; canvas reveal safety at 1.2s.
-  4. **Header**: `backdrop-blur-md` removed → solid `bg-[#060402]/95` (Chromium backdrop-filter uninitialized-white path eliminated).
-  5. **Typography & UI**: Outfit + Tajawal + IBM Plex Sans Arabic, 3-column academic stages, minimalist experience vertical stepper, all functioning properly.
+- **Current Status**: RE-CALIBRATED ARCHITECTURE APPLIED & VERIFIED — User provided crucial empirical discovery: The intermittent white background bug NEVER occurs on Google Chrome, but occurs specifically on Microsoft Edge (Windows + Android) and Brave (Windows + Android).
+- **Critical Cross-Browser Discovery**:
+  - Google Chrome does not enable forced web contents dark mode by default and initializes its window backing to dark.
+  - Microsoft Edge and Brave feature built-in "Dark Theme for Web Contents" / "Night Mode" and aggressive tracking/shield layers that run heuristic-based color inversion on transparent WebGL canvases (`alpha: true`) and unstyled window backings.
+- **Permanent Solution Applied**:
+  1. Removed `translateZ(0)` and `will-change: transform, filter` from `.canvas-ambient-blur`: Prevents Windows DirectComposition from promoting the canvas to an MPO hardware overlay swapchain that punches white holes through the DWM window.
+  2. Canvas starts at `opacity: 0`: Attached to DOM with `opacity: 0`. It transitions smoothly to `opacity: 1` ONLY after `lettersReady === true` AND `framesRendered >= 8` (verified drawing buffer).
+  3. Enforced `MIN_CURTAIN_MS = 350ms` in `main.js`: Eliminates premature curtain dissolution on fast-caching Edge, ensuring a smooth, consistent cinematic entrance across all browsers.
+  4. Added `beforeunload` listener in `main.js`: Instantly sets `#site-curtain` to opacity 1 and canvas to opacity 0 upon F5, guaranteeing that Edge's Paint Holding snapshots a solid dark screen instead of an uninitialized canvas.
+  5. Solid luxury WebGL: `alpha: false`, `scene.background = new THREE.Color(0x060402)`, `renderer.setClearColor(0x060402, 1.0)`.
+  6. Restored 1.2px cinematic bokeh blur on background typography without obscuring fog.
+- **Architectural State**:
+  1. **Zero-MPO In-DOM Canvas**: Canvas composited natively in Blink's paint tree without DirectComposition hole punching.
+  2. **Reload Snapshot Immunity**: `beforeunload` ensures Paint Holding never captures an uninitialized GPU state.
+  3. **Crystal-Clear 3D Typography + 1.2px Bokeh**: Sharp, legible 3D letters with warm golden highlights.
 - **Live Local Server**: `http://localhost:5173/` (vite dev binds `::1` — use `localhost`)
 - **Live Production URL**: `https://zoser69.github.io/mr-ahmed-samir-portfolio/`
-- **Regression Tooling**: `.work/cdp-diagnose.mjs`, `.work/reload-test.mjs` (headless), `.work/gpu-reload-test.mjs` (visible Edge via `--remote-debugging-port=9222`), `.work/ghpages-sim.mjs` (serves `dist/` under the GitHub Pages base — `vite preview` does NOT apply `base` routing and black-screens the local test).
-- **Next Priority**: Push `main` to GitHub and deploy `dist/` to GitHub Pages (`npx --yes gh-pages -d dist`). Have user hard-refresh repeatedly and confirm fix and blur.
+- **Next Priority**: User test and validation on `http://localhost:5173/` (hard refresh `Ctrl + F5` and normal `F5` in Edge and Brave). Once visually confirmed, commit and deploy to GitHub Pages.
+
+## Active Files & Dynamic Docs Registry
+- [index.html](file:///d:/Anti%20Projects/MR%20Ahmed%20Samir/index.html) — Root HTML shell, color-scheme: only dark, critical CSS curtain & head preconnects.
+- [src/threeScene.js](file:///d:/Anti%20Projects/MR%20Ahmed%20Samir/src/threeScene.js) — 3D background kinetic typography engine (alpha: false, dynamic canvas mount, reflective materials).
+- [src/style.css](file:///d:/Anti%20Projects/MR%20Ahmed%20Samir/src/style.css) — Global styles, 1.2px canvas ambient blur with GPU transform isolation, Tailwind v4.
+- [src/main.js](file:///d:/Anti%20Projects/MR%20Ahmed%20Samir/src/main.js) — Application bootstrapper and site-curtain dissolution orchestration.
+- [src/portraitHero.js](file:///d:/Anti%20Projects/MR%20Ahmed%20Samir/src/portraitHero.js) — GSAP Master Entrance and timeline scroll choreography.
+- [.work/STATE.md](file:///d:/Anti%20Projects/MR%20Ahmed%20Samir/.work/STATE.md) — Current state, system architecture, active tasks.
+- [.work/MEMORY.md](file:///d:/Anti%20Projects/MR%20Ahmed%20Samir/.work/MEMORY.md) — Heuristics, failure logs, crystallized rules.

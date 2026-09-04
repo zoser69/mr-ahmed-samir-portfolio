@@ -13,6 +13,14 @@ if (typeof history !== 'undefined' && 'scrollRestoration' in history) {
   history.scrollRestoration = 'manual';
 }
 
+let heroEntranceTimeline = null;
+
+export function playHeroEntrance() {
+  if (heroEntranceTimeline) {
+    heroEntranceTimeline.play();
+  }
+}
+
 export function initPortraitHero() {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -40,7 +48,8 @@ export function initPortraitHero() {
   }
 
   // --- SECTION 1: MASTER HERO ENTRANCE (Dynamic Split Side Entrance) ---
-  const heroTl = gsap.timeline({
+  heroEntranceTimeline = gsap.timeline({
+    paused: true,
     defaults: { ease: 'power3.out', force3D: true }
   });
 
@@ -55,7 +64,7 @@ export function initPortraitHero() {
     x: 20
   });
 
-  heroTl
+  heroEntranceTimeline
     .to(img, {
       opacity: 1,
       x: 0,
