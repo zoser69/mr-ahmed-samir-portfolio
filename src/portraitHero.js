@@ -62,6 +62,7 @@ export function initPortraitHero() {
       '#about .timeline-track-base',
       '#about .timeline-track-progress',
       '#about .about-card-item',
+      '#about .about-card-item .ps-14',
       '#contact .contact-reveal-box > *',
       '#contact .social-card-item'
     ], {
@@ -175,7 +176,7 @@ export function initPortraitHero() {
     const progressLine = aboutSection.querySelector('.timeline-track-progress');
     const milestones = aboutSection.querySelectorAll('.about-card-item');
 
-    let dotFractions = [0.079, 0.517, 0.955];
+    let dotFractions = [0.0, 0.438, 0.875];
     const updateDotFractions = () => {
       if (!baseLine) return;
       const baseRect = baseLine.getBoundingClientRect();
@@ -184,8 +185,9 @@ export function initPortraitHero() {
           const dot = item.querySelector('.timeline-milestone-dot');
           if (!dot) return 0;
           const dotRect = dot.getBoundingClientRect();
-          const dotCenterY = (dotRect.top + dotRect.height / 2) - baseRect.top;
-          return dotCenterY / baseRect.height;
+          // Calculate fraction to the top edge of the dot where the line tip first touches it
+          const dotTopY = dotRect.top - baseRect.top;
+          return Math.max(0, dotTopY / baseRect.height);
         });
       }
     };
@@ -195,8 +197,8 @@ export function initPortraitHero() {
         const dot = item.querySelector('.timeline-milestone-dot');
         if (!dot) return;
         const targetFraction = dotFractions[idx] ?? 0;
-        // As soon as the golden line tip reaches or passes the dot's center:
-        if (currentProgress >= targetFraction - 0.015) {
+        // As soon as the golden line tip reaches the dot (and line has actually started):
+        if (currentProgress > 0.01 && currentProgress >= targetFraction - 0.005) {
           dot.classList.add('is-active');
         } else {
           dot.classList.remove('is-active');
@@ -225,10 +227,12 @@ export function initPortraitHero() {
       });
     }
 
-    // Progressive milestone card arrival (Bidirectional reversible)
+    // Progressive milestone card content arrival (Bidirectional reversible)
+    // Animate the text content rather than the whole item so the milestone dot remains statically anchored to the track
     milestones.forEach((item) => {
-      gsap.fromTo(item,
-        { opacity: 0, y: 24 },
+      const content = item.querySelector('.ps-14') || item;
+      gsap.fromTo(content,
+        { opacity: 0, y: 20 },
         {
           opacity: 1,
           y: 0,
